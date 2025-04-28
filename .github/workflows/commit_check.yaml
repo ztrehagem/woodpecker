@@ -1,0 +1,27 @@
+name: Commit Check
+
+on:
+  pull_request_target:
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install pnpm
+        run: npm install --global pnpm@latest
+      - name: Determine fetch depth
+        id: fetch-depth
+        run: echo "FETCH_DEPTH=$(( COMMITS + 1 ))" >> $GITHUB_OUTPUT
+        env:
+          COMMITS: ${{ github.event.pull_request.commits }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ steps.fetch-depth.outputs.FETCH_DEPTH }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run Commitlint
+        run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
