@@ -17,6 +17,8 @@ jobs:
       - name: Install pnpm
         run: npm install --global pnpm@latest
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -32,6 +34,8 @@ jobs:
       - name: Install pnpm
         run: npm install --global pnpm@latest
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -47,6 +51,8 @@ jobs:
       - name: Install pnpm
         run: npm install --global pnpm@latest
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
