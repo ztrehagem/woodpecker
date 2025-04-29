@@ -6,6 +6,10 @@ on:
       - main
   pull_request_target:
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   eslint:
     runs-on: ubuntu-latest
