@@ -7,6 +7,8 @@ import security from "eslint-plugin-security";
 import sonarjs from "eslint-plugin-sonarjs";
 import tseslint from "typescript-eslint";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import importAccess from "eslint-plugin-import-access/flat-config";
+import checkFile from "eslint-plugin-check-file";
 
 export default tseslint.config(
   gitignore(),
@@ -33,12 +35,55 @@ export default tseslint.config(
     },
     plugins: {
       "simple-import-sort": simpleImportSort,
+      "import-access": importAccess,
+      "check-file": checkFile,
     },
     rules: {
       "no-console": "warn",
       "no-debugger": "error",
+      "no-undefined": "error",
+      "no-eval": "error",
+      curly: "error",
+      camelcase: "error",
+      "func-style": [
+        "error",
+        "declaration",
+        {
+          allowArrowFunctions: true,
+          overrides: {
+            namedExports: "declaration",
+          },
+        },
+      ],
+      "sonarjs/todo-tag": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/explicit-module-boundary-types": "error",
+      "@typescript-eslint/prefer-enum-initializers": "error",
+      "@typescript-eslint/strict-boolean-expressions": "error",
       "simple-import-sort/imports": "warn",
+      "import-access/jsdoc": [
+        "error",
+        /** @see https://github.com/uhyo/eslint-plugin-import-access/blob/master/docs/rule-jsdoc.md */
+        {
+          defaultImportability: "package",
+        },
+      ],
+      "check-file/filename-naming-convention": [
+        "error",
+        {
+          "**/*": "KEBAB_CASE",
+        },
+        {
+          ignoreMiddleExtensions: true,
+        },
+      ],
+      "check-file/folder-naming-convention": [
+        "error",
+        {
+          "**/*": "KEBAB_CASE",
+        },
+      ],
     },
   },
 );
