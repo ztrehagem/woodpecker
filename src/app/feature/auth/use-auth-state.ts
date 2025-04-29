@@ -1,8 +1,9 @@
 import { useContext } from "react";
 
-import { AuthStateContext } from "./context";
+import { AtpAgentContext } from "./context";
 
 /** @public */
 export function useAuthState(): boolean {
-  return useContext(AuthStateContext);
+  const agent = useContext(AtpAgentContext);
+  return agent != null;
 }

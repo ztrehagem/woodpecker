@@ -47,13 +47,15 @@ export default tseslint.config(
       camelcase: "error",
       "func-style": [
         "error",
-        "expression",
+        "declaration",
         {
+          allowArrowFunctions: true,
           overrides: {
             namedExports: "declaration",
           },
         },
       ],
+      "sonarjs/todo-tag": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/explicit-module-boundary-types": "error",

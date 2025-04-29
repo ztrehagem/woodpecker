@@ -1,10 +1,11 @@
+import type { AtpAgent } from "@atproto/api";
 import type React from "react";
 import { createContext } from "react";
 
-export const AuthStateContext = createContext(false);
+export const AtpAgentContext = createContext<AtpAgent | null>(null);
 
-export const SetAuthStateContext = createContext<
-  React.Dispatch<React.SetStateAction<boolean>>
+export const SetAtpAgentContext = createContext<
+  React.Dispatch<React.SetStateAction<AtpAgent | null>>
 >(() => {
   // do nothing
 });

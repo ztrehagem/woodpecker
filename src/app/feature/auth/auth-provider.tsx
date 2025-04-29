@@ -1,16 +1,17 @@
+import type { AtpAgent } from "@atproto/api";
 import { useState } from "react";
 
-import { AuthStateContext, SetAuthStateContext } from "./context";
+import { AtpAgentContext, SetAtpAgentContext } from "./context";
 
 /** @public */
 export default function AuthProvider({
   children,
 }: Readonly<React.PropsWithChildren>): React.ReactElement {
-  const [state, setState] = useState(false);
+  const [atpAgent, setAtpAgent] = useState<AtpAgent | null>(null);
 
   return (
-    <SetAuthStateContext value={setState}>
-      <AuthStateContext value={state}>{children}</AuthStateContext>
-    </SetAuthStateContext>
+    <SetAtpAgentContext value={setAtpAgent}>
+      <AtpAgentContext value={atpAgent}>{children}</AtpAgentContext>
+    </SetAtpAgentContext>
   );
 }
