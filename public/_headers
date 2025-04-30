@@ -1,11 +1,17 @@
 /*
-  Content-Security-Policy: default-src 'self';connect-src * https:;base-uri 'self';form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self';connect-src * https:;base-uri 'self';form-action 'self';frame-ancestors 'none';object-src 'none';script-src-attr 'none';upgrade-insecure-requests
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
   Origin-Agent-Cluster: ?1
   Referrer-Policy: no-referrer
+  Permissions-Policy: document-domain=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
-  X-DNS-Prefetch-Control: off
-  X-Frame-Options: SAMEORIGIN
-  X-Permitted-Cross-Domain-Policies: none
+  X-Frame-Options: DENY
+
+/assets/*
+  ! Content-Security-Policy
+  ! Cross-Origin-Opener-Policy
+  ! Origin-Agent-Cluster
+  ! Referrer-Policy
+  ! X-Frame-Options
