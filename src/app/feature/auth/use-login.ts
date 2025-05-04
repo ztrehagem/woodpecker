@@ -1,45 +1,16 @@
-import { AtpAgent } from "@atproto/api";
-import { useCallback, useContext } from "react";
-
-import { SetAtpAgentContext } from "./context";
+import { useCallback } from "react";
 
 export type Login = (params: {
-  readonly service: string;
+  // readonly service: string;
   readonly identifier: string;
-  readonly password: string;
+  // readonly password: string;
 }) => Promise<"invalid_service" | "authentication_failure" | null>;
 
 /** @public */
 export function useLogin(): Login {
-  const setAuthenticated = useContext(SetAtpAgentContext);
-
-  return useCallback(
-    async ({ service, identifier, password }) => {
-      const serviceUrl = safeParseURL(service || "https://bsky.social");
-
-      if (serviceUrl == null) {
-        return "invalid_service";
-      }
-
-      const agent = new AtpAgent({
-        service: serviceUrl,
-        // TODO: persistSession
-      });
-
-      const result = await agent.sessionManager.login({
-        identifier,
-        password,
-      });
-
-      if (!result.success) {
-        return "authentication_failure";
-      }
-
-      setAuthenticated(agent);
-      return null;
-    },
-    [setAuthenticated],
-  );
+  return useCallback(async ({ identifier }) => {
+    return null;
+  }, []);
 }
 
 function safeParseURL(urlString: string): URL | null {

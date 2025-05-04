@@ -1,44 +1,46 @@
 import type React from "react";
-import { useActionState, useId } from "react";
-import { useNavigate } from "react-router";
+import { useId } from "react";
 
-import { useLogin } from "../../feature/auth/use-login";
+import { hc } from "../../hc";
 
 export default function Login(): React.ReactElement {
   const id = useId();
   const formId = `${id}form`;
-  const serviceId = `${id}service`;
+  // const serviceId = `${id}service`;
   const identifierId = `${id}identifier`;
-  const passwordId = `${id}password`;
-  const login = useLogin();
-  const navigate = useNavigate();
+  // const passwordId = `${id}password`;
+  // const navigate = useNavigate();
 
-  const [errorText, action, isPending] = useActionState<
-    string | null,
-    FormData
-  >(async (_, fd) => {
-    const result = await login({
-      service: fd.get("service") as string,
-      identifier: fd.get("identifier") as string,
-      password: fd.get("password") as string,
-    });
+  // const [errorText, action, isPending] = useActionState<
+  //   string | null,
+  //   FormData
+  // >(async (_, fd) => {
+  //   const result = await login({
+  //     service: fd.get("service") as string,
+  //     identifier: fd.get("identifier") as string,
+  //     password: fd.get("password") as string,
+  //   });
 
-    switch (result) {
-      case "invalid_service":
-        return "ホスティングプロバイダのURLが不正です";
-      case "authentication_failure":
-        return "ログインに失敗しました";
-      case null:
-        await navigate("/");
-        return null;
-    }
-  }, null);
+  //   switch (result) {
+  //     case "invalid_service":
+  //       return "ホスティングプロバイダのURLが不正です";
+  //     case "authentication_failure":
+  //       return "ログインに失敗しました";
+  //     case null:
+  //       await navigate("/");
+  //       return null;
+  //   }
+  // }, null);
 
   return (
-    <form aria-labelledby={id} action={action} inert={isPending}>
+    <form
+      aria-labelledby={id}
+      method="GET"
+      action={hc.api.login.$url().toString()}
+    >
       <h1 id={formId}>ログイン</h1>
 
-      <div>
+      {/* <div>
         <label htmlFor={serviceId}>ホスティングプロバイダ</label>
         <input
           type="text"
@@ -46,7 +48,7 @@ export default function Login(): React.ReactElement {
           placeholder="https://bsky.social"
           id={serviceId}
         />
-      </div>
+      </div> */}
 
       <div>
         <label htmlFor={identifierId}>ユーザ名またはメールアドレス</label>
@@ -58,7 +60,7 @@ export default function Login(): React.ReactElement {
         />
       </div>
 
-      <div>
+      {/* <div>
         <label htmlFor={passwordId}>パスワード</label>
         <input
           type="password"
@@ -66,11 +68,12 @@ export default function Login(): React.ReactElement {
           autoComplete="current-password"
           id={passwordId}
         />
-      </div>
+      </div> */}
 
-      <button type="submit">{isPending ? "処理中" : "ログイン"}</button>
+      <button type="submit">ログイン</button>
+      {/* <button type="submit">{isPending ? "処理中" : "ログイン"}</button> */}
 
-      {errorText != null && <p>{errorText}</p>}
+      {/* {errorText != null && <p>{errorText}</p>} */}
     </form>
   );
 }

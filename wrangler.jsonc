@@ -29,16 +29,33 @@
    */
   "kv_namespaces": [
     {
-      "binding": "KV_BINDING",
-      "id": "27d56c278dcd4c7bb1b73c86409a6750",
+      "binding": "KV_SESSION",
+      "id": "f9f3503d30f74ea9853249b1fdbbe645",
+      "preview_id": "cc6b8a97fd2d4dc89c499b373f0b882a",
+    },
+    {
+      "binding": "KV_OAUTH_STATE",
+      "id": "d825c112dd0844269cf051b637bcbe11",
+    },
+    {
+      "binding": "KV_OAUTH_SESSION",
+      "id": "da47b040235f44c0b9122fc59492c09d",
     },
   ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ATP_OAUTH_CLIENT",
+        "class_name": "AtpOAuthClient",
+      },
+    ],
+  },
 
   /**
    * Environment Variables
    * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
    */
-  // "vars": { "MY_VARIABLE": "production_value" },
+  "vars": {},
   /**
    * Note: Use secrets to store sensitive data.
    * https://developers.cloudflare.com/workers/configuration/secrets/
@@ -55,4 +72,12 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+
+  /**
+   * Overrides
+   * https://developers.cloudflare.com/pages/functions/wrangler-configuration/#environment-specific-overrides
+   */
+  "env": {
+    "preview": {},
+  },
 }
