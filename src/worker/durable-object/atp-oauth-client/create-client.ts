@@ -7,14 +7,6 @@ import type {
 } from "@atproto/oauth-client";
 import { OAuthClient } from "@atproto/oauth-client";
 
-const originalFetch = globalThis.fetch;
-
-const overrideFetch: typeof originalFetch = (request, init) => {
-  return originalFetch(request, { ...init, redirect: "manual" });
-};
-
-globalThis.fetch = overrideFetch;
-
 /**
  * @see https://www.npmjs.com/package/@atproto/oauth-client
  */
@@ -54,21 +46,21 @@ export async function createClient(env: Env): Promise<OAuthClient> {
 
     clientMetadata: {
       /* eslint-disable camelcase */
-      client_id: "https://woodpecker.ztrehagem.app/client-metadata.json",
-      redirect_uris: ["https://woodpecker.ztrehagem.app/oauth-callback"],
+      client_id: new URL("/client-metadata.json", env.ORIGIN).toString(),
+      redirect_uris: [new URL("/oauth-callback", env.ORIGIN).toString()],
       grant_types: ["authorization_code", "refresh_token"],
       response_types: ["code"],
       application_type: "web",
       token_endpoint_auth_method: "private_key_jwt",
       token_endpoint_auth_signing_alg: "ES256",
       dpop_bound_access_tokens: true,
-      jwks_uri: "https://woodpecker.ztrehagem.app/jwks.json",
+      jwks_uri: new URL("/jwks.json", env.ORIGIN).toString(),
       scope: "atproto",
 
       // ↓ optional fields
       client_name: "Woodpecker",
-      client_uri: "https://woodpecker.ztrehagem.app",
-      logo_uri: "https://woodpecker.ztrehagem.app/favicon.webp",
+      client_uri: new URL("/", env.ORIGIN).toString(),
+      logo_uri: new URL("/favicon.webp", env.ORIGIN).toString(),
       /** (string, optional): URL to human-readable terms of service (ToS) for the client. Only https: URIs are allowed. */
       // tos_uri: "https://woodpecker.ztrehagem.app/tos",
       /** (string, optional): URL to human-readable privacy policy for the client. Only https: URIs are allowed. */
