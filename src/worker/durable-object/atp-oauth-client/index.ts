@@ -1,6 +1,5 @@
 import type { NodeOAuthClient } from "@atproto/oauth-client-node";
 import { DurableObject } from "cloudflare:workers";
-import { z } from "zod";
 
 import { createClient } from "./create-client";
 
@@ -8,8 +7,6 @@ import { createClient } from "./create-client";
 export const pathnameClientMetadataJson = "/client-metadata.json";
 /** @public */
 export const pathnameJwksJson = "/jwks.json";
-/** @public */
-export const pathnameLogin = "/api/login";
 
 export class AtpOAuthClient extends DurableObject<Env> {
   client!: NodeOAuthClient;
@@ -23,7 +20,7 @@ export class AtpOAuthClient extends DurableObject<Env> {
     });
   }
 
-  async fetch(request: Request): Promise<Response> {
+  fetch(request: Request): Response {
     const url = new URL(request.url);
 
     switch (url.pathname) {
@@ -32,27 +29,24 @@ export class AtpOAuthClient extends DurableObject<Env> {
 
       case pathnameJwksJson:
         return Response.json(this.client.jwks);
-
-      case pathnameLogin: {
-        // const fd = await request.formData();
-        // const handle = z.string().parse(fd.get("handle"));
-        const params = new URL(request.url).searchParams;
-        const handle = z.string().parse(params.get("handle"));
-
-        const state = crypto
-          .getRandomValues(new Uint32Array(1))
-          .at(0)!
-          .toFixed();
-
-        const url = await this.client.authorize(handle, {
-          state,
-          // ui_locales: 'ja-JP',
-        });
-
-        return Response.redirect(url.toString(), 307);
-      }
     }
 
     return new Response(null, { status: 404 });
+  }
+
+  async getOAuthLoginUrl({ handle }: { handle: string }): Promise<string> {
+    const state = crypto.getRandomValues(new Uint32Array(1)).at(0)!.toFixed();
+
+    try {
+      const url = await this.client.authorize(handle, {
+        state,
+        // ui_locales: 'ja-JP',
+      });
+
+      return url.toString();
+    } catch (e) {
+      console.log("ERROR getOAuthLoginUrl()", e);
+      throw e;
+    }
   }
 }
