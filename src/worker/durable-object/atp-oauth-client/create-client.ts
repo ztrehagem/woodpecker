@@ -1,11 +1,34 @@
 import { JoseKey } from "@atproto/jwk-jose";
-import type { InternalStateData, Key, Session } from "@atproto/oauth-client";
+import type {
+  InternalStateData,
+  Jwk,
+  Key,
+  Session,
+} from "@atproto/oauth-client";
 import { OAuthClient } from "@atproto/oauth-client";
+
+const originalFetch = globalThis.fetch;
+
+const overrideFetch: typeof originalFetch = (request, init) => {
+  return originalFetch(request, { ...init, redirect: "manual" });
+};
+
+globalThis.fetch = overrideFetch;
 
 /**
  * @see https://www.npmjs.com/package/@atproto/oauth-client
  */
 export async function createClient(env: Env): Promise<OAuthClient> {
+  const jwk1 = JSON.parse(env.ATP_OAUTH_JWK_1) as Jwk;
+  const jwk2 = JSON.parse(env.ATP_OAUTH_JWK_2) as Jwk;
+  const jwk3 = JSON.parse(env.ATP_OAUTH_JWK_3) as Jwk;
+
+  const [kid1, kid2, kid3] = await Promise.all([
+    sha1(env.ATP_OAUTH_JWK_1),
+    sha1(env.ATP_OAUTH_JWK_2),
+    sha1(env.ATP_OAUTH_JWK_3),
+  ]);
+
   const client = new OAuthClient({
     handleResolver: "https://public.api.bsky.app",
     // handleResolver: {
@@ -39,7 +62,7 @@ export async function createClient(env: Env): Promise<OAuthClient> {
       token_endpoint_auth_method: "private_key_jwt",
       token_endpoint_auth_signing_alg: "ES256",
       dpop_bound_access_tokens: true,
-      jwks_uri: "https://woodpecker.ztrehagem.app/oauth-jwks.json",
+      jwks_uri: "https://woodpecker.ztrehagem.app/jwks.json",
       scope: "atproto",
 
       // ↓ optional fields
@@ -54,9 +77,9 @@ export async function createClient(env: Env): Promise<OAuthClient> {
     },
 
     keyset: await Promise.all([
-      JoseKey.fromImportable(env.ATP_OAUTH_JWK_1),
-      JoseKey.fromImportable(env.ATP_OAUTH_JWK_2),
-      JoseKey.fromImportable(env.ATP_OAUTH_JWK_3),
+      JoseKey.fromImportable(jwk1, kid1),
+      JoseKey.fromImportable(jwk2, kid2),
+      JoseKey.fromImportable(jwk3, kid3),
     ]),
 
     stateStore: {
@@ -138,60 +161,68 @@ export async function createClient(env: Env): Promise<OAuthClient> {
     },
   });
 
-  const oauthResolverResolve = client.oauthResolver.resolve;
-  client.oauthResolver.resolve = async function (
-    this: OAuthClient["oauthResolver"],
-    ...args
-  ) {
-    console.log("oauthResolver.resolve()", ...args);
-    try {
-      return await oauthResolverResolve.call(this, ...args);
-    } catch (e) {
-      console.log("error on oauthResolver.resolve()", e);
-      throw e;
-    }
-  };
+  // const oauthResolverResolve = client.oauthResolver.resolve;
+  // client.oauthResolver.resolve = async function (
+  //   this: OAuthClient["oauthResolver"],
+  //   ...args
+  // ) {
+  //   console.log("oauthResolver.resolve()", ...args);
+  //   try {
+  //     return await oauthResolverResolve.call(this, ...args);
+  //   } catch (e) {
+  //     console.log("error on oauthResolver.resolve()", e);
+  //     throw e;
+  //   }
+  // };
 
-  const identityResolverResolve = client.oauthResolver.identityResolver.resolve;
-  client.oauthResolver.identityResolver.resolve = function (
-    this: OAuthClient["oauthResolver"]["identityResolver"],
-    ...args
-  ) {
-    console.log("identityResolver.resolve()", ...args);
-    return identityResolverResolve.call(this, ...args);
-  };
+  // const identityResolverResolve = client.oauthResolver.identityResolver.resolve;
+  // client.oauthResolver.identityResolver.resolve = function (
+  //   this: OAuthClient["oauthResolver"]["identityResolver"],
+  //   ...args
+  // ) {
+  //   console.log("identityResolver.resolve()", ...args);
+  //   return identityResolverResolve.call(this, ...args);
+  // };
 
-  const handleResolverResolve =
-    client.oauthResolver.identityResolver.handleResolver.resolve;
-  client.oauthResolver.identityResolver.handleResolver.resolve =
-    async function (
-      this: OAuthClient["oauthResolver"]["identityResolver"]["handleResolver"],
-      ...args
-    ) {
-      console.log("handleResolver.resolve()", ...args);
-      try {
-        return await handleResolverResolve.call(this, ...args);
-      } catch (e) {
-        console.log("error on handleResolver.resolve()", e);
-        throw e;
-      }
-    };
+  // const handleResolverResolve =
+  //   client.oauthResolver.identityResolver.handleResolver.resolve;
+  // client.oauthResolver.identityResolver.handleResolver.resolve =
+  //   async function (
+  //     this: OAuthClient["oauthResolver"]["identityResolver"]["handleResolver"],
+  //     ...args
+  //   ) {
+  //     console.log("handleResolver.resolve()", ...args);
+  //     try {
+  //       return await handleResolverResolve.call(this, ...args);
+  //     } catch (e) {
+  //       console.log("error on handleResolver.resolve()", e);
+  //       throw e;
+  //     }
+  //   };
 
-  const didResolverResolve =
-    client.oauthResolver.identityResolver.didResolver.resolve;
-  client.oauthResolver.identityResolver.didResolver.resolve = async function (
-    this: OAuthClient["oauthResolver"]["identityResolver"]["didResolver"],
-    did,
-    options,
-  ) {
-    console.log("didResolver.resolve()", did, options);
-    try {
-      return await didResolverResolve.call(this, did, options);
-    } catch (e) {
-      console.log("error on didResolver.resolve()", e);
-      throw e;
-    }
-  };
+  // const didResolverResolve =
+  //   client.oauthResolver.identityResolver.didResolver.resolve;
+  // client.oauthResolver.identityResolver.didResolver.resolve = async function (
+  //   this: OAuthClient["oauthResolver"]["identityResolver"]["didResolver"],
+  //   did,
+  //   options,
+  // ) {
+  //   console.log("didResolver.resolve()", did, options);
+  //   try {
+  //     return await didResolverResolve.call(this, did, options);
+  //   } catch (e) {
+  //     console.log("error on didResolver.resolve()", e);
+  //     throw e;
+  //   }
+  // };
 
   return client;
+}
+
+async function sha1(text: string) {
+  const uint8 = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest("SHA-1", uint8);
+  return Array.from(new Uint8Array(digest))
+    .map((v) => v.toString(16).padStart(2, "0"))
+    .join("");
 }

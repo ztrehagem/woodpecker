@@ -1,11 +1,5 @@
-const { privateKey } = await crypto.subtle.generateKey(
-  { name: "ECDSA", namedCurve: "P-256" },
-  true,
-  ["sign", "verify"],
-);
+import { JoseKey } from "@atproto/jwk-jose";
 
-const jwkJson = JSON.stringify(
-  await crypto.subtle.exportKey("jwk", privateKey),
-);
+const key = await JoseKey.generate()
 
-console.log(jwkJson);
+console.log(JSON.stringify(key))

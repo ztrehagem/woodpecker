@@ -16,7 +16,12 @@ export class AtpOAuthClient extends DurableObject<Env> {
 
     // eslint-disable-next-line sonarjs/no-async-constructor
     void ctx.blockConcurrencyWhile(async () => {
-      this.client = await createClient(env);
+      try {
+        this.client = await createClient(env);
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
     });
   }
 
