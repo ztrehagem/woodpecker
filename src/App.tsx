@@ -94,8 +94,13 @@ function SignInForm(): React.ReactElement {
 }
 
 function SignOutForm({ sub }: { sub: string }): React.ReactElement {
+  const signOut = async () => {
+    await oauthClient.revoke(sub);
+    location.reload();
+  };
+
   return (
-    <button type="button" onClick={() => oauthClient.revoke(sub)}>
+    <button type="button" onClick={signOut}>
       Sign Out
     </button>
   );
