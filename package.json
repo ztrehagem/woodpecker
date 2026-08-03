@@ -1,6 +1,5 @@
 {
   "name": "woodpecker",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +15,10 @@
     "depcruise:graph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "steiger": "steiger src",
     "typecheck": "tsc -b --noEmit",
+    "vitest": "vitest run",
+    "vitest:dev": "vitest",
+    "playwright": "playwright test",
+    "playwright:dev": "playwright test --ui",
     "preview": "pnpm run build && vite preview",
     "deploy": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types"
@@ -29,17 +32,34 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.50.0",
     "@feature-sliced/steiger-plugin": "^0.7.0",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/browser-playwright": "^4.1.10",
     "dependency-cruiser": "^18.1.0",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.71.0",
     "oxlint-tsgolint": "^7.0.2001",
+    "playwright": "^1.62.1",
     "steiger": "^0.6.0",
     "typescript": "~6.0.2",
     "vite": "^8.1.1",
+    "vitest": "^4.1.10",
+    "vitest-browser-react": "^2.2.0",
     "wrangler": "^4.118.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.18.0",
+      "onFail": "warn"
+    },
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "warn"
+    }
   }
 }
