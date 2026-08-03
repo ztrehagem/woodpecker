@@ -1,6 +1,8 @@
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
+import { configs as sonarjs } from "eslint-plugin-sonarjs";
+import { defineConfig } from "oxlint";
+
+export default defineConfig({
+  plugins: [
     "oxc",
     "typescript",
     "react",
@@ -9,26 +11,27 @@
     "import",
     "jsx-a11y",
     "promise",
-    "vitest"
+    "vitest",
   ],
-  "options": {
-    "typeAware": true
+  jsPlugins: ["eslint-plugin-sonarjs"],
+  options: {
+    typeAware: true,
   },
-  "rules": {
-    "no-console": "warn",
+  rules: {
+    // "no-console": "warn",
     "no-debugger": "error",
     "no-undefined": "error",
     "no-eval": "error",
-    "curly": "error",
+    curly: "error",
     "func-style": [
       "error",
       "declaration",
       {
-        "allowArrowFunctions": true,
-        "overrides": {
-          "namedExports": "declaration"
-        }
-      }
+        allowArrowFunctions: true,
+        overrides: {
+          namedExports: "declaration",
+        },
+      },
     ],
     "typescript/no-non-null-assertion": "off",
     "typescript/consistent-type-imports": "error",
@@ -36,12 +39,13 @@
     "typescript/prefer-enum-initializers": "error",
     "typescript/strict-boolean-expressions": "error",
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "react/only-export-components": ["warn", { allowConstantExport: true }],
     "unicorn/filename-case": [
       "error",
       {
-        "case": "kebabCase"
-      }
-    ]
-  }
-}
+        case: "kebabCase",
+      },
+    ],
+    ...sonarjs.recommended.rules,
+  },
+});
