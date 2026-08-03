@@ -4,8 +4,6 @@ interface FormParams {
   readonly handle: string;
 }
 
-type State = "ready" | "error" | "success";
-
 export default function SignInForm({
   action,
 }: {
