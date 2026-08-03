@@ -32,3 +32,10 @@ dist-ssr
 
 # depcruise
 /dependency-graph.svg
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

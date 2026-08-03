@@ -1,4 +1,4 @@
-name: Code Check
+name: Test
 
 on:
   push:
@@ -11,8 +11,10 @@ permissions:
   pull-requests: read
 
 jobs:
-  oxlint:
+  get-playwright-version:
     runs-on: ubuntu-latest
+    outputs:
+      PLAYWRIGHT_VERSION: ${{ steps.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
       - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
@@ -21,10 +23,15 @@ jobs:
           node-version: lts/*
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run oxlint
+      - id: get-playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
-  oxfmt:
+  vitest:
     runs-on: ubuntu-latest
+    needs:
+      - get-playwright-version
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
       - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
@@ -33,10 +40,15 @@ jobs:
           node-version: lts/*
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run oxfmt
+      - run: pnpm run vitest
 
-  depcruise:
+  playwright:
     runs-on: ubuntu-latest
+    needs:
+      - get-playwright-version
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
+      options: --user pwuser
     steps:
       - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
@@ -45,28 +57,9 @@ jobs:
           node-version: lts/*
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run depcruise
-
-  steiger:
-    runs-on: ubuntu-latest
-    steps:
-      - run: npm install --global pnpm@latest
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - run: pnpm run playwright
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
         with:
-          node-version: lts/*
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run steiger
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - run: npm install --global pnpm@latest
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: lts/*
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run typecheck
+          name: playwright-report
+          path: playwright-report/
