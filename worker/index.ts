@@ -1,13 +1,8 @@
+import { Hono } from "hono";
 import { createAtpClientMetadata } from "./create-atp-client-metadata.ts";
 
-export default {
-  fetch(request) {
-    const url = new URL(request.url);
+const app = new Hono();
 
-    if (url.pathname == "/atp-client-metadata.json") {
-      return Response.json(createAtpClientMetadata(request));
-    }
+app.get("/atp-client-metadata.json", (c) => c.json(createAtpClientMetadata(c.req.raw)));
 
-    return new Response(null, { status: 404 });
-  },
-} satisfies ExportedHandler<Env>;
+export default app satisfies ExportedHandler<Env>;
