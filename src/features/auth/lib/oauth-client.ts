@@ -1,12 +1,14 @@
 import { BrowserOAuthClient } from "@atproto/oauth-client-browser";
 import { use } from "react";
+
 import { CachedClient } from "./cached-client";
 
 const oauthClientPromise = import.meta.env.DEV
   ? (() => {
+      const redirectUri = `${location.origin}/callback`;
       const scopes = ["atproto", "rpc:app.bsky.actor.getProfile?aud=*"];
       return BrowserOAuthClient.load({
-        clientId: `http://localhost?redirect_uri=${encodeURIComponent(`${location.origin}/callback`)}&scope=${encodeURIComponent(scopes.join(" "))}`,
+        clientId: `http://localhost?redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(" "))}`,
         handleResolver: "https://bsky.social",
       });
     })()

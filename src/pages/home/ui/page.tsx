@@ -1,14 +1,15 @@
 import type React from "react";
+import { Suspense, use } from "react";
+
 import {
   SignInForm,
   SignOutForm,
   useOAuthClient,
   useOAuthResult,
 } from "#src/features/auth/index.ts";
-import { Suspense, use } from "react";
+import { useCachedClient } from "#src/features/auth/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
-import { useCachedClient } from "#src/features/auth/index.ts";
 
 export default function Page(): React.ReactElement {
   const oauthClient = useOAuthClient();
