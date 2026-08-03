@@ -1,6 +1,7 @@
-import { app } from "#src/shared/api/lexicons/index.ts";
 import { Client } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
+
+import { app } from "#src/shared/api/lexicons/index.ts";
 
 export class CachedClient {
   readonly #session: OAuthSession;

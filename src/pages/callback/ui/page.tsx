@@ -1,6 +1,7 @@
 import type React from "react";
-import { useOAuthResult } from "#src/features/auth/index.ts";
 import { Link } from "react-router";
+
+import { useOAuthResult } from "#src/features/auth/index.ts";
 
 export default function Page(): React.ReactElement {
   const oauthResult = useOAuthResult();
