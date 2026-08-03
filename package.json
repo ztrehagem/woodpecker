@@ -1,12 +1,14 @@
 {
   "name": "woodpecker",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "oxlint": "oxlint",
+    "oxfmt": "oxfmt --check",
+    "oxfmt:fix": "oxfmt",
     "preview": "pnpm run build && vite preview",
     "deploy": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types"
@@ -23,6 +25,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "oxfmt": "^0.61.0",
     "oxlint": "^1.71.0",
     "oxlint-tsgolint": "^7.0.2001",
     "typescript": "~6.0.2",
