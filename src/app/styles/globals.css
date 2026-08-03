@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
-body {
-  background-color: #333;
-  color: #fff;
-}
+@layer base {
+  body {
+    @apply bg-neutral-800 text-white;
+  }
 
-a:link {
-  color: #ccf;
-}
+  a {
+    @apply text-blue-400;
+  }
 
-a:visited {
-  color: #fcf;
+  a:visited {
+    @apply text-blue-300;
+  }
 }

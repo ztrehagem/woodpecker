@@ -84,7 +84,7 @@ function ProfileView({
         <dd>{profile.displayName}</dd>
 
         <dt>description</dt>
-        <dd style={{ whiteSpace: "pre-line" }}>{profile.description}</dd>
+        <dd className="whitespace-pre-line">{profile.description}</dd>
 
         <dt>followersCount</dt>
         <dd>{profile.followersCount}</dd>

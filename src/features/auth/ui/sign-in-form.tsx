@@ -24,31 +24,22 @@ export default function SignInForm({
   );
 
   return (
-    <form
-      action={dispatch}
-      noValidate
-      name="signin"
-      style={{ display: "inline-grid", gap: "12px", grid: "auto-flow auto / auto" }}
-    >
-      <div
-        style={{
-          display: "inline-grid",
-          gap: "8px 12px",
-          grid: "auto-flow auto / repeat(2, auto)",
-        }}
-      >
-        <label htmlFor="handle">Handle *</label>
+    <form action={dispatch} noValidate name="signin">
+      <div className="inline-grid gap-3 auto-cols-auto">
+        <div className="inline-grid gap-x-3 gap-y-2 grid-cols-[auto_1fr]">
+          <label htmlFor="handle">Handle *</label>
 
-        <input type="text" id="handle" name="handle" placeholder="user.bsky.social" required />
+          <input type="text" id="handle" name="handle" placeholder="user.bsky.social" required />
+        </div>
+
+        <div className="justify-self-end">
+          <button type="submit" disabled={isPending}>
+            Sign In
+          </button>
+        </div>
       </div>
 
-      <div style={{ justifySelf: "end" }}>
-        <button type="submit" disabled={isPending}>
-          Sign In
-        </button>
-      </div>
-
-      {error && <p style={{ color: "red" }}>{error.message}</p>}
+      {error && <p className="text-red-600">{error.message}</p>}
     </form>
   );
 }
