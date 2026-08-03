@@ -22,12 +22,12 @@ export default function Page(): React.ReactElement {
               <code>{oauthResult.session.sub}</code> was restored (last active session)
             </p>
           )}
-
-          <Link to="/">Go back to the home</Link>
         </div>
       ) : (
-        <div>Callback failed</div>
+        <p>Callback failed</p>
       )}
+
+      <Link to="/">Go back to the home</Link>
     </>
   );
 }

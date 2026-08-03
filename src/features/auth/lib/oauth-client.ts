@@ -23,7 +23,12 @@ export function useOAuthClient(): BrowserOAuthClient {
 
 type OAuthResult = Awaited<ReturnType<BrowserOAuthClient["init"]>>;
 
-const oauthResultPromise = oauthClientPromise.then((client) => client.init());
+const oauthResultPromise = oauthClientPromise
+  .then((client) => client.init())
+  .catch((error) => {
+    console.error(error);
+    return null;
+  });
 
 export function useOAuthResult(): OAuthResult | null {
   return use(oauthResultPromise);
