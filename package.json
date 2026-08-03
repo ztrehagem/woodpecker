@@ -4,7 +4,8 @@
   "type": "module",
   "imports": {
     "#/*": "./*",
-    "#src/*": "./src/*"
+    "#src/*": "./src/*",
+    "#worker/*": "./worker/*"
   },
   "scripts": {
     "prepare": "pnpm run lexicon:build",
