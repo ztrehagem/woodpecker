@@ -9,6 +9,8 @@
     "oxlint": "oxlint",
     "oxfmt": "oxfmt --check",
     "oxfmt:fix": "oxfmt",
+    "depcruise": "depcruise src",
+    "depcruise:graph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "preview": "pnpm run build && vite preview",
     "deploy": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types"
@@ -25,6 +27,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "dependency-cruiser": "^18.1.0",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.71.0",
     "oxlint-tsgolint": "^7.0.2001",
