@@ -20,6 +20,7 @@
     "depcruise": "depcruise src",
     "depcruise:graph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "steiger": "steiger src",
+    "steiger:watch": "steiger src --watch",
     "typecheck": "tsc -b --noEmit",
     "vitest": "vitest run",
     "vitest:dev": "vitest",
