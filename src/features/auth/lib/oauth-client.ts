@@ -1,5 +1,5 @@
 import { BrowserOAuthClient, type ClientMetadata } from "@atproto/oauth-client-browser";
-import atpClientMetadata from "../../../../public/atp-client-metadata.json";
+import atpClientMetadata from "#/public/atp-client-metadata.json";
 import { use } from "react";
 
 const oauthClientPromise = import.meta.env.DEV

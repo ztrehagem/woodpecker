@@ -1,5 +1,5 @@
 import type React from "react";
-import { useOAuthResult } from "../../../features/auth";
+import { useOAuthResult } from "#src/features/auth/index.ts";
 import { Link } from "react-router";
 
 export default function Page(): React.ReactElement {

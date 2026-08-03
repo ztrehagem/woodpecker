@@ -4,14 +4,14 @@ import { createBrowserRouter } from "react-router";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: lazy(() => import("../../pages/home/index.ts")),
+    Component: lazy(() => import("#src/pages/home/index.ts")),
   },
   {
     path: "/callback",
-    Component: lazy(() => import("../../pages/callback/index.ts")),
+    Component: lazy(() => import("#src/pages/callback/index.ts")),
   },
   {
     path: "/*",
-    Component: lazy(() => import("../../pages/not-found/index.ts")),
+    Component: lazy(() => import("#src/pages/not-found/index.ts")),
   },
 ]);

@@ -2,6 +2,10 @@
   "name": "woodpecker",
   "private": true,
   "type": "module",
+  "imports": {
+    "#/*": "./*",
+    "#src/*": "./src/*"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

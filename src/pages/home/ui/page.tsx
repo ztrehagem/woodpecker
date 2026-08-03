@@ -1,5 +1,10 @@
 import type React from "react";
-import { SignInForm, SignOutForm, useOAuthClient, useOAuthResult } from "../../../features/auth";
+import {
+  SignInForm,
+  SignOutForm,
+  useOAuthClient,
+  useOAuthResult,
+} from "#src/features/auth/index.ts";
 
 export default function Page(): React.ReactElement {
   const oauthClient = useOAuthClient();
