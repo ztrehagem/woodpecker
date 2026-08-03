@@ -49,5 +49,17 @@
     "vitest": "^4.1.10",
     "vitest-browser-react": "^2.2.0",
     "wrangler": "^4.118.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=11",
+      "onFail": "warn"
+    },
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "warn"
+    }
   }
 }
