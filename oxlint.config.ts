@@ -1,3 +1,4 @@
+import security from "eslint-plugin-security";
 import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import { defineConfig } from "oxlint";
 
@@ -13,7 +14,7 @@ export default defineConfig({
     "promise",
     "vitest",
   ],
-  jsPlugins: ["eslint-plugin-sonarjs"],
+  jsPlugins: ["eslint-plugin-sonarjs", "eslint-plugin-security"],
   options: {
     typeAware: true,
   },
@@ -47,5 +48,6 @@ export default defineConfig({
       },
     ],
     ...sonarjs.recommended.rules,
+    ...security.configs.recommended.rules,
   },
 });
