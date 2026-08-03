@@ -34,7 +34,9 @@ export default function Page(): React.ReactElement {
 
           <hr />
 
-          <SignedInView />
+          <ErrorBoundary fallback={<div>Failed to load</div>}>
+            <SignedInView />
+          </ErrorBoundary>
         </div>
       ) : (
         <SignInForm
@@ -53,11 +55,9 @@ function SignedInView(): React.ReactElement {
   const client = useCachedClient();
 
   return (
-    <ErrorBoundary fallback={<div>Failed to load profile</div>}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ProfileView profilePromise={client.getProfile()} />
-      </Suspense>
-    </ErrorBoundary>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProfileView profilePromise={client.getProfile()} />
+    </Suspense>
   );
 }
 
