@@ -5,32 +5,50 @@ interface FormParams {
 }
 
 export default function SignInForm({
-  onSubmit,
+  action,
 }: {
-  onSubmit: (params: FormParams) => Promise<void>;
+  action: (params: FormParams) => Promise<void>;
 }): React.ReactElement {
-  const [, action, isPending] = useActionState(async (fd: FormData) => {
-    const handle = (fd.get("handle") as string).trim();
-    await onSubmit({ handle });
-    return fd;
-  }, new FormData());
+  const [error, dispatch, isPending] = useActionState<Error | null, FormData>(
+    async (_error, fd) => {
+      try {
+        const handle = (fd.get("handle") as string).trim();
+        await action({ handle });
+      } catch (error) {
+        console.error(error);
+        return error instanceof Error ? error : new Error("Unknown error");
+      }
+      return null;
+    },
+    null,
+  );
 
   return (
     <form
-      action={action}
+      action={dispatch}
       noValidate
       name="signin"
-      style={{
-        display: "inline-grid",
-        gap: "8px 12px",
-        grid: "auto-flow auto / repeat(2, auto)",
-      }}
+      style={{ display: "inline-grid", gap: "12px", grid: "auto-flow auto / auto" }}
     >
-      <label htmlFor="handle">Handle *</label>
-      <input type="text" id="handle" name="handle" placeholder="user.bsky.social" required />
-      <button type="submit" disabled={isPending}>
-        Sign In
-      </button>
+      <div
+        style={{
+          display: "inline-grid",
+          gap: "8px 12px",
+          grid: "auto-flow auto / repeat(2, auto)",
+        }}
+      >
+        <label htmlFor="handle">Handle *</label>
+
+        <input type="text" id="handle" name="handle" placeholder="user.bsky.social" required />
+      </div>
+
+      <div style={{ justifySelf: "end" }}>
+        <button type="submit" disabled={isPending}>
+          Sign In
+        </button>
+      </div>
+
+      {error && <p style={{ color: "red" }}>{error.message}</p>}
     </form>
   );
 }
