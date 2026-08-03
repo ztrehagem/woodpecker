@@ -36,7 +36,7 @@
     "@atproto/api": "^0.20.36",
     "@atproto/lex": "^0.3.2",
     "@atproto/oauth-client-browser": "^0.5.1",
-    "eslint-plugin-security": "^4.0.1",
+    "hono": "^4.12.33",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.3.0"
@@ -51,8 +51,8 @@
     "@vitejs/plugin-react": "^6.0.5",
     "@vitest/browser-playwright": "^4.1.10",
     "dependency-cruiser": "^18.1.1",
+    "eslint-plugin-security": "^4.0.1",
     "eslint-plugin-sonarjs": "^4.2.0",
-    "hono": "^4.12.33",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.76.0",
     "oxlint-tsgolint": "^7.0.2001",

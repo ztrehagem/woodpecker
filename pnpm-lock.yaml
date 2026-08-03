@@ -216,9 +216,9 @@ importers:
       '@atproto/oauth-client-browser':
         specifier: ^0.5.1
         version: 0.5.1
-      eslint-plugin-security:
-        specifier: ^4.0.1
-        version: 4.0.1
+      hono:
+        specifier: ^4.12.33
+        version: 4.12.33
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -256,12 +256,12 @@ importers:
       dependency-cruiser:
         specifier: ^18.1.1
         version: 18.1.1
+      eslint-plugin-security:
+        specifier: ^4.0.1
+        version: 4.0.1
       eslint-plugin-sonarjs:
         specifier: ^4.2.0
         version: 4.2.0(eslint@10.8.0(supports-color@10.2.2))
-      hono:
-        specifier: ^4.12.33
-        version: 4.12.33
       oxfmt:
         specifier: ^0.61.0
         version: 0.61.0
