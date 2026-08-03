@@ -6,7 +6,7 @@
   "redirect_uris": ["https://woodpecker.ztrehagem.app/callback"],
   "application_type": "web",
   "grant_types": ["authorization_code", "refresh_token"],
-  "scope": "atproto",
+  "scope": "atproto rpc:app.bsky.actor.getProfile?aud=*",
   "response_types": ["code"],
   "token_endpoint_auth_method": "none",
   "dpop_bound_access_tokens": true
