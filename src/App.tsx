@@ -1,13 +1,10 @@
 import type React from "react";
-import {
-  BrowserOAuthClient,
-  type ClientMetadata,
-} from "@atproto/oauth-client-browser";
+import { BrowserOAuthClient, type ClientMetadata } from "@atproto/oauth-client-browser";
 import atpClientMetadata from "../public/atp-client-metadata.json";
 
 const oauthClient = import.meta.env.DEV
   ? await BrowserOAuthClient.load({
-      clientId: `http://localhost?redirect_uri=${encodeURIComponent("http://127.0.0.1:5174/callback")}`,
+      clientId: `http://localhost?redirect_uri=${encodeURIComponent(`${location.origin}/callback`)}`,
       handleResolver: "https://bsky.social",
     })
   : new BrowserOAuthClient({
@@ -33,15 +30,12 @@ export default function App(): React.ReactElement {
 
       {oauthResult ? (
         <div>
-          {oauthResult.state ? (
+          {oauthResult.state != null ? (
             <div>
-              {oauthResult.session.sub} was successfully authenticated (state:{" "}
-              {oauthResult.state})
+              {oauthResult.session.sub} was successfully authenticated (state: {oauthResult.state})
             </div>
           ) : (
-            <div>
-              {oauthResult.session.sub} was restored (last active session)
-            </div>
+            <div>{oauthResult.session.sub} was restored (last active session)</div>
           )}
           <SignOutForm sub={oauthResult.session.sub} />
         </div>
@@ -61,11 +55,8 @@ function SignInForm(): React.ReactElement {
         state: "DUMMY_STATE",
       });
       // Never executed
-    } catch (error) {
-      console.log(
-        'The user aborted the authorization process by navigating "back"',
-        error,
-      );
+    } catch {
+      // The user aborted the authorization process by navigating "back"
     }
   };
 
@@ -81,13 +72,7 @@ function SignInForm(): React.ReactElement {
       }}
     >
       <label htmlFor="handle">Handle *</label>
-      <input
-        type="text"
-        id="handle"
-        name="handle"
-        placeholder="user.bsky.social"
-        required
-      />
+      <input type="text" id="handle" name="handle" placeholder="user.bsky.social" required />
       <button type="submit">Sign In</button>
     </form>
   );
