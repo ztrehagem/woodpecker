@@ -16,13 +16,10 @@ jobs:
     outputs:
       PLAYWRIGHT_VERSION: ${{ steps.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
-      - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v1
         with:
-          node-version: lts/*
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+          cache: true
       - id: get-playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
@@ -33,13 +30,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
-      - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v1
         with:
-          node-version: lts/*
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+          cache: true
       - run: pnpm run vitest
 
   playwright:
@@ -50,13 +44,10 @@ jobs:
       image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
       options: --user pwuser
     steps:
-      - run: npm install --global pnpm@latest
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v1
         with:
-          node-version: lts/*
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+          cache: true
       - run: pnpm run playwright
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
