@@ -7,7 +7,7 @@ import atpClientMetadata from "../public/atp-client-metadata.json";
 
 const oauthClient = import.meta.env.DEV
   ? await BrowserOAuthClient.load({
-      clientId: `http://localhost?redirect_uri=${encodeURIComponent("http://127.0.0.1:5174/callback")}`,
+      clientId: `http://localhost?redirect_uri=${encodeURIComponent(`${location.origin}/callback`)}`,
       handleResolver: "https://bsky.social",
     })
   : new BrowserOAuthClient({
