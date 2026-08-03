@@ -1,32 +1,64 @@
-# React + TypeScript + Vite
+# Woodpecker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+AT Protocol client application built with React + Cloudflare Workers.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + React Router
+- Vite
+- Cloudflare Workers (Hono)
+- TypeScript
+- Vitest + Playwright
+- Oxlint + Oxfmt + Steiger + Dependency Cruiser
 
-## React Compiler
+## Quick Start
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+pnpm install
+pnpm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open `http://127.0.0.1:5173`.
+
+## Scripts
+
+```bash
+pnpm run dev          # local dev server
+pnpm run build        # type-check + build
+pnpm run typecheck    # TypeScript checks
+pnpm run lint         # oxlint/oxfmt/depcruise/steiger/typecheck
+pnpm run vitest       # unit and component tests
+pnpm run playwright   # e2e tests
+pnpm run deploy       # manual deploy (not regular use)
+```
+
+## OAuth Notes
+
+- Local development uses `127.0.0.1` so OAuth callback works as expected.
+- Production uses `atp-client-metadata.json` served by the Worker.
+
+## Project Layout
+
+Following [Feature-Sliced Design (FSD)](https://feature-sliced.design/) and file/directory structure is checked by Steiger.
+
+Current layers in this repository:
+
+- `src/app`: app entrypoint and router
+- `src/pages`: route-level pages
+- `src/features`: main interactions that users care to do
+- `src/shared`: a foundation for the rest of the app
+- `worker`: Cloudflare Worker
+
+Optional FSD layers such as `src/widgets` and `src/entities` can be introduced when they bring clear value.
+
+## Quality Gates
+
+Before opening a PR, run:
+
+```bash
+pnpm run lint
+pnpm run vitest
+pnpm run playwright
+```
+
+CI runs the same checks in GitHub Actions.
