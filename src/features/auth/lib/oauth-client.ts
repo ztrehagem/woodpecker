@@ -1,5 +1,4 @@
-import { BrowserOAuthClient, type ClientMetadata } from "@atproto/oauth-client-browser";
-import atpClientMetadata from "#/public/atp-client-metadata.json";
+import { BrowserOAuthClient } from "@atproto/oauth-client-browser";
 import { use } from "react";
 import { CachedClient } from "./cached-client";
 
@@ -11,12 +10,10 @@ const oauthClientPromise = import.meta.env.DEV
         handleResolver: "https://bsky.social",
       });
     })()
-  : Promise.resolve(
-      new BrowserOAuthClient({
-        clientMetadata: atpClientMetadata as ClientMetadata,
-        handleResolver: "https://bsky.social",
-      }),
-    );
+  : BrowserOAuthClient.load({
+      clientId: `${location.origin}/atp-client-metadata.json`,
+      handleResolver: "https://bsky.social",
+    });
 
 export function useOAuthClient(): BrowserOAuthClient {
   return use(oauthClientPromise);

@@ -1,12 +1,8 @@
-export default {
-  fetch(request) {
-    const url = new URL(request.url);
+import { Hono } from "hono";
+import { createAtpClientMetadata } from "./create-atp-client-metadata.ts";
 
-    if (url.pathname.startsWith("/api/")) {
-      return Response.json({
-        name: "Cloudflare",
-      });
-    }
-    return new Response(null, { status: 404 });
-  },
-} satisfies ExportedHandler<Env>;
+const app = new Hono();
+
+app.get("/atp-client-metadata.json", (c) => c.json(createAtpClientMetadata(c.req.raw)));
+
+export default app satisfies ExportedHandler<Env>;
