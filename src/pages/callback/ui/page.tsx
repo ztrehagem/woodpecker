@@ -3,7 +3,7 @@ import { Suspense, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { useOAuthResult } from "#src/features/auth/index.ts";
-import { LoadingBoxesIcon } from "#src/shared/ui/icon/index.ts";
+import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { Header } from "#src/widgets/header/index.ts";
 
 export default function Page(): React.ReactElement {
@@ -11,11 +11,9 @@ export default function Page(): React.ReactElement {
     <div className="flex min-h-dvh flex-col">
       <Header />
 
-      <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
-        <Suspense fallback={<LoadingBoxesIcon />}>
-          <Content />
-        </Suspense>
-      </div>
+      <Suspense fallback={<LoadingFallback />}>
+        <Content />
+      </Suspense>
     </div>
   );
 }
@@ -34,11 +32,13 @@ function Content(): React.ReactElement {
   return (
     <>
       {isAuthenticated ? (
-        <LoadingBoxesIcon />
+        <LoadingFallback />
       ) : (
-        <div className="flex flex-col items-center gap-3">
-          <p>ログインに失敗しました</p>
-          <Link to="/">ホームに戻る</Link>
+        <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
+          <div className="flex flex-col items-center gap-3">
+            <p>ログインに失敗しました</p>
+            <Link to="/">ホームに戻る</Link>
+          </div>
         </div>
       )}
     </>

@@ -11,6 +11,10 @@ export const router = createBrowserRouter([
     Component: lazy(() => import("#src/pages/callback/index.ts")),
   },
   {
+    path: "/profile/:handle",
+    Component: lazy(() => import("#src/pages/profile/index.ts")),
+  },
+  {
     path: "/*",
     Component: lazy(() => import("#src/pages/not-found/index.ts")),
   },

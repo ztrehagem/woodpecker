@@ -1,5 +1,6 @@
 import { asDatetimeString } from "@atproto/lex";
 import React, { use } from "react";
+import { Link } from "react-router";
 
 import type { Timeline } from "../model/timeline";
 
@@ -10,7 +11,12 @@ export function TimelineView({ timeline }: { timeline: Timeline }): React.ReactE
         <article key={post.post.uri}>
           <img src={post.post.author.avatar} alt="" className="h-10 w-10 rounded-full" />
           <div>
-            <span>{post.post.author.displayName}</span>
+            <Link
+              to={`/profile/${post.post.author.handle}`}
+              className="font-bold text-inherit hover:underline"
+            >
+              {post.post.author.displayName}
+            </Link>
             <span>&emsp;@{post.post.author.handle}</span>
           </div>
           <div>

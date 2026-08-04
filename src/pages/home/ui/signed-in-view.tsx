@@ -5,20 +5,14 @@ import { TimelineView } from "#src/entities/timeline/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
-import { LoadingBoxesIcon } from "#src/shared/ui/icon/index.ts";
+import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 export default function SignedInView(): React.ReactElement {
   const client = useCachedClient();
 
   return (
     <ErrorBoundary fallback={<div>Failed to load</div>}>
-      <Suspense
-        fallback={
-          <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
-            <LoadingBoxesIcon />
-          </div>
-        }
-      >
+      <Suspense fallback={<LoadingFallback />}>
         <div className="py-4">
           <Container>
             <ProfileCard.Promise profile={client.getProfile()} />
