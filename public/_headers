@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self';img-src * https:;media-src * https:;connect-src * https:;base-uri 'self';form-action 'self';frame-ancestors 'none';object-src 'none';script-src-attr 'none';style-src-elem 'self' https://fonts.googleapis.com/;upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self';img-src * https:;media-src * https:;connect-src * https:;base-uri 'self';form-action 'self';frame-ancestors 'none';object-src 'none';script-src-attr 'none';style-src-elem 'self' https://fonts.googleapis.com/;font-src 'self' https://fonts.gstatic.com/;upgrade-insecure-requests
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
   Origin-Agent-Cluster: ?1
