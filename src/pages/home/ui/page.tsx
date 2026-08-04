@@ -5,8 +5,7 @@ import { useOAuthClient, useOAuthResult } from "#src/features/auth/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
-import LoadingBoxesIcon from "#src/shared/ui/icon/loading-boxes.tsx";
-import PersonIcon from "#src/shared/ui/icon/person.tsx";
+import { LoadingBoxesIcon, PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 import { Header } from "#src/widgets/header/index.ts";
 
