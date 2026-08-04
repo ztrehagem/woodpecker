@@ -1,11 +1,12 @@
 import React, { use } from "react";
 
-import type { Profile } from "#src/features/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-export default function ProfileCard({
+import type { Profile } from "../model/profile";
+
+export function ProfileCard({
   profile,
 }: Readonly<{
   profile: Profile;

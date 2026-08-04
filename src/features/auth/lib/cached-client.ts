@@ -2,10 +2,9 @@ import type { Did } from "@atproto/api";
 import { Client } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
+import type { Profile } from "#src/entities/profile/index.ts";
+import type { Timeline } from "#src/entities/timeline/index.ts";
 import { app } from "#src/shared/api/lexicons/index.ts";
-
-import type { Profile } from "../model/profile";
-import type { Timeline } from "../model/timeline";
 
 export class CachedClient {
   readonly #session: OAuthSession;
