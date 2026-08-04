@@ -1,6 +1,6 @@
 import React, { use } from "react";
 
-import type { app } from "#src/shared/api/lexicons/index.ts";
+import type { Profile } from "#src/features/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
@@ -8,7 +8,7 @@ import Tooltip from "#src/shared/ui/tooltip.tsx";
 export default function ProfileCard({
   profile,
 }: Readonly<{
-  profile: app.bsky.actor.defs.ProfileViewDetailed;
+  profile: Profile;
 }>): React.ReactElement {
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
@@ -80,7 +80,7 @@ export default function ProfileCard({
 ProfileCard.Promise = function ({
   profile: profilePromise,
 }: Readonly<{
-  profile: Promise<app.bsky.actor.defs.ProfileViewDetailed>;
+  profile: Promise<Profile>;
 }>): React.ReactElement {
   const profile = use(profilePromise);
 

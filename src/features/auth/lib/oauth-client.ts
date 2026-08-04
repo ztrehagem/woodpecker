@@ -6,7 +6,11 @@ import { CachedClient } from "./cached-client";
 const oauthClientPromise = import.meta.env.DEV
   ? (() => {
       const redirectUri = `${location.origin}/callback`;
-      const scopes = ["atproto", "rpc:app.bsky.actor.getProfile?aud=*"];
+      const scopes = [
+        "atproto",
+        "rpc:app.bsky.actor.getProfile?aud=*",
+        "rpc:app.bsky.feed.getTimeline?aud=*",
+      ];
       return BrowserOAuthClient.load({
         clientId: `http://localhost?redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(" "))}`,
         handleResolver: "https://bsky.social",

@@ -4,10 +4,12 @@ import type { OAuthSession } from "@atproto/oauth-client-browser";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
 
+import type { Profile } from "../model/profile";
+import type { Timeline } from "../model/timeline";
+
 export class CachedClient {
   readonly #session: OAuthSession;
   readonly #client: Client;
-  #profile: Promise<app.bsky.actor.defs.ProfileViewDetailed> | null = null;
 
   constructor(session: OAuthSession) {
     this.#session = session;
@@ -18,10 +20,21 @@ export class CachedClient {
     return this.#session.did;
   }
 
-  async getProfile(): Promise<app.bsky.actor.defs.ProfileViewDetailed> {
+  #profile: Promise<Profile> | null = null;
+
+  async getProfile(): Promise<Profile> {
     if (this.#profile == null) {
       this.#profile = this.#client.call(app.bsky.actor.getProfile, { actor: this.#session.did });
     }
     return this.#profile;
+  }
+
+  #timeline: Promise<Timeline> | null = null;
+
+  async getTimeline(): Promise<Timeline> {
+    if (this.#timeline == null) {
+      this.#timeline = this.#client.call(app.bsky.feed.getTimeline, { limit: 50 });
+    }
+    return this.#timeline;
   }
 }
