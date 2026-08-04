@@ -7,5 +7,5 @@ test("renders correctly", async () => {
   const action = vi.fn<() => Promise<void>>();
   const view = await render(<SignInForm action={action} />);
 
-  await expect.element(view.getByLabelText("Handle")).toBeInTheDocument();
+  await expect.element(view.getByLabelText("ユーザー名")).toBeInTheDocument();
 });

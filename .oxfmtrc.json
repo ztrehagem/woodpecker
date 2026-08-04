@@ -1,5 +1,9 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "ignorePatterns": ["/lexicons/**", "/lexicons.json"],
-  "sortImports": true
+  "sortImports": true,
+  "sortTailwindcss": {
+    "stylesheet": "./src/app/styles/globals.css",
+    "functions": ["clsx"]
+  }
 }

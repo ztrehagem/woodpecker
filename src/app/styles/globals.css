@@ -1,12 +1,23 @@
-body {
-  background-color: #333;
-  color: #fff;
+@import "tailwindcss";
+
+@theme {
+  --font-brand: "Edu VIC WA NT Hand", sans-serif;
 }
 
-a:link {
-  color: #ccf;
-}
+@layer base {
+  html {
+    @apply font-sans;
+  }
 
-a:visited {
-  color: #fcf;
+  body {
+    @apply bg-neutral-800 text-white;
+  }
+
+  a {
+    @apply text-blue-400;
+  }
+
+  a:active {
+    @apply text-blue-300;
+  }
 }
