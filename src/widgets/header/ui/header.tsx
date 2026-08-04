@@ -32,11 +32,9 @@ function Secondary(): React.ReactElement {
   return (
     <>
       {oauthResult && (
-        <Tooltip.Provider>
-          <div className="pointer-events-auto flex items-center">
-            <SignOutButton />
-          </div>
-        </Tooltip.Provider>
+        <div className="pointer-events-auto flex items-center">
+          <SignOutButton />
+        </div>
       )}
     </>
   );
