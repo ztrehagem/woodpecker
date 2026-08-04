@@ -9,7 +9,7 @@ import LogoutIcon from "#src/shared/ui/icon/logout.tsx";
 
 export default function Header(): React.ReactElement {
   return (
-    <header className="pointer-events-none sticky top-0 left-0 flex h-15 items-stretch justify-between">
+    <header className="pointer-events-none sticky top-0 left-0 z-10 flex h-15 items-stretch justify-between">
       <h1 className="font-brand text-lg font-medium">
         <Link
           to="/"
