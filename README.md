@@ -45,11 +45,11 @@ Current layers in this repository:
 
 - `src/app`: app entrypoint and router
 - `src/pages`: route-level pages
+- `src/widgets`: reusable, self-contained UI blocks
 - `src/features`: main interactions that users care to do
+- `src/entities`: domain concepts and related model/ui
 - `src/shared`: a foundation for the rest of the app
 - `worker`: Cloudflare Worker
-
-Optional FSD layers such as `src/widgets` and `src/entities` can be introduced when they bring clear value.
 
 ## Quality Gates
 

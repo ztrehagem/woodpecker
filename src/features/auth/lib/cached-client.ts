@@ -1,5 +1,5 @@
 import type { Did } from "@atproto/api";
-import { Client } from "@atproto/lex";
+import { Client, type AtIdentifierString } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
 import type { Profile } from "#src/entities/profile/index.ts";
@@ -19,13 +19,17 @@ export class CachedClient {
     return this.#session.did;
   }
 
-  #profile: Promise<Profile> | null = null;
+  #profiles: Map<AtIdentifierString, Promise<Profile>> = new Map();
 
-  async getProfile(): Promise<Profile> {
-    if (this.#profile == null) {
-      this.#profile = this.#client.call(app.bsky.actor.getProfile, { actor: this.#session.did });
+  async getProfile(id: AtIdentifierString = this.#session.did): Promise<Profile> {
+    let profile = this.#profiles.get(id);
+
+    if (profile == null) {
+      profile = this.#client.call(app.bsky.actor.getProfile, { actor: id });
+      this.#profiles.set(id, profile);
     }
-    return this.#profile;
+
+    return profile;
   }
 
   #timeline: Promise<Timeline> | null = null;
