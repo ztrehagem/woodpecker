@@ -14,11 +14,9 @@ export default function SignedInView(): React.ReactElement {
     <ErrorBoundary fallback={<div>Failed to load</div>}>
       <Suspense
         fallback={
-          <Container>
-            <div className="grid grow grid-cols-1 grid-rows-1 place-items-center py-4">
-              <LoadingBoxesIcon />
-            </div>
-          </Container>
+          <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
+            <LoadingBoxesIcon />
+          </div>
         }
       >
         <div className="my-4">
