@@ -1,4 +1,4 @@
-import { useCachedClient, useOAuthClient } from "#src/features/auth/index.ts";
+import { useCachedClient, useOAuthClient } from "./oauth-client";
 
 export function useSignOut(): () => Promise<void> {
   const oauthClient = useOAuthClient();
