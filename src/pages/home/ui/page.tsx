@@ -5,7 +5,9 @@ import { useOAuthClient, useOAuthResult } from "#src/features/auth/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
+import LoadingBoxesIcon from "#src/shared/ui/icon/loading-boxes.tsx";
 import PersonIcon from "#src/shared/ui/icon/person.tsx";
+import Tooltip from "#src/shared/ui/tooltip.tsx";
 import { Header } from "#src/widgets/header/index.ts";
 
 import SignInForm from "./sign-in-form";
@@ -42,13 +44,17 @@ function SignedInView(): React.ReactElement {
   const client = useCachedClient();
 
   return (
-    <div>
-      <ErrorBoundary fallback={<div>Failed to load</div>}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <ProfileView profilePromise={client.getProfile()} />
-        </Suspense>
-      </ErrorBoundary>
-    </div>
+    <ErrorBoundary fallback={<div>Failed to load</div>}>
+      <Suspense
+        fallback={
+          <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
+            <LoadingBoxesIcon />
+          </div>
+        }
+      >
+        <ProfileView profilePromise={client.getProfile()} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
@@ -85,7 +91,11 @@ function ProfileView({
             <div className="flex flex-1 flex-wrap items-start justify-between gap-3 pb-2">
               <div>
                 <h2 className="text-2xl font-semibold">{profile.displayName ?? profile.handle}</h2>
-                <p className="text-sm text-neutral-400">@{profile.handle}</p>
+                <p className="text-sm text-neutral-400">
+                  <Tooltip tooltip={<span className="text-xs">{profile.did}</span>} side="right">
+                    @{profile.handle}
+                  </Tooltip>
+                </p>
               </div>
 
               {/* <button

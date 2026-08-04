@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { useCachedClient, useOAuthClient, useOAuthResult } from "#src/features/auth/index.ts";
 import LoadingDotsIcon from "#src/shared/ui/icon/loading-dots.tsx";
 import LogoutIcon from "#src/shared/ui/icon/logout.tsx";
+import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 export default function Header(): React.ReactElement {
   return (
@@ -32,9 +33,11 @@ function Secondary(): React.ReactElement {
   return (
     <>
       {oauthResult && (
-        <div className="pointer-events-auto flex items-center">
-          <SignOutButton />
-        </div>
+        <Tooltip.Provider>
+          <div className="pointer-events-auto flex items-center">
+            <SignOutButton />
+          </div>
+        </Tooltip.Provider>
       )}
     </>
   );
@@ -48,16 +51,18 @@ function SignOutButton(): React.ReactElement {
     async () => {
       await oauthClient.revoke(client.did);
       location.assign("/");
+      await Promise.race([]); // never resolve, so the page doesn't re-render after the redirect
     },
     void 0,
   );
 
   return (
     <form action={dispatch} noValidate name="signout">
-      <button
-        type="submit"
-        disabled={isPending}
+      <Tooltip
         className="relative cursor-pointer justify-self-end rounded-full border border-transparent px-3 py-2 focus-visible:border-blue-400 focus-visible:outline-none"
+        render={(props, _state) => <button type="submit" disabled={isPending} {...props} />}
+        side="left"
+        tooltip="ログアウト"
       >
         {isPending && (
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -67,7 +72,7 @@ function SignOutButton(): React.ReactElement {
         <span className={clsx("flex items-center", isPending && "invisible")}>
           <LogoutIcon />
         </span>
-      </button>
+      </Tooltip>
     </form>
   );
 }

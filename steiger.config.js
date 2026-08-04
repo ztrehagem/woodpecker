@@ -11,4 +11,10 @@ export default defineConfig([
       "fsd/public-api": "off",
     },
   },
+  {
+    files: ["./src/shared/ui/icon/**"],
+    rules: {
+      "fsd/no-public-api-sidestep": "off",
+    },
+  },
 ]);
