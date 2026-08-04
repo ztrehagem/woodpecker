@@ -1,6 +1,9 @@
 import { asDatetimeString } from "@atproto/lex";
+import { Collapsible } from "@base-ui/react/collapsible";
 import React, { use } from "react";
 import { Link } from "react-router";
+
+import { CaretRightIcon } from "#src/shared/ui/icon/caret-right.tsx";
 
 import type { Timeline } from "../model/timeline";
 
@@ -47,7 +50,17 @@ export function TimelineView({ timeline }: { timeline: Timeline }): React.ReactE
               <dt>Bookmarks</dt>
             </div>
           </dl>
-          <pre className="text-xs whitespace-pre">{JSON.stringify(post, null, 2)}</pre>
+          <Collapsible.Root>
+            <Collapsible.Trigger className="group inline-flex cursor-pointer items-center text-xs text-neutral-400">
+              Show raw data
+              <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
+            </Collapsible.Trigger>
+            <Collapsible.Panel>
+              <pre className="rounded-e-md bg-stone-800 px-5 py-4 text-xs whitespace-pre text-neutral-400">
+                {JSON.stringify(post, null, 2)}
+              </pre>
+            </Collapsible.Panel>
+          </Collapsible.Root>
         </article>
       ))}
     </div>
