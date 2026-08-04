@@ -5,3 +5,5 @@ export { default as LoginIcon } from "./login.tsx";
 export { default as LogoutIcon } from "./logout.tsx";
 export { default as PersonIcon } from "./person.tsx";
 export { CaretRightIcon } from "./caret-right.tsx";
+export { AccountCircleIcon } from "./account-circle.tsx";
+export { SettingsIcon } from "./settings.tsx";

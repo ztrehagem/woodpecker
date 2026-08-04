@@ -11,7 +11,6 @@ export class CachedClient {
   readonly #client: Client;
 
   constructor(session: OAuthSession) {
-    console.log(session);
     this.#session = session;
     this.#client = new Client(session);
   }
@@ -22,12 +21,12 @@ export class CachedClient {
 
   #profiles: Map<AtIdentifierString, Promise<Profile>> = new Map();
 
-  async getProfile(did: AtIdentifierString = this.#session.did): Promise<Profile> {
-    let profile = this.#profiles.get(did);
+  async getProfile(id: AtIdentifierString = this.#session.did): Promise<Profile> {
+    let profile = this.#profiles.get(id);
 
     if (profile == null) {
-      profile = this.#client.call(app.bsky.actor.getProfile, { actor: did });
-      this.#profiles.set(did, profile);
+      profile = this.#client.call(app.bsky.actor.getProfile, { actor: id });
+      this.#profiles.set(id, profile);
     }
 
     return profile;

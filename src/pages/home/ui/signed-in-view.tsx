@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 
-import { ProfileCard } from "#src/entities/profile/index.ts";
 import { TimelineView } from "#src/entities/timeline/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
@@ -13,11 +12,11 @@ export default function SignedInView(): React.ReactElement {
   return (
     <ErrorBoundary fallback={<div>Failed to load</div>}>
       <Suspense fallback={<LoadingFallback />}>
-        <div className="py-4">
+        {/* <div className="py-4">
           <Container>
             <ProfileCard.Promise profile={client.getProfile()} />
           </Container>
-        </div>
+        </div> */}
 
         <div className="py-4">
           <Container>

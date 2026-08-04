@@ -3,7 +3,7 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React, { use } from "react";
 import { Link } from "react-router";
 
-import { CaretRightIcon } from "#src/shared/ui/icon/caret-right.tsx";
+import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import type { Timeline } from "../model/timeline";
 
