@@ -1,9 +1,7 @@
 import clsx from "clsx";
 import { useActionState } from "react";
 
-import AtmarkIcon from "#src/shared/ui/icon/atmark.tsx";
-import LoadingDotsIcon from "#src/shared/ui/icon/loading-dots.tsx";
-import LoginIcon from "#src/shared/ui/icon/login.tsx";
+import { AtIcon, LoadingDotsIcon, LoginIcon } from "#src/shared/ui/icon/index.ts";
 
 interface FormParams {
   readonly handle: string;
@@ -39,7 +37,7 @@ export default function SignInForm({
         <label htmlFor="handle">ユーザー名</label>
 
         <div className="relative">
-          <AtmarkIcon className="absolute top-1/2 left-2 -translate-y-1/2" />
+          <AtIcon className="absolute top-1/2 left-2 -translate-y-1/2" />
           <input
             type="text"
             id="handle"

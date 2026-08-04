@@ -4,8 +4,7 @@ import { Suspense, useActionState } from "react";
 import { Link } from "react-router";
 
 import { useCachedClient, useOAuthClient, useOAuthResult } from "#src/features/auth/index.ts";
-import LoadingDotsIcon from "#src/shared/ui/icon/loading-dots.tsx";
-import LogoutIcon from "#src/shared/ui/icon/logout.tsx";
+import { LoadingDotsIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 export default function Header(): React.ReactElement {
@@ -33,11 +32,9 @@ function Secondary(): React.ReactElement {
   return (
     <>
       {oauthResult && (
-        <Tooltip.Provider>
-          <div className="pointer-events-auto flex items-center">
-            <SignOutButton />
-          </div>
-        </Tooltip.Provider>
+        <div className="pointer-events-auto flex items-center">
+          <SignOutButton />
+        </div>
       )}
     </>
   );

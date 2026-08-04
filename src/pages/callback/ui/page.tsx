@@ -3,7 +3,7 @@ import { Suspense, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { useOAuthResult } from "#src/features/auth/index.ts";
-import LoadingBoxesIcon from "#src/shared/ui/icon/loading-boxes.tsx";
+import { LoadingBoxesIcon } from "#src/shared/ui/icon/index.ts";
 import { Header } from "#src/widgets/header/index.ts";
 
 export default function Page(): React.ReactElement {
