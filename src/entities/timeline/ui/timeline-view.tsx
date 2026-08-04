@@ -1,3 +1,4 @@
+import { asDatetimeString } from "@atproto/lex";
 import React, { use } from "react";
 
 import type { Timeline } from "../model/timeline";
@@ -13,8 +14,8 @@ export function TimelineView({ timeline }: { timeline: Timeline }): React.ReactE
             <span>&emsp;@{post.post.author.handle}</span>
           </div>
           <div>
-            <time dateTime={post.post.indexedAt}>
-              {new Date(post.post.indexedAt).toLocaleString()}
+            <time dateTime={asDatetimeString(post.post.record.createdAt as string)}>
+              {new Date(asDatetimeString(post.post.record.createdAt as string)).toLocaleString()}
             </time>
           </div>
           <p>{post.post.record.text as string}</p>
