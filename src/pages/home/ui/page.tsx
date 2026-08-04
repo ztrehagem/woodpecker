@@ -1,54 +1,39 @@
 import type React from "react";
 import { Suspense, use } from "react";
 
-import {
-  SignInForm,
-  SignOutForm,
-  useOAuthClient,
-  useOAuthResult,
-} from "#src/features/auth/index.ts";
+import { useOAuthClient, useOAuthResult } from "#src/features/auth/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
+import { Header } from "#src/widgets/header/index.ts";
+
+import SignInForm from "./sign-in-form";
 
 export default function Page(): React.ReactElement {
-  const oauthClient = useOAuthClient();
   const oauthResult = useOAuthResult();
 
   return (
-    <>
-      <h1>Woodpecker</h1>
+    <div className="flex min-h-dvh flex-col">
+      <Header />
 
-      <hr />
+      {oauthResult ? <SignedInView /> : <SignedOutView />}
+    </div>
+  );
+}
 
-      {oauthResult ? (
-        <div>
-          <p>
-            You are authenticated as <code>{oauthResult.session.sub}</code>
-          </p>
-          <SignOutForm
-            action={async () => {
-              await oauthClient.revoke(oauthResult.session.sub);
-              location.reload();
-            }}
-          />
+function SignedOutView(): React.ReactElement {
+  const oauthClient = useOAuthClient();
 
-          <hr />
-
-          <ErrorBoundary fallback={<div>Failed to load</div>}>
-            <SignedInView />
-          </ErrorBoundary>
-        </div>
-      ) : (
-        <SignInForm
-          action={async (params) => {
-            await oauthClient.signIn(params.handle, {
-              state: "DUMMY_STATE",
-            });
-          }}
-        />
-      )}
-    </>
+  return (
+    <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
+      <SignInForm
+        action={async (params) => {
+          await oauthClient.signIn(params.handle, {
+            state: "DUMMY_STATE",
+          });
+        }}
+      />
+    </div>
   );
 }
 
@@ -56,9 +41,13 @@ function SignedInView(): React.ReactElement {
   const client = useCachedClient();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProfileView profilePromise={client.getProfile()} />
-    </Suspense>
+    <div>
+      <ErrorBoundary fallback={<div>Failed to load</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProfileView profilePromise={client.getProfile()} />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
   );
 }
 

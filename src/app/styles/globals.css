@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --font-brand: "Edu VIC WA NT Hand", sans-serif;
+}
+
 @layer base {
+  html {
+    @apply font-sans;
+  }
+
   body {
     @apply bg-neutral-800 text-white;
   }
@@ -9,7 +17,7 @@
     @apply text-blue-400;
   }
 
-  a:visited {
+  a:active {
     @apply text-blue-300;
   }
 }
