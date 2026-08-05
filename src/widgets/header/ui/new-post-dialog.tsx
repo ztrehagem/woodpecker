@@ -16,12 +16,12 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const onChangeOpen = (isOpen: boolean) => {
-    if (!isOpen) {
-      if (text.trim().length > 0) {
-        setIsConfirmationOpen(true);
-        return;
-      }
-    }
+    // if (!isOpen) {
+    //   if (text.trim().length > 0) {
+    //     setIsConfirmationOpen(true);
+    //     return;
+    //   }
+    // }
 
     setIsDialogOpen(isOpen);
   };
@@ -37,16 +37,15 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
         return;
       }
 
+      setError(null);
+
       try {
-        setError(null);
         await client.createPost(trimmedText);
         setIsDialogOpen(false);
         setText("");
       } catch (error) {
         setError(error instanceof Error ? error : new Error("Unknown error", { cause: error }));
       }
-
-      setError(null);
     });
   };
 
