@@ -31,12 +31,18 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   const [error, dispatch, isPending] = useActionState<Error | null, FormData>(
     async (_, fd: FormData) => {
       const text = (fd.get("text") as string).trim();
+
+      if (text.length == 0) {
+        return null;
+      }
+
       try {
         await client.createPost(text);
         setIsDialogOpen(false);
       } catch (error) {
         return error instanceof Error ? error : new Error("Unknown error", { cause: error });
       }
+
       return null;
     },
     null,
