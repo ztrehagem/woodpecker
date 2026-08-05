@@ -8,20 +8,22 @@ import MySelfButton from "./my-self-button";
 
 export default function Header(): React.ReactElement {
   return (
-    <header className="pointer-events-none sticky top-0 left-0 z-10 flex h-15 items-stretch justify-between">
-      <h1 className="font-brand text-lg font-medium">
-        <Link
-          to="/"
-          className="pointer-events-auto flex h-full items-center gap-2 rounded-br-xl border-r border-b px-5 text-inherit no-underline backdrop-blur-sm focus-visible:border-blue-400 focus-visible:outline-none"
-        >
-          <img src="/favicon.webp" alt="" width="24" height="24" />
-          Woodpecker
-        </Link>
-      </h1>
+    <header className="pointer-events-none sticky top-0 left-0 z-10">
+      <div className="flex h-15 items-stretch justify-between">
+        <h1 className="font-brand text-lg font-medium">
+          <Link
+            to="/"
+            className="pointer-events-auto flex h-full items-center gap-2 rounded-br-xl border-r border-b px-5 text-inherit no-underline backdrop-blur-sm"
+          >
+            <img src="/favicon.webp" alt="" width="24" height="24" />
+            Woodpecker
+          </Link>
+        </h1>
 
-      <Suspense>
-        <Secondary />
-      </Suspense>
+        <Suspense>
+          <Secondary />
+        </Suspense>
+      </div>
     </header>
   );
 }

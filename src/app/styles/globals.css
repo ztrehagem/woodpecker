@@ -2,6 +2,24 @@
 
 @theme {
   --font-brand: "Edu VIC WA NT Hand", sans-serif;
+
+  --breakpoint-*: initial;
+  --breakpoint-mobile: 425px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1440px;
+  --breakpoint-desktop: 1920px;
+
+  --container-*: initial;
+  --container-mobile: var(--breakpoint-mobile);
+  --container-tablet: var(--breakpoint-tablet);
+  --container-laptop: var(--breakpoint-laptop);
+  --container-desktop: var(--breakpoint-desktop);
+
+  --color-backdrop: var(--color-neutral-800);
+  --color-filling: var(--color-stone-800);
+  --color-highlight: var(--color-stone-700);
+  --color-fg: var(--color-white);
+  --color-fg-muted: var(--color-neutral-400);
 }
 
 @layer base {
@@ -10,7 +28,7 @@
   }
 
   body {
-    @apply bg-neutral-800 text-white;
+    @apply bg-backdrop text-fg;
   }
 
   a {
