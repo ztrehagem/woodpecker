@@ -10,6 +10,7 @@ const oauthClientPromise = import.meta.env.DEV
         "atproto",
         "rpc:app.bsky.actor.getProfile?aud=*",
         "rpc:app.bsky.feed.getTimeline?aud=*",
+        "repo:*",
       ];
       return BrowserOAuthClient.load({
         clientId: `http://localhost?redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(" "))}`,

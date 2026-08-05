@@ -1,9 +1,12 @@
-export { default as AtIcon } from "./at.tsx";
-export { default as LoadingDotsIcon } from "./loading-dots.tsx";
-export { default as LoadingBoxesIcon } from "./loading-boxes.tsx";
-export { default as LoginIcon } from "./login.tsx";
-export { default as LogoutIcon } from "./logout.tsx";
-export { default as PersonIcon } from "./person.tsx";
+export { AtIcon } from "./at.tsx";
+export { LoadingDotsIcon } from "./loading-dots.tsx";
+export { LoadingBoxesIcon } from "./loading-boxes.tsx";
+export { LoginIcon } from "./login.tsx";
+export { LogoutIcon } from "./logout.tsx";
+export { PersonIcon } from "./person.tsx";
 export { CaretRightIcon } from "./caret-right.tsx";
 export { AccountCircleIcon } from "./account-circle.tsx";
 export { SettingsIcon } from "./settings.tsx";
+export { EditNoteIcon } from "./edit-note.tsx";
+export { EditSquareIcon } from "./edit-square.tsx";
+export { SendIcon } from "./send.tsx";

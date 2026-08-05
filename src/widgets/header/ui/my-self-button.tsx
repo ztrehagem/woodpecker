@@ -15,9 +15,9 @@ export default function MySelfButton({
   const profile = use(profilePromise);
   const signOut = useSignOut();
 
-  const separatorClassName = clsx("my-2 border-t border-neutral-400");
+  const separatorClassName = clsx("my-2 border-t border-fg-muted");
   const itemClassName = clsx(
-    "flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit hover:bg-stone-700",
+    "flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit hover:bg-highlight",
   );
 
   return (
@@ -33,7 +33,7 @@ export default function MySelfButton({
       </Menu.Trigger>
       <Menu.Portal className="relative z-50">
         <Menu.Positioner align="end" sideOffset={8}>
-          <Menu.Popup className="relative rounded-md bg-stone-800 py-2 shadow-2xl">
+          <Menu.Popup className="relative rounded-md bg-filling py-2 shadow-2xl">
             <Menu.Item
               className={itemClassName}
               render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}

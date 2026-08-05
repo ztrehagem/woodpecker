@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function AtIcon({ className }: { className?: string }): React.ReactElement {
+export function AtIcon({ className }: { className?: string }): React.ReactElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
