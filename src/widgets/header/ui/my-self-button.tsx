@@ -17,7 +17,7 @@ export default function MySelfButton({
 
   const separatorClassName = clsx("my-2 border-t border-fg-muted");
   const itemClassName = clsx(
-    "hover:bg-highlight flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit",
+    "flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit hover:bg-highlight",
   );
 
   return (

@@ -31,7 +31,7 @@ export default function SignInForm({
       action={dispatch}
       noValidate
       name="signin"
-      className="bg-filling mx-5 my-4 w-full max-w-mobile rounded-2xl px-10 py-8 shadow-2xl"
+      className="mx-5 my-4 w-full max-w-mobile rounded-2xl bg-filling px-10 py-8 shadow-2xl"
     >
       <div className="grid auto-cols-auto">
         <label htmlFor="handle">ユーザー名</label>
@@ -42,9 +42,10 @@ export default function SignInForm({
             type="text"
             id="handle"
             name="handle"
+            autoComplete="username"
             placeholder="user.bsky.social"
             required
-            className="w-full border-b border-white px-3 py-2 pl-10 transition-colors focus-visible:border-blue-400 focus-visible:outline-none"
+            className="w-full border-b border-white px-3 py-2 pl-10 transition-colors"
           />
         </div>
 
@@ -53,7 +54,7 @@ export default function SignInForm({
         <button
           type="submit"
           disabled={isPending}
-          className="relative -mx-3 mt-8 cursor-pointer justify-self-end rounded-full border px-3 py-2 focus-visible:border-blue-400 focus-visible:outline-none"
+          className="relative -mx-3 mt-8 cursor-pointer justify-self-end rounded-full border px-3 py-2"
         >
           {isPending && (
             <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

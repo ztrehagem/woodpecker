@@ -58,7 +58,7 @@ export function TimelineView({ timeline }: { timeline: Timeline }): React.ReactE
                 <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
               </Collapsible.Trigger>
               <Collapsible.Panel>
-                <pre className="bg-filling rounded-e-md px-5 py-4 text-xs whitespace-pre text-fg-muted">
+                <pre className="rounded-e-md bg-filling px-5 py-4 text-xs whitespace-pre text-fg-muted">
                   {JSON.stringify(post, null, 2)}
                 </pre>
               </Collapsible.Panel>

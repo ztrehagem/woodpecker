@@ -7,3 +7,5 @@ export { default as PersonIcon } from "./person.tsx";
 export { CaretRightIcon } from "./caret-right.tsx";
 export { AccountCircleIcon } from "./account-circle.tsx";
 export { SettingsIcon } from "./settings.tsx";
+export { EditNoteIcon } from "./edit-note.tsx";
+export { EditSquareIcon } from "./edit-square.tsx";

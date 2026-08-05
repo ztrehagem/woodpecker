@@ -27,7 +27,7 @@ export function ProfileCard({
 
         <div className="relative px-5 pt-0 pb-6 tablet:px-8">
           <div className="-mt-14 flex flex-wrap items-end gap-4 tablet:-mt-16">
-            <div className="border-filling flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 bg-slate-300 shadow-md tablet:h-28 tablet:w-28">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-filling bg-slate-300 shadow-md tablet:h-28 tablet:w-28">
               {hasAvatar ? (
                 <img src={profile.avatar} alt="avatar" className="h-full w-full object-cover" />
               ) : (
