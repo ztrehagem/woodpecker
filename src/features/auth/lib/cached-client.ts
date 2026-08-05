@@ -1,5 +1,5 @@
 import type { Did } from "@atproto/api";
-import { Client, type AtIdentifierString } from "@atproto/lex";
+import { Client, toDatetimeString, type AtIdentifierString, type CreateOutput } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
 import type { Profile } from "#src/entities/profile/index.ts";
@@ -39,5 +39,12 @@ export class CachedClient {
       this.#timeline = this.#client.call(app.bsky.feed.getTimeline, { limit: 50 });
     }
     return this.#timeline;
+  }
+
+  async createPost(text: string): Promise<CreateOutput> {
+    return await this.#client.create(app.bsky.feed.post, {
+      text,
+      createdAt: toDatetimeString(new Date()),
+    });
   }
 }

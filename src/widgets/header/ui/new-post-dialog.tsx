@@ -2,10 +2,13 @@ import { Dialog, AlertDialog } from "@base-ui/react";
 import clsx from "clsx";
 import React, { useActionState, useRef, useState } from "react";
 
+import { useCachedClient } from "#src/features/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
+  const client = useCachedClient();
+
   const formRef = useRef<HTMLFormElement>(null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -28,9 +31,12 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   const [error, dispatch, isPending] = useActionState<Error | null, FormData>(
     async (_, fd: FormData) => {
       const text = (fd.get("text") as string).trim();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(text);
-      setIsDialogOpen(false);
+      try {
+        await client.createPost(text);
+        setIsDialogOpen(false);
+      } catch (error) {
+        return error instanceof Error ? error : new Error("Unknown error", { cause: error });
+      }
       return null;
     },
     null,

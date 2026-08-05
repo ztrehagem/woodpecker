@@ -16,6 +16,7 @@ export function createAtpClientMetadata(request: Request): OAuthClientMetadataIn
     "atproto",
     "rpc:app.bsky.actor.getProfile?aud=*",
     "rpc:app.bsky.feed.getTimeline?aud=*",
+    "repo:*",
   ];
 
   return {
