@@ -20,6 +20,10 @@
   --color-highlight: var(--color-stone-700);
   --color-fg: var(--color-white);
   --color-fg-muted: var(--color-neutral-400);
+  --color-link: var(--color-blue-400);
+  --color-link-active: var(--color-blue-300);
+  --color-danger: var(--color-red-400);
+  --color-danger-active: var(--color-red-300);
 }
 
 @layer base {
@@ -32,10 +36,10 @@
   }
 
   a {
-    @apply text-blue-400;
+    @apply text-link;
   }
 
   a:active {
-    @apply text-blue-300;
+    @apply text-link-active;
   }
 }

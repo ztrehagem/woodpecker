@@ -2,7 +2,7 @@ import type React from "react";
 
 import css from "./loading-boxes.module.css";
 
-export default function LoadingBoxesIcon(): React.ReactElement {
+export function LoadingBoxesIcon(): React.ReactElement {
   return (
     <svg
       version="1.1"

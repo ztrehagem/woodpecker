@@ -49,7 +49,7 @@ export default function SignInForm({
           />
         </div>
 
-        {error && <p className="mt-2 text-red-400">{error.message}</p>}
+        {error && <p className="mt-2 text-danger">{error.message}</p>}
 
         <button
           type="submit"

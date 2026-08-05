@@ -3,9 +3,10 @@ import { Suspense } from "react";
 import { Link } from "react-router";
 
 import { useCachedClient, useOAuthResult } from "#src/features/auth/index.ts";
+import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 import MySelfButton from "./my-self-button";
-import NewPostButton from "./new-post-button";
+import { NewPostDialog } from "./new-post-dialog";
 
 export default function Header(): React.ReactElement {
   return (
@@ -35,8 +36,20 @@ function Secondary(): React.ReactElement {
     <>
       {oauthResult && (
         <div className="pointer-events-auto flex items-center gap-4 px-5 tablet:-mr-5">
-          <NewPostButton />
-          <MySelfButtonView />
+          <Suspense>
+            <NewPostDialog
+              trigger={
+                <NewPostDialog.Trigger
+                  className="flex size-10 cursor-pointer items-center justify-center"
+                  render={(props) => <button type="button" {...props} />}
+                >
+                  <EditSquareIcon />
+                </NewPostDialog.Trigger>
+              }
+            />
+
+            <MySelfButtonView />
+          </Suspense>
         </div>
       )}
     </>
@@ -47,9 +60,5 @@ function MySelfButtonView(): React.ReactElement {
   const client = useCachedClient();
   const profile = client.getProfile();
 
-  return (
-    <Suspense>
-      <MySelfButton profile={profile} />
-    </Suspense>
-  );
+  return <MySelfButton profile={profile} />;
 }

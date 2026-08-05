@@ -1,8 +1,8 @@
 import type React from "react";
 
-export default function LoadingDotsIcon(): React.ReactElement {
+export function LoadingDotsIcon(props: React.SVGProps<SVGSVGElement>): React.ReactElement {
   return (
-    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" {...props}>
       <circle cx="4" cy="12" r="3">
         <animate
           id="spinner_qFRN"

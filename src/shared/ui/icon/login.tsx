@@ -1,4 +1,4 @@
-export default function LoginIcon(): React.ReactElement {
+export function LoginIcon(): React.ReactElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
