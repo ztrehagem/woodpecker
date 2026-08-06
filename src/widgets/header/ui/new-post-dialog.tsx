@@ -43,6 +43,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
         await client.createPost(trimmedText);
         setIsDialogOpen(false);
         setText("");
+        client.fetchTimeline({ force: true });
       } catch (error) {
         setError(error instanceof Error ? error : new Error("Unknown error", { cause: error }));
       }

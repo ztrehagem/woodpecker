@@ -1,7 +1,7 @@
 import { BrowserOAuthClient } from "@atproto/oauth-client-browser";
 import { use } from "react";
 
-import { CachedClient } from "./cached-client";
+import { LexClient } from "./lex-client";
 
 const oauthClientPromise = import.meta.env.DEV
   ? (() => {
@@ -43,10 +43,10 @@ const cachedClientPromise = oauthResultPromise.then((result) => {
   if (result == null) {
     return null;
   }
-  return new CachedClient(result.session);
+  return new LexClient(result.session);
 });
 
-export function useCachedClient(): CachedClient {
+export function useCachedClient(): LexClient {
   const client = use(cachedClientPromise);
 
   if (client == null) {

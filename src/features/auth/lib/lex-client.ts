@@ -1,27 +1,28 @@
-import type { Did } from "@atproto/api";
 import { Client, toDatetimeString, type AtIdentifierString, type CreateOutput } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
 import type { Profile } from "#src/entities/profile/index.ts";
-import type { Timeline } from "#src/entities/timeline/index.ts";
+import type { FeedViewPost, Timeline } from "#src/entities/timeline/index.ts";
 import { app } from "#src/shared/api/lexicons/index.ts";
+import { Store } from "#src/shared/lib/react/index.ts";
 
-export class CachedClient {
-  readonly #session: OAuthSession;
+interface State {
+  timelineFeed: FeedViewPost[] | null;
+}
+
+export class LexClient extends Store<State> {
+  readonly session: OAuthSession;
   readonly #client: Client;
 
   constructor(session: OAuthSession) {
-    this.#session = session;
+    super({ timelineFeed: null });
+    this.session = session;
     this.#client = new Client(session);
-  }
-
-  get did(): Did {
-    return this.#session.did;
   }
 
   #profiles: Map<AtIdentifierString, Promise<Profile>> = new Map();
 
-  async getProfile(id: AtIdentifierString = this.#session.did): Promise<Profile> {
+  async getProfile(id: AtIdentifierString = this.session.did): Promise<Profile> {
     let profile = this.#profiles.get(id);
 
     if (profile == null) {
@@ -32,13 +33,18 @@ export class CachedClient {
     return profile;
   }
 
-  #timeline: Promise<Timeline> | null = null;
+  #getTimelinePromise: Promise<Timeline> | null = null;
 
-  async getTimeline(): Promise<Timeline> {
-    if (this.#timeline == null) {
-      this.#timeline = this.#client.call(app.bsky.feed.getTimeline, { limit: 50 });
+  fetchTimeline({ limit = 50, force = false }: { limit?: number; force?: boolean } = {}): void {
+    if (this.#getTimelinePromise == null || force) {
+      this.#getTimelinePromise = this.#client.call(app.bsky.feed.getTimeline, { limit });
+
+      this.#getTimelinePromise
+        .then(({ feed }) => {
+          this.setState((state) => ({ ...state, timelineFeed: feed }));
+        })
+        .catch(() => {});
     }
-    return this.#timeline;
   }
 
   async createPost(text: string): Promise<CreateOutput> {

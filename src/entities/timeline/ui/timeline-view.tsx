@@ -6,12 +6,13 @@ import { Link } from "react-router";
 import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
+import type { FeedViewPost } from "../model/feed-view-post";
 import type { Timeline } from "../model/timeline";
 
-export function TimelineView({ timeline }: { timeline: Timeline }): React.ReactElement {
+export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React.ReactElement {
   return (
     <div className="grid grid-cols-1 gap-4">
-      {timeline.feed.map((post) => (
+      {feed.map((post) => (
         <Card key={post.post.uri}>
           <article className="px-5 py-4">
             <img src={post.post.author.avatar} alt="" className="h-10 w-10 rounded-full" />
@@ -77,5 +78,5 @@ TimelineView.Promise = function ({
 }): React.ReactElement {
   const timeline = use(timelinePromise);
 
-  return <TimelineView timeline={timeline} />;
+  return <TimelineView feed={timeline.feed} />;
 };
