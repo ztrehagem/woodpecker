@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { TimelineView, timelineQueryOptions } from "#src/entities/timeline/index.ts";
+import { timelineQuery, TimelineView } from "#src/entities/timeline/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
@@ -11,7 +11,7 @@ export default function SignedInView(): React.ReactElement {
   const client = useCachedClient();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    timelineQueryOptions(client.rpc),
+    timelineQuery(client.rpc),
   );
 
   const feed = data?.pages.flatMap((page) => page.feed);

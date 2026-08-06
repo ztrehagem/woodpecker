@@ -1,4 +1,4 @@
-export { timelineKeys, timelineQueryOptions } from "./api/timeline-query";
+export { timelineQuery, timelineQueryKeys } from "./api/timeline-query";
 export type { Timeline } from "./model/timeline";
 export { TimelineView } from "./ui/timeline-view";
 export type { FeedViewPost } from "./model/feed-view-post";

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import React, { useState } from "react";
 
-import { timelineKeys } from "#src/entities/timeline/index.ts";
+import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
@@ -37,7 +37,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     onSuccess: () => {
       setIsDialogOpen(false);
       setText("");
-      void queryClient.invalidateQueries({ queryKey: timelineKeys.all });
+      void queryClient.invalidateQueries({ queryKey: timelineQueryKeys.all });
     },
   });
 

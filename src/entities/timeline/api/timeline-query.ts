@@ -5,34 +5,34 @@ import { app } from "#src/shared/api/lexicons/index.ts";
 
 import type { Timeline } from "../model/timeline";
 
-export const timelineKeys = {
+export const timelineQueryKeys = {
   all: ["timeline"] as const,
-  list: (limit: number) => [...timelineKeys.all, limit] as const,
+  list: (limit: number) => [...timelineQueryKeys.all, limit] as const,
 };
 
-type TimelineQueryKey = ReturnType<typeof timelineKeys.list>;
-type TimelinePageParam = string | null;
+type QueryKey = ReturnType<typeof timelineQueryKeys.list>;
+type PageParam = string | null;
 
-export function timelineQueryOptions(
+export function timelineQuery(
   rpc: Client,
   limit = 50,
 ): ReturnType<
   typeof infiniteQueryOptions<
     Timeline,
     Error,
-    InfiniteData<Timeline, TimelinePageParam>,
-    TimelineQueryKey,
-    TimelinePageParam
+    InfiniteData<Timeline, PageParam>,
+    QueryKey,
+    PageParam
   >
 > {
   return infiniteQueryOptions<
     Timeline,
     Error,
-    InfiniteData<Timeline, TimelinePageParam>,
-    TimelineQueryKey,
-    TimelinePageParam
+    InfiniteData<Timeline, PageParam>,
+    QueryKey,
+    PageParam
   >({
-    queryKey: timelineKeys.list(limit),
+    queryKey: timelineQueryKeys.list(limit),
     queryFn: ({ pageParam }) =>
       rpc.call(app.bsky.feed.getTimeline, { limit, cursor: pageParam ?? void 0 }),
     initialPageParam: null,
