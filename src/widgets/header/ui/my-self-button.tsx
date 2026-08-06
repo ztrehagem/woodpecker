@@ -1,18 +1,13 @@
 import { Menu } from "@base-ui/react/menu";
 import clsx from "clsx";
-import React, { use } from "react";
+import React from "react";
 import { Link } from "react-router";
 
 import type { Profile } from "#src/entities/profile/index.ts";
 import { useSignOut } from "#src/features/auth/index.ts";
 import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 
-export default function MySelfButton({
-  profile: profilePromise,
-}: {
-  profile: Promise<Profile>;
-}): React.ReactElement {
-  const profile = use(profilePromise);
+export default function MySelfButton({ profile }: { profile: Profile }): React.ReactElement {
   const signOut = useSignOut();
 
   const separatorClassName = clsx("my-2 border-t border-fg-muted");
