@@ -1,11 +1,11 @@
-import { useCachedClient, useOAuthClient } from "./oauth-client";
+import { useSession, useOAuthClient } from "#src/shared/lib/atproto/index.ts";
 
 export function useSignOut(): () => Promise<void> {
   const oauthClient = useOAuthClient();
-  const client = useCachedClient();
+  const session = useSession();
 
   return async () => {
-    await oauthClient.revoke(client.session.did);
+    await oauthClient.revoke(session.did);
     location.assign("/");
     await Promise.race([]); // never resolve, so the page doesn't re-render after the redirect
   };

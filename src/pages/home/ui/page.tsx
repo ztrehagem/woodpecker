@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useOAuthResult } from "#src/features/auth/index.ts";
+import { useOAuthResult } from "#src/shared/lib/atproto/index.ts";
 import { Header } from "#src/widgets/header/index.ts";
 
 import SignedInView from "./signed-in-view";

@@ -1,7 +1,7 @@
-import type { Client } from "@atproto/lex";
 import { infiniteQueryOptions, type InfiniteData } from "@tanstack/react-query";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
+import type { Session } from "#src/shared/lib/atproto/index.ts";
 
 import type { Timeline } from "../model/timeline";
 
@@ -14,7 +14,7 @@ type QueryKey = ReturnType<typeof timelineQueryKeys.list>;
 type PageParam = string | null;
 
 export function timelineQuery(
-  rpc: Client,
+  session: Session,
   limit = 50,
 ): ReturnType<
   typeof infiniteQueryOptions<
@@ -34,7 +34,7 @@ export function timelineQuery(
   >({
     queryKey: timelineQueryKeys.list(limit),
     queryFn: ({ pageParam }) =>
-      rpc.call(app.bsky.feed.getTimeline, { limit, cursor: pageParam ?? void 0 }),
+      session.client.call(app.bsky.feed.getTimeline, { limit, cursor: pageParam ?? void 0 }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.cursor ?? null,
   });

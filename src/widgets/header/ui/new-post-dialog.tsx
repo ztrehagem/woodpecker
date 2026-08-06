@@ -5,12 +5,12 @@ import React, { useState } from "react";
 
 import { createPost } from "#src/entities/post/index.ts";
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
-import { useCachedClient } from "#src/features/auth/index.ts";
+import { useSession } from "#src/shared/lib/atproto/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
-  const client = useCachedClient();
+  const session = useSession();
   const queryClient = useQueryClient();
 
   const [text, setText] = useState("");
@@ -34,7 +34,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     isPending,
     error,
   } = useMutation({
-    mutationFn: (text: string) => createPost(client.rpc, text),
+    mutationFn: (text: string) => createPost(session, text),
     onSuccess: () => {
       setIsDialogOpen(false);
       setText("");

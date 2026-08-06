@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Link } from "react-router";
 
 import { profileQuery } from "#src/entities/profile/index.ts";
-import { useCachedClient, useOAuthResult } from "#src/features/auth/index.ts";
+import { useSession, useOAuthResult } from "#src/shared/lib/atproto/index.ts";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 import MySelfButton from "./my-self-button";
@@ -61,8 +61,8 @@ function Secondary(): React.ReactElement {
 }
 
 function MySelfButtonView(): React.ReactElement {
-  const client = useCachedClient();
-  const { data: profile } = useQuery(profileQuery(client.rpc, client.session.did));
+  const session = useSession();
+  const { data: profile } = useQuery(profileQuery(session, session.did));
 
   return <>{profile && <MySelfButton profile={profile} />}</>;
 }
