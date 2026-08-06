@@ -34,10 +34,7 @@ export function timelineQueryOptions(
   >({
     queryKey: timelineKeys.list(limit),
     queryFn: ({ pageParam }) =>
-      rpc.call(
-        app.bsky.feed.getTimeline,
-        pageParam == null ? { limit } : { limit, cursor: pageParam },
-      ),
+      rpc.call(app.bsky.feed.getTimeline, { limit, cursor: pageParam ?? void 0 }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.cursor ?? null,
   });
