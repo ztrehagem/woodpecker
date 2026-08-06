@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import React, { useState } from "react";
 
+import { createPost } from "#src/entities/post/index.ts";
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
 import { useCachedClient } from "#src/features/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -33,7 +34,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     isPending,
     error,
   } = useMutation({
-    mutationFn: (text: string) => client.createPost(text),
+    mutationFn: (text: string) => createPost(client.rpc, text),
     onSuccess: () => {
       setIsDialogOpen(false);
       setText("");
