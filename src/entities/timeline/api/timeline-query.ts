@@ -1,9 +1,9 @@
 import type { Client } from "@atproto/lex";
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, type InfiniteData } from "@tanstack/react-query";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { Timeline } from "../model/timeline";
 
 export const timelineKeys = {
   all: ["timeline"] as const,
@@ -11,13 +11,34 @@ export const timelineKeys = {
 };
 
 type TimelineQueryKey = ReturnType<typeof timelineKeys.list>;
+type TimelinePageParam = string | null;
 
 export function timelineQueryOptions(
   rpc: Client,
   limit = 50,
-): ReturnType<typeof queryOptions<FeedViewPost[], Error, FeedViewPost[], TimelineQueryKey>> {
-  return queryOptions({
+): ReturnType<
+  typeof infiniteQueryOptions<
+    Timeline,
+    Error,
+    InfiniteData<Timeline, TimelinePageParam>,
+    TimelineQueryKey,
+    TimelinePageParam
+  >
+> {
+  return infiniteQueryOptions<
+    Timeline,
+    Error,
+    InfiniteData<Timeline, TimelinePageParam>,
+    TimelineQueryKey,
+    TimelinePageParam
+  >({
     queryKey: timelineKeys.list(limit),
-    queryFn: async () => (await rpc.call(app.bsky.feed.getTimeline, { limit })).feed,
+    queryFn: ({ pageParam }) =>
+      rpc.call(
+        app.bsky.feed.getTimeline,
+        pageParam == null ? { limit } : { limit, cursor: pageParam },
+      ),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => lastPage.cursor ?? null,
   });
 }
