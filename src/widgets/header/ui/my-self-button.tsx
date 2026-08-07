@@ -10,7 +10,6 @@ import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 export default function MySelfButton({ profile }: { profile: Profile }): React.ReactElement {
   const signOut = useSignOut();
 
-  const separatorClassName = clsx("my-2 border-t border-fg-muted");
   const itemClassName = clsx(
     "flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit hover:bg-highlight",
   );
@@ -41,8 +40,6 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
               <SettingsIcon />
               設定
             </Menu.Item> */}
-
-            <Menu.Separator className={separatorClassName} />
 
             <Menu.Item onClick={signOut} className={itemClassName}>
               <LogoutIcon />
