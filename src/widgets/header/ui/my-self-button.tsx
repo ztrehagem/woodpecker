@@ -1,14 +1,16 @@
 import { Menu } from "@base-ui/react/menu";
 import clsx from "clsx";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 
 import type { Profile } from "#src/entities/profile/index.ts";
+import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 
 import { useSignOut } from "../api/use-sign-out.ts";
 
 export default function MySelfButton({ profile }: { profile: Profile }): React.ReactElement {
+  const [isShowingSignOutConfirmation, setIsShowingSignOutConfirmation] = useState(false);
   const signOut = useSignOut();
 
   const itemClassName = clsx(
@@ -16,39 +18,50 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
   );
 
   return (
-    <Menu.Root>
-      <Menu.Trigger render={(props, _state) => <button type="button" {...props} />}>
-        <img
-          src={profile.avatar}
-          alt={profile.displayName}
-          width="40"
-          height="40"
-          className="cursor-pointer rounded-full"
+    <>
+      <Menu.Root>
+        <Menu.Trigger render={(props, _state) => <button type="button" {...props} />}>
+          <img
+            src={profile.avatar}
+            alt={profile.displayName}
+            width="40"
+            height="40"
+            className="cursor-pointer rounded-full"
+          />
+        </Menu.Trigger>
+        <Menu.Portal className="relative z-50">
+          <Menu.Positioner align="end" sideOffset={8}>
+            <Menu.Popup className="relative rounded-md bg-filling py-2 shadow-2xl">
+              <Menu.Item
+                className={itemClassName}
+                render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}
+              >
+                <AccountCircleIcon />
+                プロフィール
+              </Menu.Item>
+
+              <Menu.Item
+                onClick={() => setIsShowingSignOutConfirmation(true)}
+                className={itemClassName}
+              >
+                <LogoutIcon />
+                ログアウト
+              </Menu.Item>
+            </Menu.Popup>
+          </Menu.Positioner>
+        </Menu.Portal>
+      </Menu.Root>
+      {isShowingSignOutConfirmation && (
+        <AlertDialog
+          open={isShowingSignOutConfirmation}
+          onOpenChange={setIsShowingSignOutConfirmation}
+          onConfirm={signOut}
+          title="ログアウトしますか？"
+          cancel="キャンセル"
+          confirm="ログアウト"
+          destructive
         />
-      </Menu.Trigger>
-      <Menu.Portal className="relative z-50">
-        <Menu.Positioner align="end" sideOffset={8}>
-          <Menu.Popup className="relative rounded-md bg-filling py-2 shadow-2xl">
-            <Menu.Item
-              className={itemClassName}
-              render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}
-            >
-              <AccountCircleIcon />
-              プロフィール
-            </Menu.Item>
-
-            {/* <Menu.Item className={itemClassName}>
-              <SettingsIcon />
-              設定
-            </Menu.Item> */}
-
-            <Menu.Item onClick={signOut} className={itemClassName}>
-              <LogoutIcon />
-              ログアウト
-            </Menu.Item>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>
+      )}
+    </>
   );
 }

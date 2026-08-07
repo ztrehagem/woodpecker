@@ -1,0 +1,90 @@
+import { AlertDialog as Lib } from "@base-ui/react";
+import clsx from "clsx";
+import React, { useState } from "react";
+
+import Card from "./card";
+import { LoadingDotsIcon } from "./icon";
+
+export function AlertDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  title,
+  description,
+  cancel,
+  confirm,
+  destructive = false,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: () => Promise<void> | void;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  cancel: React.ReactNode;
+  confirm: React.ReactNode;
+  destructive?: boolean;
+}): React.ReactElement {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const onClickConfirm = () => {
+    const maybePromise = onConfirm();
+
+    if (maybePromise instanceof Promise) {
+      setIsProcessing(true);
+      maybePromise
+        .catch(() => {})
+        .finally(() => {
+          setIsProcessing(false);
+          onOpenChange(false);
+        });
+    } else {
+      onOpenChange(false);
+    }
+  };
+
+  return (
+    <Lib.Root open={open} onOpenChange={onOpenChange}>
+      <Lib.Portal className="relative z-50">
+        <Lib.Backdrop className="fixed inset-0 bg-backdrop/75" />
+        <Lib.Popup className="fixed top-[calc(50%+1.25rem*var(--nested-dialogs))] left-1/2 -mt-8 flex w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 scale-[calc(1-0.1*var(--nested-dialogs))] flex-col gap-4">
+          <Card>
+            <div className="flex flex-col gap-4 px-5 py-4">
+              <div className="flex flex-col gap-1">
+                <Lib.Title className="text-base font-bold">{title}</Lib.Title>
+                {description != null && (
+                  <Lib.Description className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {description}
+                  </Lib.Description>
+                )}
+              </div>
+              <div className="flex justify-end gap-3">
+                <Lib.Close
+                  disabled={isProcessing}
+                  className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-link select-none active:text-link-active"
+                >
+                  {cancel}
+                </Lib.Close>
+                <button
+                  type="button"
+                  disabled={isProcessing}
+                  className={clsx(
+                    "relative flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-bold whitespace-nowrap select-none",
+                    destructive
+                      ? "text-danger active:text-danger-active"
+                      : "text-link active:text-link-active",
+                  )}
+                  onClick={onClickConfirm}
+                >
+                  <span className={clsx(isProcessing && "invisible")}>{confirm}</span>
+                  {isProcessing && (
+                    <LoadingDotsIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  )}
+                </button>
+              </div>
+            </div>
+          </Card>
+        </Lib.Popup>
+      </Lib.Portal>
+    </Lib.Root>
+  );
+}

@@ -1,10 +1,11 @@
-import { Dialog, AlertDialog } from "@base-ui/react";
+import { Dialog } from "@base-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import React, { useState } from "react";
 
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 
@@ -59,8 +60,8 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     <Dialog.Root open={isDialogOpen} onOpenChange={onChangeOpen}>
       {trigger}
       <Dialog.Portal className="relative z-50">
-        <Dialog.Backdrop className="fixed inset-0 bg-backdrop/50" />
-        <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/50">
+        <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
+        <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
           <div className="mx-auto w-full max-w-tablet">
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
@@ -102,13 +103,18 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
               </div>
             </Card>
 
-            <ConfirmationDialog
+            <AlertDialog
               open={isConfirmationOpen}
               onOpenChange={setIsConfirmationOpen}
               onConfirm={() => {
                 setIsDialogOpen(false);
                 setIsConfirmationOpen(false);
               }}
+              title="ポストを破棄しますか？"
+              description="入力中の内容は保存されません。"
+              cancel="入力に戻る"
+              confirm="破棄する"
+              destructive
             />
           </div>
         </Dialog.Popup>
@@ -118,49 +124,3 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
 }
 
 NewPostDialog.Trigger = Dialog.Trigger;
-
-function ConfirmationDialog({
-  open,
-  onOpenChange,
-  onConfirm,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
-}): React.ReactElement {
-  return (
-    <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
-      <AlertDialog.Portal className="relative z-50">
-        <AlertDialog.Popup className="fixed top-[calc(50%+1.25rem*var(--nested-dialogs))] left-1/2 -mt-8 flex w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 scale-[calc(1-0.1*var(--nested-dialogs))] flex-col gap-4">
-          <Card>
-            <div className="flex flex-col gap-4 px-5 py-4">
-              <div className="flex flex-col gap-1">
-                <AlertDialog.Title className="text-base font-bold">
-                  ポストを破棄しますか？
-                </AlertDialog.Title>
-                <AlertDialog.Description className="text-sm text-neutral-600 dark:text-neutral-400">
-                  入力中の内容は保存されません。
-                </AlertDialog.Description>
-              </div>
-              <div className="flex justify-end gap-3">
-                <AlertDialog.Close className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-link select-none active:text-link-active">
-                  入力に戻る
-                </AlertDialog.Close>
-                <button
-                  type="button"
-                  className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-bold whitespace-nowrap text-danger select-none active:text-danger-active"
-                  onClick={() => {
-                    onOpenChange(false);
-                    onConfirm();
-                  }}
-                >
-                  破棄する
-                </button>
-              </div>
-            </div>
-          </Card>
-        </AlertDialog.Popup>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
-  );
-}
