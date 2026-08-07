@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useOAuthClient } from "#src/shared/auth/index.ts";
+import { useOAuthClient } from "./atproto-context";
 
 export function useSignIn(): (params: { handle: string }) => Promise<void> {
   const oauthClient = useOAuthClient();

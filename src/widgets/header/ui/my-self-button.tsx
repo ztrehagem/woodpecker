@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 
 import type { Profile } from "#src/entities/profile/index.ts";
+import { useSignOut } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
-
-import { useSignOut } from "../api/use-sign-out.ts";
 
 export default function MySelfButton({ profile }: { profile: Profile }): React.ReactElement {
   const [isShowingSignOutConfirmation, setIsShowingSignOutConfirmation] = useState(false);
