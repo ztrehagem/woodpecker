@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Link } from "react-router";
 
 import { profileQuery } from "#src/entities/profile/index.ts";
-import { useSession, useOAuthResult } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession, useSession } from "#src/shared/lib/atproto/index.ts";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 import MySelfButton from "./my-self-button";
@@ -33,10 +33,12 @@ export default function Header(): React.ReactElement {
 }
 
 function Secondary(): React.ReactElement {
-  const oauthResult = useOAuthResult();
+  const session = useSession();
+  const isAuthenticated = session != null;
+
   return (
     <>
-      {oauthResult && (
+      {isAuthenticated && (
         <div className="pointer-events-auto flex items-center gap-4 px-5 tablet:-mr-5">
           <Suspense>
             <NewPostDialog
@@ -61,7 +63,7 @@ function Secondary(): React.ReactElement {
 }
 
 function MySelfButtonView(): React.ReactElement {
-  const session = useSession();
+  const session = useAssertSession();
   const { data: profile } = useQuery(profileQuery(session, session.did));
 
   return <>{profile && <MySelfButton profile={profile} />}</>;

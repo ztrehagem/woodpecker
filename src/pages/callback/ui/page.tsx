@@ -2,7 +2,7 @@ import type React from "react";
 import { Suspense, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
-import { useOAuthResult } from "#src/shared/lib/atproto/index.ts";
+import { useSession } from "#src/shared/lib/atproto/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { Header } from "#src/widgets/header/index.ts";
 
@@ -20,8 +20,8 @@ export default function Page(): React.ReactElement {
 
 function Content(): React.ReactElement {
   const navigate = useNavigate();
-  const oauthResult = useOAuthResult();
-  const isAuthenticated = oauthResult != null;
+  const session = useSession();
+  const isAuthenticated = session != null;
 
   useEffect(() => {
     if (isAuthenticated) {

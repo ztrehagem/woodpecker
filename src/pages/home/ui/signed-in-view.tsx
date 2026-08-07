@@ -2,13 +2,13 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 
 import { timelineQuery, TimelineView } from "#src/entities/timeline/index.ts";
-import { useSession } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession } from "#src/shared/lib/atproto/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 export default function SignedInView(): React.ReactElement {
-  const session = useSession();
+  const session = useAssertSession();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
     timelineQuery(session),

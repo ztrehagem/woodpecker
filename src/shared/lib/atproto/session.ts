@@ -26,7 +26,7 @@ export const sessionPromise = oauthResultPromise.then((result) => {
   return new Session(result.session);
 });
 
-export function useSession(): Session {
+export function useAssertSession(): Session {
   const session = use(sessionPromise);
 
   if (session == null) {
@@ -34,4 +34,8 @@ export function useSession(): Session {
   }
 
   return session;
+}
+
+export function useSession(): Session | null {
+  return use(sessionPromise);
 }

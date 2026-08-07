@@ -1,8 +1,8 @@
-import { useSession, useOAuthClient } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession, useOAuthClient } from "#src/shared/lib/atproto/index.ts";
 
 export function useSignOut(): () => Promise<void> {
   const oauthClient = useOAuthClient();
-  const session = useSession();
+  const session = useAssertSession();
 
   return async () => {
     await oauthClient.revoke(session.did);
