@@ -18,7 +18,6 @@ jobs:
       - uses: pnpm/setup@v1
         with:
           cache: true
-      - run: pnpm install --frozen-lockfile
       - run: pnpm run oxlint
 
   oxfmt:
@@ -28,7 +27,6 @@ jobs:
       - uses: pnpm/setup@v1
         with:
           cache: true
-      - run: pnpm install --frozen-lockfile
       - run: pnpm run oxfmt
 
   depcruise:
@@ -38,7 +36,6 @@ jobs:
       - uses: pnpm/setup@v1
         with:
           cache: true
-      - run: pnpm install --frozen-lockfile
       - run: pnpm run depcruise
 
   steiger:
@@ -48,7 +45,6 @@ jobs:
       - uses: pnpm/setup@v1
         with:
           cache: true
-      - run: pnpm install --frozen-lockfile
       - run: pnpm run steiger
 
   typecheck:
@@ -58,5 +54,4 @@ jobs:
       - uses: pnpm/setup@v1
         with:
           cache: true
-      - run: pnpm install --frozen-lockfile
       - run: pnpm run typecheck

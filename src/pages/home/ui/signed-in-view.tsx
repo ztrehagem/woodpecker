@@ -1,30 +1,44 @@
-import React, { Suspense } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import React from "react";
 
-import { TimelineView } from "#src/entities/timeline/index.ts";
-import { useCachedClient } from "#src/features/auth/index.ts";
+import { timelineQuery, TimelineView } from "#src/entities/timeline/index.ts";
+import { useSession } from "#src/shared/lib/atproto/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 export default function SignedInView(): React.ReactElement {
-  const client = useCachedClient();
+  const session = useSession();
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    timelineQuery(session),
+  );
+
+  const feed = data?.pages.flatMap((page) => page.feed);
 
   return (
     <ErrorBoundary fallback={<div>Failed to load</div>}>
-      <Suspense fallback={<LoadingFallback />}>
-        {/* <div className="py-4">
-          <Container>
-            <ProfileCard.Promise profile={client.getProfile()} />
-          </Container>
-        </div> */}
-
-        <div className="py-4">
-          <Container>
-            <h2 className="mb-4 text-2xl font-bold">Timeline</h2>
-            <TimelineView.Promise timeline={client.getTimeline()} />
-          </Container>
-        </div>
-      </Suspense>
+      <div className="py-4">
+        <Container>
+          {feed ? (
+            <div className="flex flex-col gap-4">
+              <TimelineView feed={feed} />
+              {hasNextPage && (
+                <button
+                  type="button"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="cursor-pointer self-center font-bold text-link active:text-link-active disabled:text-fg-muted"
+                >
+                  {isFetchingNextPage ? "読み込み中…" : "もっと見る"}
+                </button>
+              )}
+            </div>
+          ) : (
+            <LoadingFallback />
+          )}
+        </Container>
+      </div>
     </ErrorBoundary>
   );
 }

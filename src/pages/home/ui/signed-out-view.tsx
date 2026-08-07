@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useOAuthClient } from "#src/features/auth/index.ts";
+import { useOAuthClient } from "#src/shared/lib/atproto/index.ts";
 
 import SignInForm from "./sign-in-form";
 

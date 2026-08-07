@@ -28,10 +28,18 @@ This file guides coding agents working in this repository.
 Before finishing, run relevant checks:
 
 ```bash
-pnpm run lint
+pnpm run oxlint
+pnpm run oxfmt
+pnpm run depcruise
+# Run steiger outside sandbox when possible.
+pnpm run steiger
+pnpm run typecheck
 pnpm run vitest
 pnpm run playwright
 ```
+
+- Do not use `pnpm run lint` as a bundled shortcut; run each pnpm script individually.
+- Prefer running `pnpm run steiger` outside the sandbox.
 
 ## Output Expectations
 

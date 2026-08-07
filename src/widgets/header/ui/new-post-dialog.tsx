@@ -1,16 +1,19 @@
 import { Dialog, AlertDialog } from "@base-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 
-import { useCachedClient } from "#src/features/auth/index.ts";
+import { createPost } from "#src/entities/post/index.ts";
+import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
+import { useSession } from "#src/shared/lib/atproto/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
-  const client = useCachedClient();
+  const session = useSession();
+  const queryClient = useQueryClient();
 
   const [text, setText] = useState("");
-  const [error, setError] = useState<Error | null>(null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -26,27 +29,29 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     setIsDialogOpen(isOpen);
   };
 
-  const [isPending, startTransition] = useTransition();
+  const {
+    mutate: submitPost,
+    isPending,
+    error,
+  } = useMutation({
+    mutationFn: (text: string) => createPost(session, text),
+    onSuccess: () => {
+      setIsDialogOpen(false);
+      setText("");
+      void queryClient.invalidateQueries({ queryKey: timelineQueryKeys.all });
+    },
+  });
 
   const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    startTransition(async () => {
-      const trimmedText = text.trim();
 
-      if (trimmedText.length == 0) {
-        return;
-      }
+    const trimmedText = text.trim();
 
-      setError(null);
+    if (trimmedText.length == 0) {
+      return;
+    }
 
-      try {
-        await client.createPost(trimmedText);
-        setIsDialogOpen(false);
-        setText("");
-      } catch (error) {
-        setError(error instanceof Error ? error : new Error("Unknown error", { cause: error }));
-      }
-    });
+    submitPost(trimmedText);
   };
 
   return (

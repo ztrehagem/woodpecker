@@ -1,8 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import type React from "react";
 import { Suspense } from "react";
 import { Link } from "react-router";
 
-import { useCachedClient, useOAuthResult } from "#src/features/auth/index.ts";
+import { profileQuery } from "#src/entities/profile/index.ts";
+import { useSession, useOAuthResult } from "#src/shared/lib/atproto/index.ts";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 import MySelfButton from "./my-self-button";
@@ -47,7 +49,9 @@ function Secondary(): React.ReactElement {
                 </NewPostDialog.Trigger>
               }
             />
+          </Suspense>
 
+          <Suspense>
             <MySelfButtonView />
           </Suspense>
         </div>
@@ -57,8 +61,8 @@ function Secondary(): React.ReactElement {
 }
 
 function MySelfButtonView(): React.ReactElement {
-  const client = useCachedClient();
-  const profile = client.getProfile();
+  const session = useSession();
+  const { data: profile } = useQuery(profileQuery(session, session.did));
 
-  return <MySelfButton profile={profile} />;
+  return <>{profile && <MySelfButton profile={profile} />}</>;
 }
