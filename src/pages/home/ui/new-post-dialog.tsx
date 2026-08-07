@@ -1,7 +1,7 @@
 import { Dialog } from "@base-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -20,7 +20,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
-  const onChangeOpen = (isOpen: boolean) => {
+  const onChangeOpen = useCallback((isOpen: boolean) => {
     // if (!isOpen) {
     //   if (text.trim().length > 0) {
     //     setIsConfirmationOpen(true);
@@ -29,7 +29,23 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     // }
 
     setIsDialogOpen(isOpen);
-  };
+  }, []);
+
+  useEffect(() => {
+    // Enables closing the dialog with the back gesture / button (Chromium-based browsers).
+    if (!isDialogOpen || typeof CloseWatcher === "undefined") {
+      return;
+    }
+
+    const closeWatcher = new CloseWatcher();
+    closeWatcher.addEventListener("close", () => {
+      onChangeOpen(false);
+    });
+
+    return () => {
+      closeWatcher.destroy();
+    };
+  }, [isDialogOpen, onChangeOpen]);
 
   const {
     mutate: submitPost,
