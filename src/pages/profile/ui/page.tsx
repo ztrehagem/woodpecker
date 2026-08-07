@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { useParams } from "react-router";
 
 import { profileQuery, ProfileCard } from "#src/entities/profile/index.ts";
-import { useSession } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
@@ -26,7 +26,7 @@ export default function Page(): React.ReactElement {
 }
 
 function Content(): React.ReactElement {
-  const client = useSession();
+  const client = useAssertSession();
   const { handle } = useParams();
   const { data: profile } = useQuery(profileQuery(client, handle as AtIdentifierString));
 

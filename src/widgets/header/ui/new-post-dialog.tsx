@@ -3,14 +3,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import React, { useState } from "react";
 
-import { createPost } from "#src/entities/post/index.ts";
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
-import { useSession } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 
+import { createPost } from "../api/create-post";
+
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
-  const session = useSession();
+  const session = useAssertSession();
   const queryClient = useQueryClient();
 
   const [text, setText] = useState("");

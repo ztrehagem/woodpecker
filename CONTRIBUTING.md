@@ -25,8 +25,7 @@ Run locally before opening or updating a PR:
 
 ```bash
 pnpm run lint
-pnpm run vitest
-pnpm run playwright
+pnpm run test
 ```
 
 These checks are also enforced in CI.
@@ -39,18 +38,12 @@ These checks are also enforced in CI.
 
 ## Generated Files
 
-- lexicons.json, files under `lexicons`, and API types under `src/shared/api/lexicons` are generated.
+- These files and directories are generated:
+  - /lexicons.json
+  - /lexicons/
+  - /src/shared/api/lexicons/
 - Do not hand-edit generated outputs unless there is a clear reason.
-- Regenerate with:
-
-```bash
-# add new lexicon
-pnpm run lexicon:install <lexicon name>
-# regenerate types
-pnpm run lexicon:build
-```
-
-See also: https://www.npmjs.com/package/@atproto/lex
+- Regenerate with: `pnpm run prepare`
 
 ## Commit Message Guidance
 

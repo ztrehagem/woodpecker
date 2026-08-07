@@ -2,13 +2,4 @@ import fsd from "@feature-sliced/steiger-plugin";
 // ./steiger.config.js
 import { defineConfig } from "steiger";
 
-export default defineConfig([
-  ...fsd.configs.recommended,
-  {
-    // disable the `public-api` rule for files in the Shared layer
-    files: ["./src/**"],
-    rules: {
-      "fsd/insignificant-slice": "off",
-    },
-  },
-]);
+export default defineConfig([...fsd.configs.recommended]);

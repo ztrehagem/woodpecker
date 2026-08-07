@@ -1,0 +1,6 @@
+export const scopes = [
+  "atproto",
+  "rpc:app.bsky.actor.getProfile?aud=*",
+  "rpc:app.bsky.feed.getTimeline?aud=*",
+  "repo:*",
+];

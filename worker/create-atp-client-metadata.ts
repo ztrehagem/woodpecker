@@ -1,5 +1,7 @@
 import type { OAuthClientMetadataInput } from "@atproto/oauth-client-browser";
 
+import { scopes } from "#shared/atproto/scope.ts";
+
 const allowedOrigins = [
   /^https:\/\/woodpecker\.ztrehagem\.app$/,
   /^https:\/\/.*-woodpecker\.ztrehagem\.workers\.dev$/,
@@ -11,13 +13,6 @@ export function createAtpClientMetadata(request: Request): OAuthClientMetadataIn
   if (!allowedOrigins.some((pattern) => pattern.test(url.origin))) {
     return null;
   }
-
-  const scopes = [
-    "atproto",
-    "rpc:app.bsky.actor.getProfile?aud=*",
-    "rpc:app.bsky.feed.getTimeline?aud=*",
-    "repo:*",
-  ];
 
   return {
     client_id: `${url.origin}/atp-client-metadata.json`,
