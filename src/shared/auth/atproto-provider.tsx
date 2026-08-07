@@ -1,4 +1,5 @@
 import type { BrowserOAuthClient } from "@atproto/oauth-client-browser";
+import React from "react";
 
 import {
   OAuthClientContext,
