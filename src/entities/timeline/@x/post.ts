@@ -1,1 +1,1 @@
-export { timelineQueryKeys } from "../api/timeline-query";
+export { useInvalidateTimelineQuery } from "../api/timeline-query";

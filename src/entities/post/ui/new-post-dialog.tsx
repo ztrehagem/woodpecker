@@ -1,9 +1,9 @@
 import { Dialog } from "@base-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { timelineQueryKeys } from "#src/entities/timeline/@x/post.ts";
+import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
@@ -13,7 +13,7 @@ import { createPost } from "../api/create-post";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
   const session = useAssertSession();
-  const queryClient = useQueryClient();
+  const invalidateTimelineQuery = useInvalidateTimelineQuery();
 
   const [text, setText] = useState("");
 
@@ -56,7 +56,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     onSuccess: () => {
       setIsDialogOpen(false);
       setText("");
-      void queryClient.invalidateQueries({ queryKey: timelineQueryKeys.all });
+      void invalidateTimelineQuery();
     },
   });
 

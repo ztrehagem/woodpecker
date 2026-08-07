@@ -1,16 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { Link } from "react-router";
 
 import { NewPostDialog } from "#src/entities/post/index.ts";
-import { profileQuery } from "#src/entities/profile/index.ts";
+import { useProfileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 export function NewPostArea(): React.ReactElement {
   const session = useAssertSession();
-  const { data: profile } = useQuery(profileQuery(session, session.did));
+  const { data: profile } = useProfileQuery(session, session.did);
 
   return (
     <Card>
