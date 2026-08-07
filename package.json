@@ -11,9 +11,7 @@
   "scripts": {
     "prepare": "pnpm run lexicon:ci && pnpm run lexicon:build",
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "pnpm run prepare && pnpm run build && vite preview",
-    "deploy": "pnpm run prepare && pnpm run build && wrangler deploy",
+    "build": "vite build",
     "lint": "pnpm run --aggregate-output '/^(oxlint|oxfmt|depcruise|steiger|typecheck)$/'",
     "fix": "pnpm run oxlint:fix && pnpm run oxfmt:fix",
     "oxlint": "oxlint",
@@ -25,6 +23,7 @@
     "steiger": "steiger src",
     "steiger:watch": "steiger src --watch",
     "typecheck": "tsc -b --noEmit",
+    "test": "pnpm run vitest && pnpm run playwright",
     "vitest": "vitest run",
     "vitest:dev": "vitest",
     "playwright": "playwright test",

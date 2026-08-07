@@ -17,10 +17,7 @@ This file guides coding agents working in this repository.
 ## Special Rules
 
 - Treat `src/shared/api/lexicons` as generated output.
-- For project layout and layer decisions, consult `.copilot/skills/fsd-layers/SKILL.md`.
-- For OAuth-related changes, validate both:
-  - Browser OAuth client behavior
-  - Worker endpoint for `atp-client-metadata.json`
+- For project layout and layer decisions under `src`, consult `.agents/skills/feature-sliced-design/SKILL.md`.
 - Keep local callback compatibility with `127.0.0.1` behavior.
 
 ## Validation Checklist
@@ -38,8 +35,7 @@ pnpm run vitest
 pnpm run playwright
 ```
 
-- Do not use `pnpm run lint` as a bundled shortcut; run each pnpm script individually.
-- Prefer running `pnpm run steiger` outside the sandbox.
+- Prefer running outside the sandbox.
 
 ## Output Expectations
 
