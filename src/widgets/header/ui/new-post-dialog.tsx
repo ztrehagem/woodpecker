@@ -4,7 +4,7 @@ import clsx from "clsx";
 import React, { useState } from "react";
 
 import { timelineQueryKeys } from "#src/entities/timeline/index.ts";
-import { useAssertSession } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 

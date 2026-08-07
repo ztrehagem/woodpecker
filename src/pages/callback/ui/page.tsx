@@ -2,7 +2,7 @@ import type React from "react";
 import { Suspense, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
-import { useSession } from "#src/shared/lib/atproto/index.ts";
+import { useSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { Header } from "#src/widgets/header/index.ts";
 

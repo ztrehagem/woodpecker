@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Link } from "react-router";
 
 import { profileQuery } from "#src/entities/profile/index.ts";
-import { useAssertSession, useSession } from "#src/shared/lib/atproto/index.ts";
+import { useAssertSession, useSession } from "#src/shared/auth/index.ts";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
 import MySelfButton from "./my-self-button";

@@ -1,7 +1,7 @@
 import { infiniteQueryOptions, type InfiniteData } from "@tanstack/react-query";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
-import type { Session } from "#src/shared/lib/atproto/index.ts";
+import type { Session } from "#src/shared/auth/index.ts";
 
 import type { Timeline } from "../model/timeline";
 

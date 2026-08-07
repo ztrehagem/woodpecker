@@ -1,7 +1,7 @@
 import { BrowserOAuthClient } from "@atproto/oauth-client-browser";
 
 import { scopes } from "#shared/atproto/scope.ts";
-import { Session, type OAuthResult } from "#src/shared/lib/atproto/index.ts";
+import { Session, type OAuthResult } from "#src/shared/auth/index.ts";
 
 export const oauthClientPromise: Promise<BrowserOAuthClient> = import.meta.env.DEV
   ? (() => {

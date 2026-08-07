@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useSession } from "#src/shared/lib/atproto/index.ts";
+import { useSession } from "#src/shared/auth/index.ts";
 import { Header } from "#src/widgets/header/index.ts";
 
 import SignedInView from "./signed-in-view";

@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router/dom";
 
 import "../styles/globals.css";
-import { AtProtoProvider } from "#src/shared/lib/atproto/index.ts";
+import { AtProtoProvider } from "#src/shared/auth/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 
 import { router } from "../routes";
