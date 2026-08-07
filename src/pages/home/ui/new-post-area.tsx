@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { Link } from "react-router";
 
+import { NewPostDialog } from "#src/entities/post/index.ts";
 import { profileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
 
-import { NewPostDialog } from "./new-post-dialog";
-
-export function NewPostButton(): React.ReactElement {
+export function NewPostArea(): React.ReactElement {
   const session = useAssertSession();
   const { data: profile } = useQuery(profileQuery(session, session.did));
 
@@ -16,13 +16,15 @@ export function NewPostButton(): React.ReactElement {
     <Card>
       <div className="flex items-center gap-4 px-5 py-4">
         {profile ? (
-          <img
-            src={profile.avatar}
-            alt={profile.displayName}
-            width="40"
-            height="40"
-            className="rounded-full"
-          />
+          <Link to={`/profile/${profile.handle}`} className="shrink-0">
+            <img
+              src={profile.avatar}
+              alt={profile.displayName}
+              width="40"
+              height="40"
+              className="rounded-full"
+            />
+          </Link>
         ) : (
           <div className="h-10 w-10 rounded-full bg-highlight" />
         )}
