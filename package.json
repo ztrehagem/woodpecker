@@ -5,7 +5,8 @@
   "imports": {
     "#/*": "./*",
     "#src/*": "./src/*",
-    "#worker/*": "./worker/*"
+    "#worker/*": "./worker/*",
+    "#shared/*": "./shared/*"
   },
   "scripts": {
     "prepare": "pnpm run lexicon:ci && pnpm run lexicon:build",

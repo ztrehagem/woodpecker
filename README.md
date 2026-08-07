@@ -39,17 +39,11 @@ pnpm run deploy       # manual deploy (not regular use)
 
 ## Project Layout
 
-Following [Feature-Sliced Design (FSD)](https://feature-sliced.design/) and file/directory structure is checked by Steiger.
+This repository is organized around three main layers:
 
-Current layers in this repository:
-
-- `src/app`: app entrypoint and router
-- `src/pages`: route-level pages
-- `src/widgets`: reusable, self-contained UI blocks
-- `src/features`: main interactions that users care to do
-- `src/entities`: domain concepts and related model/ui
-- `src/shared`: a foundation for the rest of the app
-- `worker`: Cloudflare Worker
+- `src`: frontend application code. The structure inside `src` follows Feature-Sliced Design (FSD); for conventions on layer placement and import rules, see [.agents/skills/feature-sliced-design/SKILL.md](.agents/skills/feature-sliced-design/SKILL.md).
+- `worker`: Cloudflare Worker entrypoints and server-side runtime logic.
+- `shared`: cross-cutting code reused by both the frontend and the worker, such as utilities, AT Protocol helpers, and shared types.
 
 ## Quality Gates
 
