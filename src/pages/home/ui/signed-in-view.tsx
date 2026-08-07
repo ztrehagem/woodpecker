@@ -7,6 +7,8 @@ import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
+import { NewPostButton } from "./new-post-button";
+
 export default function SignedInView(): React.ReactElement {
   const session = useAssertSession();
 
@@ -18,7 +20,11 @@ export default function SignedInView(): React.ReactElement {
 
   return (
     <ErrorBoundary fallback={<div>Failed to load</div>}>
-      <div className="py-4">
+      <div className="flex flex-col gap-4 py-4">
+        <Container>
+          <NewPostButton />
+        </Container>
+
         <Container>
           {feed ? (
             <div className="flex flex-col gap-4">
