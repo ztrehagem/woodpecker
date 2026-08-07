@@ -43,3 +43,6 @@ dist-ssr
 # AT Protocol
 /lexicons/
 /src/shared/api/lexicons/
+
+# vite-plugin-pwa
+/dev-dist/
