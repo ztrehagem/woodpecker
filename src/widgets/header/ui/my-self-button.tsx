@@ -13,7 +13,7 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
   const signOut = useSignOut();
 
   const itemClassName = clsx(
-    "flex cursor-pointer items-center gap-2 px-5 py-2 text-inherit hover:bg-highlight",
+    "flex cursor-pointer items-center gap-2 px-5 py-3 text-inherit hover:bg-highlight",
   );
 
   return (
@@ -30,7 +30,7 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
         </Menu.Trigger>
         <Menu.Portal className="relative z-50">
           <Menu.Positioner align="end" sideOffset={8}>
-            <Menu.Popup className="relative rounded-md bg-filling py-2 shadow-2xl">
+            <Menu.Popup className="relative rounded-md border py-2 shadow-2xl backdrop-blur-sm">
               <Menu.Item
                 className={itemClassName}
                 render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}

@@ -1,9 +1,8 @@
 import { AlertDialog as Lib } from "@base-ui/react";
-import clsx from "clsx";
 import React, { useState } from "react";
 
 import Card from "./card";
-import { LoadingDotsIcon } from "./icon";
+import { NakedButton } from "./naked-button";
 
 export function AlertDialog({
   open,
@@ -61,25 +60,19 @@ export function AlertDialog({
                 <Lib.Close
                   disabled={isProcessing}
                   className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-link select-none active:text-link-active"
+                  render={(props) => <NakedButton {...props} />}
                 >
                   {cancel}
                 </Lib.Close>
-                <button
-                  type="button"
+                <NakedButton
+                  severity={destructive ? "destructive" : "primary"}
+                  emphasize
+                  processing={isProcessing}
                   disabled={isProcessing}
-                  className={clsx(
-                    "relative flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-bold whitespace-nowrap select-none",
-                    destructive
-                      ? "text-danger active:text-danger-active"
-                      : "text-link active:text-link-active",
-                  )}
                   onClick={onClickConfirm}
                 >
-                  <span className={clsx(isProcessing && "invisible")}>{confirm}</span>
-                  {isProcessing && (
-                    <LoadingDotsIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                  )}
-                </button>
+                  {confirm}
+                </NakedButton>
               </div>
             </div>
           </Card>

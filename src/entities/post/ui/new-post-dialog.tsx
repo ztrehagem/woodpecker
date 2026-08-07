@@ -1,13 +1,13 @@
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import clsx from "clsx";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
-import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
+import { SendIcon } from "#src/shared/ui/icon/index.ts";
+import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { createPost } from "../api/create-post";
 
@@ -83,13 +83,6 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
               <div className="flex flex-col gap-4 px-5 py-4">
                 <div className="flex justify-between gap-4">
                   <h2 className="font-bold">ポスト</h2>
-
-                  <Dialog.Close
-                    className="cursor-pointer text-link active:text-link-active"
-                    render={(props) => <button type="button" {...props} />}
-                  >
-                    キャンセル
-                  </Dialog.Close>
                 </div>
 
                 <textarea
@@ -102,20 +95,24 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
 
                 {error && <p className="text-danger">{error.message}</p>}
 
-                <button
-                  type="button"
-                  onClick={onClickSubmit}
-                  disabled={isPending}
-                  className="relative cursor-pointer self-end font-bold text-link active:text-link-active"
-                >
-                  <span className={clsx("flex items-center gap-2", isPending && "invisible")}>
+                <div className="-mx-2 flex justify-between gap-4">
+                  <Dialog.Close
+                    render={(props) => <NakedButton severity="destructive" {...props} />}
+                  >
+                    キャンセル
+                  </Dialog.Close>
+
+                  <NakedButton
+                    onClick={onClickSubmit}
+                    disabled={isPending}
+                    severity="primary"
+                    emphasize
+                    processing={isPending}
+                  >
                     送信
                     <SendIcon />
-                  </span>
-                  {isPending && (
-                    <LoadingDotsIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                  )}
-                </button>
+                  </NakedButton>
+                </div>
               </div>
             </Card>
 

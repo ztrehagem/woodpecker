@@ -40,7 +40,7 @@ function Secondary(): React.ReactElement {
           <NewPostDialog
             trigger={
               <NewPostDialog.Trigger
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 font-bold"
+                className="flex h-10 cursor-pointer items-center justify-center font-bold"
                 render={(props) => <button type="button" {...props} />}
               >
                 <EditSquareIcon />

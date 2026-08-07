@@ -6,6 +6,7 @@ import { useProfileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { EditSquareIcon } from "#src/shared/ui/icon/index.ts";
+import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 export function NewPostArea(): React.ReactElement {
   const session = useAssertSession();
@@ -30,10 +31,7 @@ export function NewPostArea(): React.ReactElement {
 
         <NewPostDialog
           trigger={
-            <NewPostDialog.Trigger
-              className="flex h-10 cursor-pointer items-center justify-center gap-2 font-bold text-link active:text-link-active"
-              render={(props) => <button type="button" {...props} />}
-            >
+            <NewPostDialog.Trigger render={(props) => <NakedButton emphasize {...props} />}>
               <EditSquareIcon />
               <span>New post</span>
             </NewPostDialog.Trigger>
