@@ -1,10 +1,9 @@
 import type { AtIdentifierString } from "@atproto/lex";
-import { useQuery } from "@tanstack/react-query";
 import type React from "react";
 import { Suspense } from "react";
 import { useParams } from "react-router";
 
-import { profileQuery, ProfileCard } from "#src/entities/profile/index.ts";
+import { ProfileCard, useProfileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
@@ -28,7 +27,7 @@ export default function Page(): React.ReactElement {
 function Content(): React.ReactElement {
   const client = useAssertSession();
   const { handle } = useParams();
-  const { data: profile } = useQuery(profileQuery(client, handle as AtIdentifierString));
+  const { data: profile } = useProfileQuery(client, handle as AtIdentifierString);
 
   return (
     <div className="py-4">

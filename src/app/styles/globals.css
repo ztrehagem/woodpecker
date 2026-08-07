@@ -15,7 +15,7 @@
   --container-laptop: var(--breakpoint-laptop);
   --container-desktop: var(--breakpoint-desktop);
 
-  --color-backdrop: var(--color-neutral-800);
+  --color-backdrop: var(--color-neutral-900);
   --color-filling: var(--color-stone-800);
   --color-highlight: var(--color-stone-700);
   --color-fg: var(--color-white);

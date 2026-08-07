@@ -1,4 +1,4 @@
-import { useAssertSession, useOAuthClient } from "#src/shared/auth/index.ts";
+import { useAssertSession, useOAuthClient } from "./atproto-context";
 
 export function useSignOut(): () => Promise<void> {
   const oauthClient = useOAuthClient();

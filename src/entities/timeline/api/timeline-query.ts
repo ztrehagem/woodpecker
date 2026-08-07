@@ -1,4 +1,10 @@
-import { infiniteQueryOptions, type InfiniteData } from "@tanstack/react-query";
+import {
+  infiniteQueryOptions,
+  useInfiniteQuery,
+  useQueryClient,
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from "@tanstack/react-query";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
@@ -38,4 +44,19 @@ export function timelineQuery(
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.cursor ?? null,
   });
+}
+
+export function useTimelineQuery(
+  session: Session,
+  limit = 50,
+): UseInfiniteQueryResult<InfiniteData<Timeline, PageParam>> {
+  return useInfiniteQuery(timelineQuery(session, limit));
+}
+
+export function useInvalidateTimelineQuery(): () => Promise<void> {
+  const queryClient = useQueryClient();
+
+  return async () => {
+    await queryClient.invalidateQueries({ queryKey: timelineQueryKeys.all });
+  };
 }

@@ -1,7 +1,7 @@
-import clsx from "clsx";
 import { useActionState } from "react";
 
-import { AtIcon, LoadingDotsIcon, LoginIcon } from "#src/shared/ui/icon/index.ts";
+import { AtIcon, LoginIcon } from "#src/shared/ui/icon/index.ts";
+import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 interface FormParams {
   readonly handle: string;
@@ -51,21 +51,12 @@ export default function SignInForm({
 
         {error && <p className="mt-2 text-danger">{error.message}</p>}
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="relative -mx-3 mt-8 cursor-pointer justify-self-end rounded-full border px-3 py-2"
-        >
-          {isPending && (
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <LoadingDotsIcon />
-            </span>
-          )}
-          <span className={clsx("flex items-center gap-2", isPending && "invisible")}>
+        <div className="-mx-2 flex justify-end gap-4 pt-4">
+          <NakedButton disabled={isPending} processing={isPending} emphasize>
             <LoginIcon />
             ログイン
-          </span>
-        </button>
+          </NakedButton>
+        </div>
       </div>
     </form>
   );

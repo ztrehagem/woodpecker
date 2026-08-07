@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useSignIn } from "../api/use-sign-in";
+import { useSignIn } from "#src/shared/auth/index.ts";
+
 import SignInForm from "./sign-in-form";
 
 export default function SignedOutView(): React.ReactElement {

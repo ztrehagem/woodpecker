@@ -28,14 +28,13 @@ Before finishing, run relevant checks:
 pnpm run oxlint
 pnpm run oxfmt
 pnpm run depcruise
-# Run steiger outside sandbox when possible.
 pnpm run steiger
 pnpm run typecheck
 pnpm run vitest
 pnpm run playwright
 ```
 
-- Prefer running outside the sandbox.
+- Prefer to run steiger, vitest, and playwright outside the sandbox. Ask the user if needed.
 
 ## Output Expectations
 
