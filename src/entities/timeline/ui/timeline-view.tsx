@@ -56,7 +56,7 @@ function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
           <img src={post.post.author.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full" />
 
           <div className="grow">
-            <div className="grid auto-cols-auto grid-flow-col items-center justify-start gap-2">
+            <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
                 to={`/profile/${post.post.author.handle}`}
                 className="font-bold text-inherit hover:underline"
