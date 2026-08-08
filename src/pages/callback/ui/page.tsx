@@ -23,8 +23,8 @@ export default function Page(): React.ReactElement {
       ) : (
         <div className="grid grow grid-cols-1 grid-rows-1 place-items-center px-5 py-4">
           <div className="flex flex-col items-center gap-3">
-            <p>ログインに失敗しました</p>
-            <Link to="/">ホームに戻る</Link>
+            <p>Failed to login</p>
+            <Link to="/">Go back to home</Link>
           </div>
         </div>
       )}

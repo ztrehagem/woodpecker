@@ -5,14 +5,13 @@ import { NewPostDialog } from "#src/entities/post/index.ts";
 import { useProfileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
-import { EditSquareIcon } from "#src/shared/ui/icon/edit-square.tsx";
-import { HomeIcon } from "#src/shared/ui/icon/home.tsx";
+import { EditSquareIcon, HomeIcon } from "#src/shared/ui/icon/index.ts";
 
 import { MyMenu } from "./my-menu";
 
 export function SignedInHeader(): React.ReactElement {
   return (
-    <header className="pointer-events-none sticky top-0 left-0 z-10">
+    <header className="pointer-events-none sticky top-0 left-0 z-10 bg-backdrop/50 backdrop-blur-sm">
       <Container>
         <div className="flex h-15 items-stretch justify-between">
           <h1 className="flex items-center font-brand text-lg font-medium">

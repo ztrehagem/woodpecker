@@ -36,7 +36,7 @@ export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
                 render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}
               >
                 <AccountCircleIcon />
-                プロフィール
+                Profile
               </Menu.Item>
 
               <Menu.Item
@@ -44,7 +44,7 @@ export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
                 className={itemClassName}
               >
                 <LogoutIcon />
-                ログアウト
+                Logout
               </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>
@@ -56,9 +56,9 @@ export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
           open={isShowingSignOutConfirmation}
           onOpenChange={setIsShowingSignOutConfirmation}
           onConfirm={signOut}
-          title="ログアウトしますか？"
-          cancel="キャンセル"
-          confirm="ログアウト"
+          title="Are you sure you want to log out?"
+          cancel="Cancel"
+          confirm="Logout"
           destructive
         />
       )}

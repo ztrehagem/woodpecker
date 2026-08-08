@@ -11,11 +11,13 @@ export default function Layout(): React.ReactElement {
     <div className="flex min-h-dvh flex-col">
       <Header />
 
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingFallback />}>
-          <Outlet />
-        </Suspense>
-      </ErrorBoundary>
+      <div className="grid grow grid-cols-1">
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingFallback />}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
     </div>
   );
 }

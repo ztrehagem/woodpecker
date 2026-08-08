@@ -82,12 +82,12 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
                 <div className="flex justify-between gap-4">
-                  <h2 className="font-bold">ポスト</h2>
+                  <h2 className="font-bold">New post</h2>
                 </div>
 
                 <textarea
                   name="text"
-                  placeholder="最近どう？"
+                  placeholder="What's on your mind?"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   className="w-full bg-highlight px-3 py-2 inset-shadow-sm"
@@ -99,7 +99,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
                   <Dialog.Close
                     render={(props) => <NakedButton severity="destructive" {...props} />}
                   >
-                    キャンセル
+                    Cancel
                   </Dialog.Close>
 
                   <NakedButton
@@ -109,7 +109,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
                     emphasize
                     processing={isPending}
                   >
-                    送信
+                    Send
                     <SendIcon />
                   </NakedButton>
                 </div>
