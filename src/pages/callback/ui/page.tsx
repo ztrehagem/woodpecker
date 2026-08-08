@@ -1,24 +1,11 @@
 import type React from "react";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { useSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
-import { Header } from "#src/widgets/header/index.ts";
 
 export default function Page(): React.ReactElement {
-  return (
-    <div className="flex min-h-dvh flex-col">
-      <Header />
-
-      <Suspense fallback={<LoadingFallback />}>
-        <Content />
-      </Suspense>
-    </div>
-  );
-}
-
-function Content(): React.ReactElement {
   const navigate = useNavigate();
   const session = useSession();
   const isAuthenticated = session != null;
