@@ -15,6 +15,9 @@
   --container-laptop: var(--breakpoint-laptop);
   --container-desktop: var(--breakpoint-desktop);
 
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: calc(1 / 0.625);
+
   --color-backdrop: var(--color-neutral-900);
   --color-filling: var(--color-stone-800);
   --color-highlight: var(--color-stone-700);

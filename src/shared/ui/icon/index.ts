@@ -10,3 +10,8 @@ export { SettingsIcon } from "./settings.tsx";
 export { EditNoteIcon } from "./edit-note.tsx";
 export { EditSquareIcon } from "./edit-square.tsx";
 export { SendIcon } from "./send.tsx";
+export { ReplyIcon } from "./reply.tsx";
+export { RepeatIcon } from "./repeat.tsx";
+export { QuoteIcon } from "./quote.tsx";
+export { LikeIcon } from "./like.tsx";
+export { BookmarkIcon } from "./bookmark.tsx";
