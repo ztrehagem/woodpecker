@@ -99,17 +99,19 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
               </div>
             </dl>
 
-            <Collapsible.Root className="flex flex-col">
-              <Collapsible.Trigger className="group inline-flex cursor-pointer items-center text-2xs text-fg-muted">
-                Show raw data
-                <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
-              </Collapsible.Trigger>
-              <Collapsible.Panel>
-                <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
-                  {JSON.stringify(post, null, 2)}
-                </pre>
-              </Collapsible.Panel>
-            </Collapsible.Root>
+            {import.meta.env.DEV && (
+              <Collapsible.Root className="flex flex-col">
+                <Collapsible.Trigger className="group inline-flex cursor-pointer items-center text-2xs text-fg-muted">
+                  Show raw data
+                  <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
+                </Collapsible.Trigger>
+                <Collapsible.Panel>
+                  <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
+                    {JSON.stringify(post, null, 2)}
+                  </pre>
+                </Collapsible.Panel>
+              </Collapsible.Root>
+            )}
           </div>
         </div>
       </article>
