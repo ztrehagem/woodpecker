@@ -8,7 +8,7 @@ import { useSignOut } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 
-export default function MySelfButton({ profile }: { profile: Profile }): React.ReactElement {
+export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
   const [isShowingSignOutConfirmation, setIsShowingSignOutConfirmation] = useState(false);
   const signOut = useSignOut();
 
@@ -50,6 +50,7 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
           </Menu.Positioner>
         </Menu.Portal>
       </Menu.Root>
+
       {isShowingSignOutConfirmation && (
         <AlertDialog
           open={isShowingSignOutConfirmation}
