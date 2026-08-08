@@ -4,6 +4,7 @@ import React from "react";
 import { LoadingDotsIcon } from "./icon";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
+  type?: "button" | "submit";
   severity?: "primary" | "plain" | "destructive";
   emphasize?: boolean;
   processing?: boolean;
@@ -11,6 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function NakedButton({
+  type = "button",
   severity = "primary",
   emphasize = false,
   processing = false,
@@ -20,7 +22,7 @@ export function NakedButton({
 }: Props): React.ReactElement {
   return (
     <button
-      type="button"
+      type={type}
       disabled={disabled}
       {...props}
       className={clsx("relative h-8 cursor-pointer px-2", {

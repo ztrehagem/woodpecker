@@ -52,7 +52,7 @@ export default function SignInForm({
         {error && <p className="mt-2 text-danger">{error.message}</p>}
 
         <div className="-mx-2 flex justify-end gap-4 pt-4">
-          <NakedButton disabled={isPending} processing={isPending} emphasize>
+          <NakedButton type="submit" disabled={isPending} processing={isPending} emphasize>
             <LoginIcon />
             ログイン
           </NakedButton>
