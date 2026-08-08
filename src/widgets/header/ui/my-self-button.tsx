@@ -30,7 +30,7 @@ export default function MySelfButton({ profile }: { profile: Profile }): React.R
         </Menu.Trigger>
         <Menu.Portal className="relative z-50">
           <Menu.Positioner align="end" sideOffset={8}>
-            <Menu.Popup className="relative rounded-md border py-2 shadow-2xl backdrop-blur-sm">
+            <Menu.Popup className="relative rounded-md border bg-filling/75 py-2 shadow-2xl backdrop-blur-sm">
               <Menu.Item
                 className={itemClassName}
                 render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}
