@@ -31,10 +31,10 @@ export default function SignInForm({
       action={dispatch}
       noValidate
       name="signin"
-      className="mx-5 my-4 w-full max-w-mobile rounded-2xl bg-filling px-10 py-8 shadow-2xl"
+      className="w-full max-w-mobile rounded-2xl bg-filling px-10 py-8 shadow-2xl"
     >
       <div className="grid auto-cols-auto">
-        <label htmlFor="handle">ユーザー名</label>
+        <label htmlFor="handle">Handle</label>
 
         <div className="relative">
           <AtIcon className="absolute top-1/2 left-2 -translate-y-1/2" />
@@ -54,7 +54,7 @@ export default function SignInForm({
         <div className="-mx-2 flex justify-end gap-4 pt-4">
           <NakedButton type="submit" disabled={isPending} processing={isPending} emphasize>
             <LoginIcon />
-            ログイン
+            Login
           </NakedButton>
         </div>
       </div>

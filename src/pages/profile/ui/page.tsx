@@ -1,34 +1,17 @@
 import type { AtIdentifierString } from "@atproto/lex";
 import type React from "react";
-import { Suspense } from "react";
 import { useParams } from "react-router";
 
 import { ProfileCard, useProfileQuery } from "#src/entities/profile/index.ts";
 import { TimelineView } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
-import ErrorBoundary from "#src/shared/ui/error-boundary.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
-import { Header } from "#src/widgets/header/index.ts";
 
 import { useAuthorFeedQuery } from "../api/author-feed-query.ts";
 
 export default function Page(): React.ReactElement {
-  return (
-    <div className="flex min-h-dvh flex-col">
-      <Header />
-
-      <ErrorBoundary fallback={<div>Failed to load profile.</div>}>
-        <Suspense fallback={<LoadingFallback />}>
-          <Content />
-        </Suspense>
-      </ErrorBoundary>
-    </div>
-  );
-}
-
-function Content(): React.ReactElement {
   const session = useAssertSession();
   const { handle } = useParams();
   const actor = handle as AtIdentifierString;

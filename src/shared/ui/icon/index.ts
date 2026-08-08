@@ -15,3 +15,4 @@ export { RepeatIcon } from "./repeat.tsx";
 export { QuoteIcon } from "./quote.tsx";
 export { LikeIcon } from "./like.tsx";
 export { BookmarkIcon } from "./bookmark.tsx";
+export { HomeIcon } from "./home.tsx";
