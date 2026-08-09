@@ -8,7 +8,7 @@ import type { Thread, ThreadGate } from "../model/post";
 
 const postQueryKeys = {
   all: ["posts"] as const,
-  detail: (uri: AtUriString, depth: number, parentHeight: number) =>
+  detail: (uri: AtUriString, depth?: number, parentHeight?: number) =>
     [...postQueryKeys.all, uri, depth, parentHeight] as const,
 };
 
@@ -24,8 +24,8 @@ function postQuery(
     depth,
     parentHeight,
   }: {
-    depth: number;
-    parentHeight: number;
+    depth?: number;
+    parentHeight?: number;
   },
 ) {
   return queryOptions<Output>({
