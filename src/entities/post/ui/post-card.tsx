@@ -15,93 +15,115 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { Post } from "../model/post";
 import { EmbedView } from "./embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
-export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
-  const datetimeString = asDatetimeString(post.post.record.createdAt as string);
+export function PostCard({ post }: { post: Post }): React.ReactElement {
+  const datetimeString = asDatetimeString(post.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
-  const text = "text" in post.post.record ? (post.post.record.text as string) : "";
-  const facets =
-    "facets" in post.post.record ? (post.post.record.facets as RichTextProps["facets"]) : void 0;
+  const link = extractLink(post);
+
+  const displayName =
+    post.author.displayName == null || post.author.displayName == ""
+      ? post.author.handle
+      : post.author.displayName;
+
+  const text = "text" in post.record ? (post.record.text as string) : "";
+  const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
   const richText = new RichText({ text, facets });
 
   return (
     <Card>
-      <article className="px-5 py-4">
+      <article className="relative px-5 py-4 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight">
+        <Link
+          to={link ?? ""}
+          aria-label="View post"
+          data-view-post-link
+          className="absolute inset-0 block"
+        ></Link>
+
         <div className="flex gap-2">
-          <img src={post.post.author.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full" />
+          <Link
+            to={`/profile/${post.author.handle}`}
+            className="h-10 w-10 shrink-0 overflow-clip rounded-full"
+          >
+            <img src={post.author.avatar} alt="" className="size-full" />
+          </Link>
 
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={`/profile/${post.post.author.handle}`}
-                className="font-bold text-inherit hover:underline"
+                to={`/profile/${post.author.handle}`}
+                className="relative font-bold wrap-anywhere text-inherit hover:underline"
               >
-                {post.post.author.displayName}
+                {displayName}
               </Link>
 
-              <div className="text-xs">@{post.post.author.handle}</div>
+              <div className="text-xs wrap-anywhere">@{post.author.handle}</div>
 
-              <Tooltip side="top" tooltip={<span className="text-xs">{datetimeLocaleString}</span>}>
+              <Tooltip
+                side="top"
+                className="relative"
+                tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
+              >
                 <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
                   {timeAgo(date)}
                 </time>
               </Tooltip>
             </div>
 
-            <p className="font-light whitespace-pre-line">
+            <p className="whitespace-pre-line">
               {Array.from(richText.segments()).map((segment, index) => (
                 <RichTextSegmentView key={index} segment={segment} />
               ))}
             </p>
 
-            {post.post.embed && <EmbedView embed={post.post.embed} />}
+            {post.embed && <EmbedView embed={post.embed} />}
 
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
               <div className="flex items-center gap-x-1">
                 <dt>
                   <ReplyIcon aria-label="Replies" className="size-4" />
                 </dt>
-                <dd>{post.post.replyCount}</dd>
+                <dd>{post.replyCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <RepeatIcon aria-label="Reposts" className="size-4" />
                 </dt>
-                <dd>{post.post.repostCount}</dd>
+                <dd>{post.repostCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <QuoteIcon aria-label="Quotes" className="size-4" />
                 </dt>
-                <dd>{post.post.quoteCount}</dd>
+                <dd>{post.quoteCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <LikeIcon aria-label="Likes" className="size-4" />
                 </dt>
-                <dd>{post.post.likeCount}</dd>
+                <dd>{post.likeCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <BookmarkIcon aria-label="Bookmarks" className="size-4" />
                 </dt>
-                <dd>{post.post.bookmarkCount}</dd>
+                <dd>{post.bookmarkCount}</dd>
               </div>
             </dl>
 
             {import.meta.env.DEV && (
-              <Collapsible.Root className="flex flex-col">
-                <Collapsible.Trigger className="group inline-flex cursor-pointer items-center text-2xs text-fg-muted">
+              <Collapsible.Root className="flex flex-col items-start">
+                <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                   Show raw data
                   <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
                 </Collapsible.Trigger>
@@ -117,4 +139,19 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
       </article>
     </Card>
   );
+}
+
+function extractLink(post: Post): string | null {
+  const matches = post.uri.match(/at:\/\/([^/]+)\/([^/]+)\/([^/]+)/);
+
+  const [, did, nsid, key] = matches ?? [];
+
+  const isBskyPost = nsid === "app.bsky.feed.post" && key != null;
+  const isMatchAuthor = did === post.author.did;
+
+  if (isBskyPost && isMatchAuthor) {
+    return `/profile/${post.author.handle}/post/${key}`;
+  }
+
+  return null;
 }

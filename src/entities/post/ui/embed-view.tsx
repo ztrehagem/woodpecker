@@ -2,13 +2,9 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { Post } from "../model/post";
 
-export function EmbedView({
-  embed,
-}: {
-  embed: NonNullable<FeedViewPost["post"]["embed"]>;
-}): React.ReactElement {
+export function EmbedView({ embed }: { embed: NonNullable<Post["embed"]> }): React.ReactElement {
   switch (embed.$type) {
     case "app.bsky.embed.external#view":
       return <ExternalEmbedView embed={embed as app.bsky.embed.external.View} />;
@@ -36,7 +32,7 @@ function ExternalEmbedView({ embed }: { embed: app.bsky.embed.external.View }): 
   const thumb = external.thumb;
 
   return (
-    <div className="relative my-3 flex flex-col overflow-hidden rounded-md border border-highlight bg-highlight tablet:flex-row">
+    <div className="relative my-3 flex flex-col overflow-hidden rounded-md border border-filling bg-highlight tablet:flex-row">
       <div className="flex flex-1 flex-col gap-1 px-3 py-2">
         <a
           href={external.uri}
@@ -76,7 +72,7 @@ function GalleryEmbedView({ embed }: { embed: app.bsky.embed.gallery.View }): Re
             key={index}
             href={image.fullsize}
             target="_blank"
-            className="overflow-hidden rounded-md border border-highlight"
+            className="relative overflow-hidden rounded-md border border-filling"
           >
             <img src={image.thumbnail} alt={image.alt} className="h-60 w-60 object-cover" />
           </a>
@@ -95,7 +91,7 @@ function ImagesEmbedView({ embed }: { embed: app.bsky.embed.images.View }): Reac
             key={index}
             href={image.fullsize}
             target="_blank"
-            className="mx-auto block w-max max-w-full overflow-hidden rounded-md border border-highlight"
+            className="relative mx-auto block w-max max-w-full overflow-hidden rounded-md border border-filling"
           >
             <img src={image.thumb} alt={image.alt} className="max-h-90 w-max object-contain" />
           </a>
@@ -111,7 +107,7 @@ function ImagesEmbedView({ embed }: { embed: app.bsky.embed.images.View }): Reac
           key={index}
           href={image.fullsize}
           target="_blank"
-          className="overflow-hidden rounded-md border border-highlight"
+          className="relative overflow-hidden rounded-md border border-filling"
         >
           <img src={image.thumb} alt={image.alt} className="h-60 w-full object-cover" />
         </a>
@@ -125,14 +121,14 @@ function RecordEmbedView({ embed }: { embed: app.bsky.embed.record.View }): Reac
 
   if (!record || record.$type !== "app.bsky.embed.record#viewRecord") {
     return (
-      <div className="my-3 rounded-md border border-highlight px-3 py-2 text-sm text-fg-muted">
+      <div className="my-3 rounded-md border border-filling px-3 py-2 text-sm text-fg-muted">
         Embedded record
       </div>
     );
   }
 
   return (
-    <div className="my-3 rounded-md border border-highlight px-3 py-2">
+    <div className="my-3 rounded-md border border-filling px-3 py-2">
       <div className="text-sm font-semibold">
         {record.author.displayName ?? record.author.handle}
       </div>

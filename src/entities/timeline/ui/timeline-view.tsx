@@ -1,15 +1,18 @@
 import React, { use } from "react";
 
+import { PostCard } from "#src/entities/post/@x/timeline.ts";
+
 import type { FeedViewPost } from "../model/feed-view-post";
 import type { Timeline } from "../model/timeline";
-import { PostCard } from "./post-card";
 
 export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React.ReactElement {
   return (
     <div className="grid grid-cols-1 gap-4">
-      {feed.map((post) => (
-        <PostCard key={post.post.uri} post={post} />
-      ))}
+      {feed
+        .filter((post) => post.reply?.parent == null)
+        .map((post) => (
+          <PostCard key={post.post.uri} post={post.post} />
+        ))}
     </div>
   );
 }
