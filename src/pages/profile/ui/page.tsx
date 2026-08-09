@@ -37,8 +37,10 @@ export default function Page(): React.ReactElement {
   if (feed) {
     authorFeedContent = (
       <div className="flex flex-col gap-4">
-        {feed.length > 0 ? <TimelineView feed={feed} /> : <p>投稿はありません。</p>}
+        {feed.length > 0 ? <TimelineView feed={feed} /> : <p>No posts.</p>}
+
         {authorFeedError && <p className="text-danger">{authorFeedError.message}</p>}
+
         {hasNextPage && (
           <div className="self-center">
             <NakedButton
@@ -47,7 +49,7 @@ export default function Page(): React.ReactElement {
               processing={isFetchingNextPage}
               emphasize
             >
-              もっと見る
+              Load more
             </NakedButton>
           </div>
         )}

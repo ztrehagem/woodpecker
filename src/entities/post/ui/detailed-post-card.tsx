@@ -15,6 +15,7 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 
 import type { Post } from "../model/post";
+import { fallbackDisplayName } from "./display-name";
 import { EmbedView } from "./embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
@@ -24,10 +25,7 @@ export function DetailedPostCard({ post }: { post: Post }): React.ReactElement {
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
-  const displayName =
-    post.author.displayName == null || post.author.displayName == ""
-      ? post.author.handle
-      : post.author.displayName;
+  const displayName = fallbackDisplayName(post.author.displayName, post.author.handle);
 
   const text = "text" in post.record ? (post.record.text as string) : "";
   const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;

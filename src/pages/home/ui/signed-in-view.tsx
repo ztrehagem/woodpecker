@@ -33,7 +33,7 @@ export default function SignedInView(): React.ReactElement {
                   processing={isFetchingNextPage}
                   emphasize
                 >
-                  もっと見る
+                  Load more
                 </NakedButton>
               </div>
             )}
