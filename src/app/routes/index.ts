@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
         Component: lazy(() => import("#src/pages/profile/index.ts")),
       },
       {
-        path: "/post/:uri",
+        path: "/profile/:handle/post/:postId",
         Component: lazy(() => import("#src/pages/post/index.ts")),
       },
       {

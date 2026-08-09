@@ -15,40 +15,41 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { Post } from "../model/post";
 import { EmbedView } from "./embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
-export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
-  const datetimeString = asDatetimeString(post.post.record.createdAt as string);
+export function PostCard({ post }: { post: Post }): React.ReactElement {
+  const datetimeString = asDatetimeString(post.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
-  const text = "text" in post.post.record ? (post.post.record.text as string) : "";
-  const facets =
-    "facets" in post.post.record ? (post.post.record.facets as RichTextProps["facets"]) : void 0;
+  const link = extractLink(post);
+
+  const text = "text" in post.record ? (post.record.text as string) : "";
+  const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
   const richText = new RichText({ text, facets });
 
   return (
     <Card>
       <article className="px-5 py-4">
         <div className="flex gap-2">
-          <img src={post.post.author.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full" />
+          <img src={post.author.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full" />
 
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={`/profile/${post.post.author.handle}`}
+                to={`/profile/${post.author.handle}`}
                 className="font-bold text-inherit hover:underline"
               >
-                {post.post.author.displayName ?? post.post.author.handle}
+                {post.author.displayName ?? post.author.handle}
               </Link>
 
-              <div className="text-xs">@{post.post.author.handle}</div>
+              <div className="text-xs">@{post.author.handle}</div>
 
               <Tooltip side="top" tooltip={<span className="text-xs">{datetimeLocaleString}</span>}>
-                <Link to={`/post/${encodeURIComponent(post.post.uri)}`} className="hover:underline">
+                <Link to={link ?? ""} className="hover:underline">
                   <time
                     dateTime={datetimeString}
                     className="flex items-center text-xs text-fg-muted"
@@ -65,42 +66,42 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
               ))}
             </p>
 
-            {post.post.embed && <EmbedView embed={post.post.embed} />}
+            {post.embed && <EmbedView embed={post.embed} />}
 
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
               <div className="flex items-center gap-x-1">
                 <dt>
                   <ReplyIcon aria-label="Replies" className="size-4" />
                 </dt>
-                <dd>{post.post.replyCount}</dd>
+                <dd>{post.replyCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <RepeatIcon aria-label="Reposts" className="size-4" />
                 </dt>
-                <dd>{post.post.repostCount}</dd>
+                <dd>{post.repostCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <QuoteIcon aria-label="Quotes" className="size-4" />
                 </dt>
-                <dd>{post.post.quoteCount}</dd>
+                <dd>{post.quoteCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <LikeIcon aria-label="Likes" className="size-4" />
                 </dt>
-                <dd>{post.post.likeCount}</dd>
+                <dd>{post.likeCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <BookmarkIcon aria-label="Bookmarks" className="size-4" />
                 </dt>
-                <dd>{post.post.bookmarkCount}</dd>
+                <dd>{post.bookmarkCount}</dd>
               </div>
             </dl>
 
@@ -122,4 +123,19 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
       </article>
     </Card>
   );
+}
+
+function extractLink(post: Post): string | null {
+  const matches = post.uri.match(/at:\/\/([^/]+)\/([^/]+)\/([^/]+)/);
+
+  const [, did, nsid, key] = matches ?? [];
+
+  const isBskyPost = nsid === "app.bsky.feed.post" && key != null;
+  const isMatchAuthor = did === post.author.did;
+
+  if (isBskyPost && isMatchAuthor) {
+    return `/profile/${post.author.handle}/post/${key}`;
+  }
+
+  return null;
 }

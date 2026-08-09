@@ -2,13 +2,9 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { Post } from "../model/post";
 
-export function EmbedView({
-  embed,
-}: {
-  embed: NonNullable<FeedViewPost["post"]["embed"]>;
-}): React.ReactElement {
+export function EmbedView({ embed }: { embed: NonNullable<Post["embed"]> }): React.ReactElement {
   switch (embed.$type) {
     case "app.bsky.embed.external#view":
       return <ExternalEmbedView embed={embed as app.bsky.embed.external.View} />;
