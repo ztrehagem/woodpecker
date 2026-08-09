@@ -72,7 +72,7 @@ function GalleryEmbedView({ embed }: { embed: app.bsky.embed.gallery.View }): Re
             key={index}
             href={image.fullsize}
             target="_blank"
-            className="overflow-hidden rounded-md border border-filling"
+            className="relative overflow-hidden rounded-md border border-filling"
           >
             <img src={image.thumbnail} alt={image.alt} className="h-60 w-60 object-cover" />
           </a>
@@ -91,7 +91,7 @@ function ImagesEmbedView({ embed }: { embed: app.bsky.embed.images.View }): Reac
             key={index}
             href={image.fullsize}
             target="_blank"
-            className="mx-auto block w-max max-w-full overflow-hidden rounded-md border border-filling"
+            className="relative mx-auto block w-max max-w-full overflow-hidden rounded-md border border-filling"
           >
             <img src={image.thumb} alt={image.alt} className="max-h-90 w-max object-contain" />
           </a>
@@ -107,7 +107,7 @@ function ImagesEmbedView({ embed }: { embed: app.bsky.embed.images.View }): Reac
           key={index}
           href={image.fullsize}
           target="_blank"
-          className="overflow-hidden rounded-md border border-filling"
+          className="relative overflow-hidden rounded-md border border-filling"
         >
           <img src={image.thumb} alt={image.alt} className="h-60 w-full object-cover" />
         </a>

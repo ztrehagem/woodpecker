@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
-import { PostCard } from "#src/entities/post/@x/timeline.ts";
+import { DetailedPostCard, PostCard } from "#src/entities/post/index.ts";
 import { usePostQuery, type Thread, type ThreadViewPost } from "#src/entities/post/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
@@ -38,7 +38,9 @@ function Content({ thread }: { thread: Thread }): React.ReactElement {
       return (
         <div>
           <Parent parent={parent} />
-          <PostCard post={post} />
+          <ScrollIntoViewOnMount>
+            <DetailedPostCard post={post} />
+          </ScrollIntoViewOnMount>
           <Replies replies={replies} />
         </div>
       );
@@ -55,6 +57,22 @@ function Content({ thread }: { thread: Thread }): React.ReactElement {
         </div>
       );
   }
+}
+
+function ScrollIntoViewOnMount({ children }: { children: React.ReactNode }): React.ReactElement {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView();
+    }
+  }, []);
+
+  return (
+    <div ref={ref} className="scroll-mt-15">
+      {children}
+    </div>
+  );
 }
 
 type ParentNode = NonNullable<ThreadViewPost["parent"]>;
