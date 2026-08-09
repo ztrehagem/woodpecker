@@ -42,7 +42,7 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
                 to={`/profile/${post.post.author.handle}`}
                 className="font-bold text-inherit hover:underline"
               >
-                {post.post.author.displayName}
+                {post.post.author.displayName ?? post.post.author.handle}
               </Link>
 
               <div className="text-xs">@{post.post.author.handle}</div>
@@ -59,7 +59,7 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
               </Tooltip>
             </div>
 
-            <p className="font-light whitespace-pre-line">
+            <p className="whitespace-pre-line">
               {Array.from(richText.segments()).map((segment, index) => (
                 <RichTextSegmentView key={index} segment={segment} />
               ))}
