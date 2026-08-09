@@ -8,9 +8,11 @@ import type { Timeline } from "../model/timeline";
 export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React.ReactElement {
   return (
     <div className="grid grid-cols-1 gap-4">
-      {feed.map((post) => (
-        <PostCard key={post.post.uri} post={post.post} />
-      ))}
+      {feed
+        .filter((post) => post.reply?.parent == null)
+        .map((post) => (
+          <PostCard key={post.post.uri} post={post.post} />
+        ))}
     </div>
   );
 }
