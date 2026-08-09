@@ -27,6 +27,11 @@ export function PostCard({ post }: { post: Post }): React.ReactElement {
 
   const link = extractLink(post);
 
+  const displayName =
+    post.author.displayName == null || post.author.displayName == ""
+      ? post.author.handle
+      : post.author.displayName;
+
   const text = "text" in post.record ? (post.record.text as string) : "";
   const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
   const richText = new RichText({ text, facets });
@@ -43,7 +48,7 @@ export function PostCard({ post }: { post: Post }): React.ReactElement {
                 to={`/profile/${post.author.handle}`}
                 className="font-bold text-inherit hover:underline"
               >
-                {post.author.displayName ?? post.author.handle}
+                {displayName}
               </Link>
 
               <div className="text-xs">@{post.author.handle}</div>
