@@ -48,9 +48,14 @@ export function PostCard({ post }: { post: FeedViewPost }): React.ReactElement {
               <div className="text-xs">@{post.post.author.handle}</div>
 
               <Tooltip side="top" tooltip={<span className="text-xs">{datetimeLocaleString}</span>}>
-                <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
-                  {timeAgo(date)}
-                </time>
+                <Link to={`/post/${encodeURIComponent(post.post.uri)}`} className="hover:underline">
+                  <time
+                    dateTime={datetimeString}
+                    className="flex items-center text-xs text-fg-muted"
+                  >
+                    {timeAgo(date)}
+                  </time>
+                </Link>
               </Tooltip>
             </div>
 
