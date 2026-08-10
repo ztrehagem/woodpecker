@@ -22,16 +22,15 @@ export function SignedInHeader(): React.ReactElement {
             <Link
               to="/"
               className="flex size-10 items-center justify-center text-inherit no-underline"
-              aria-label="Woodpecker"
-              aria-description="Go to home"
             >
-              <HomeIcon />
+              <HomeIcon aria-label="Home" />
             </Link>
           </div>
 
           <h1 className="flex items-center">
             <button
               type="button"
+              aria-label="Scroll to top"
               onClick={scrollToTop}
               className="flex cursor-pointer items-center gap-2 font-brand text-sm font-medium"
             >
