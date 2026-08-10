@@ -15,7 +15,7 @@ test("renders external embeds", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: "https://example.test/avatar.png",
+        avatar: void 0,
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -57,7 +57,7 @@ test("renders embedded record post content", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: "https://example.test/avatar.png",
+        avatar: void 0,
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -79,7 +79,7 @@ test("renders embedded record post content", async () => {
             did: "did:plc:embed",
             handle: "bob.test",
             displayName: "Bob",
-            avatar: "https://example.test/avatar.png",
+            avatar: void 0,
           },
           indexedAt: "2024-01-02T00:00:00.000Z",
           replyCount: 0,
@@ -116,7 +116,7 @@ test("renders nested embeds inside embedded record posts", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: "https://example.test/avatar.png",
+        avatar: void 0,
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -134,8 +134,9 @@ test("renders nested embeds inside embedded record posts", async () => {
             text: "Embedded post",
             createdAt: "2024-01-02T00:00:00.000Z",
             embed: {
-              $type: "app.bsky.embed.external#view",
+              $type: "app.bsky.embed.external",
               external: {
+                $type: "app.bsky.embed.external#external",
                 uri: "https://example.com/embedded",
                 title: "Embedded Link",
                 description: "An embedded link",
@@ -146,8 +147,18 @@ test("renders nested embeds inside embedded record posts", async () => {
             did: "did:plc:embed",
             handle: "bob.test",
             displayName: "Bob",
-            avatar: "https://example.test/avatar.png",
+            avatar: void 0,
           },
+          embeds: [
+            {
+              $type: "app.bsky.embed.external#view",
+              external: {
+                uri: "https://example.com/embedded",
+                title: "Embedded Link",
+                description: "An embedded link",
+              },
+            },
+          ],
           indexedAt: "2024-01-02T00:00:00.000Z",
           replyCount: 0,
           repostCount: 0,
