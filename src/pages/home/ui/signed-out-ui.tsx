@@ -5,7 +5,7 @@ import Container from "#src/shared/ui/container.tsx";
 
 import SignInForm from "./sign-in-form";
 
-export default function SignedOutView(): React.ReactElement {
+export default function SignedOutUI(): React.ReactElement {
   const signIn = useSignIn();
 
   return (

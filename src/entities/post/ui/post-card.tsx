@@ -1,9 +1,10 @@
-import { RichText, type RichTextProps } from "@atproto/api";
+import { RichText } from "@atproto/api";
 import { asDatetimeString } from "@atproto/lex";
 import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import {
   BookmarkIcon,
@@ -16,32 +17,39 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { Post, PostReason, PostReasonRepost } from "../model/post";
+import { buildPostHref } from "./build-post-href";
 import { fallbackDisplayName } from "./display-name";
-import { EmbedView } from "./embed-view";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { EmbedUI } from "./embeds/embed-ui";
+import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
 export function PostCard({
-  post,
+  postView,
   reason,
   pinned = false,
 }: {
-  post: Post;
-  reason?: PostReason;
+  postView: app.bsky.feed.defs.PostView;
+  reason?: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned?: boolean;
 }): React.ReactElement {
-  const datetimeString = asDatetimeString(post.record.createdAt as string);
+  const post =
+    postView.record.$type === "app.bsky.feed.post"
+      ? (postView.record as app.bsky.feed.post.Main)
+      : null;
+
+  if (!post) {
+    return <></>;
+  }
+
+  const datetimeString = asDatetimeString(post.createdAt);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
-  const link = extractLink(post);
+  const link = buildPostHref(postView);
 
-  const displayName = fallbackDisplayName(post.author.displayName, post.author.handle);
+  const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
-  const text = "text" in post.record ? (post.record.text as string) : "";
-  const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
-  const richText = new RichText({ text, facets });
+  const richText = new RichText({ text: post.text, facets: post.facets });
 
   return (
     <Card>
@@ -57,22 +65,22 @@ export function PostCard({
 
         <div className="flex gap-2">
           <Link
-            to={`/profile/${post.author.handle}`}
+            to={`/profile/${postView.author.handle}`}
             className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
-            <img src={post.author.avatar} alt="" className="size-full" />
+            <img src={postView.author.avatar} alt="" className="size-full" />
           </Link>
 
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={`/profile/${post.author.handle}`}
+                to={`/profile/${postView.author.handle}`}
                 className="relative font-bold wrap-anywhere text-inherit hover:underline"
               >
                 {displayName}
               </Link>
 
-              <div className="text-xs wrap-anywhere">@{post.author.handle}</div>
+              <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
               <Tooltip
                 side="top"
@@ -85,48 +93,50 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            <p className="whitespace-pre-line">
-              {Array.from(richText.segments()).map((segment, index) => (
-                <RichTextSegmentView key={index} segment={segment} />
-              ))}
-            </p>
+            {post.text.length > 0 && (
+              <p className="whitespace-pre-line">
+                {Array.from(richText.segments()).map((segment, index) => (
+                  <RichTextSegmentUI key={index} segment={segment} />
+                ))}
+              </p>
+            )}
 
-            {post.embed && <EmbedView embed={post.embed} />}
+            {postView.embed && <EmbedUI embed={postView.embed} />}
 
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
               <div className="flex items-center gap-x-1">
                 <dt>
                   <ReplyIcon aria-label="Replies" className="size-4" />
                 </dt>
-                <dd>{post.replyCount}</dd>
+                <dd>{postView.replyCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <RepeatIcon aria-label="Reposts" className="size-4" />
                 </dt>
-                <dd>{post.repostCount}</dd>
+                <dd>{postView.repostCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <QuoteIcon aria-label="Quotes" className="size-4" />
                 </dt>
-                <dd>{post.quoteCount}</dd>
+                <dd>{postView.quoteCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <LikeIcon aria-label="Likes" className="size-4" />
                 </dt>
-                <dd>{post.likeCount}</dd>
+                <dd>{postView.likeCount}</dd>
               </div>
 
               <div className="flex items-center gap-x-1">
                 <dt>
                   <BookmarkIcon aria-label="Bookmarks" className="size-4" />
                 </dt>
-                <dd>{post.bookmarkCount}</dd>
+                <dd>{postView.bookmarkCount}</dd>
               </div>
             </dl>
 
@@ -150,26 +160,11 @@ export function PostCard({
   );
 }
 
-function extractLink(post: Post): string | null {
-  const matches = post.uri.match(/at:\/\/([^/]+)\/([^/]+)\/([^/]+)/);
-
-  const [, did, nsid, key] = matches ?? [];
-
-  const isBskyPost = nsid === "app.bsky.feed.post" && key != null;
-  const isMatchAuthor = did === post.author.did;
-
-  if (isBskyPost && isMatchAuthor) {
-    return `/profile/${post.author.handle}/post/${key}`;
-  }
-
-  return null;
-}
-
 function PostReasonBlock({
   reason,
   pinned,
 }: {
-  reason: PostReason;
+  reason: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned: boolean;
 }): React.ReactElement | null {
   if (pinned) {
@@ -178,7 +173,7 @@ function PostReasonBlock({
 
   switch (reason?.$type) {
     case "app.bsky.feed.defs#reasonRepost":
-      return <PostReasonBlockRepost reason={reason as PostReasonRepost} />;
+      return <PostReasonBlockRepost reason={reason as app.bsky.feed.defs.ReasonRepost} />;
     case "app.bsky.feed.defs#reasonPin":
       return <PostReasonBlockPinned />;
     default:
@@ -194,7 +189,11 @@ function PostReasonBlockPinned(): React.ReactElement {
     </div>
   );
 }
-function PostReasonBlockRepost({ reason }: { reason: PostReasonRepost }): React.ReactElement {
+function PostReasonBlockRepost({
+  reason,
+}: {
+  reason: app.bsky.feed.defs.ReasonRepost;
+}): React.ReactElement {
   return (
     <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
       <RepeatIcon className="size-4" />

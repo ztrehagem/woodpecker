@@ -33,6 +33,10 @@ dist-ssr
 # depcruise
 /dependency-graph.svg
 
+# Vitest
+/.vitest-attachments/
+__screenshots__/
+
 # Playwright
 /test-results/
 /playwright-report/

@@ -6,7 +6,6 @@ import {
   type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
 
-import type { Timeline } from "#src/entities/timeline/index.ts";
 import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
@@ -18,12 +17,13 @@ const authorFeedQueryKeys = {
 
 type QueryKey = ReturnType<typeof authorFeedQueryKeys.list>;
 type PageParam = string | null;
+type AuthorFeed = app.bsky.feed.getAuthorFeed.$Output["body"];
 
 function authorFeedQuery(session: Session, actor: AtIdentifierString, limit = 50) {
   return infiniteQueryOptions<
-    Timeline,
+    AuthorFeed,
     Error,
-    InfiniteData<Timeline, PageParam>,
+    InfiniteData<AuthorFeed, PageParam>,
     QueryKey,
     PageParam
   >({
@@ -43,6 +43,6 @@ export function useAuthorFeedQuery(
   session: Session,
   actor: AtIdentifierString,
   limit = 50,
-): UseInfiniteQueryResult<InfiniteData<Timeline, PageParam>> {
+): UseInfiniteQueryResult<InfiniteData<AuthorFeed, PageParam>> {
   return useInfiniteQuery(authorFeedQuery(session, actor, limit));
 }

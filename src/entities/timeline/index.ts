@@ -1,4 +1,2 @@
 export { useTimelineQuery, useInvalidateTimelineQuery } from "./api/timeline-query";
-export type { Timeline } from "./model/timeline";
-export { TimelineView } from "./ui/timeline-view";
-export type { FeedViewPost } from "./model/feed-view-post";
+export { TimelineUI } from "./ui/timeline-ui";

@@ -2,9 +2,10 @@ import type { AtIdentifierString, AtUriString } from "@atproto/lex";
 import type React from "react";
 import { useParams } from "react-router";
 
-import { PostCard, usePostQuery, type ThreadViewPost } from "#src/entities/post/index.ts";
+import { PostCard, usePostQuery } from "#src/entities/post/index.ts";
 import { ProfileCard, ProfileCardSkeleton, useProfileQuery } from "#src/entities/profile/index.ts";
-import { TimelineView } from "#src/entities/timeline/index.ts";
+import { TimelineUI } from "#src/entities/timeline/index.ts";
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
@@ -19,17 +20,17 @@ export default function Page(): React.ReactElement {
   return (
     <div className="flex flex-col gap-4 py-4">
       <Container>
-        <ProfileView actor={actor} />
+        <ProfileBlock actor={actor} />
       </Container>
 
       <Container>
-        <FeedView actor={actor} />
+        <FeedBlock actor={actor} />
       </Container>
     </div>
   );
 }
 
-function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactElement {
+function ProfileBlock({ actor }: { actor: AtIdentifierString }): React.ReactElement {
   const session = useAssertSession();
   const { data: profile, error } = useProfileQuery(session, actor);
 
@@ -37,7 +38,7 @@ function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactEleme
     return (
       <div className="flex flex-col gap-4">
         <ProfileCard profile={profile} />
-        {profile.pinnedPost && <PinnedView uri={profile.pinnedPost.uri} />}
+        {profile.pinnedPost && <PinnedCard uri={profile.pinnedPost.uri} />}
       </div>
     );
   } else if (error) {
@@ -47,7 +48,7 @@ function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactEleme
   return <ProfileCardSkeleton />;
 }
 
-function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
+function PinnedCard({ uri }: { uri: AtUriString }): React.ReactElement {
   const session = useAssertSession();
   const { data, error } = usePostQuery(session, uri, { depth: 0, parentHeight: 0 });
 
@@ -55,7 +56,7 @@ function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
     const thread = data.thread;
 
     if (thread.$type == "app.bsky.feed.defs#threadViewPost") {
-      return <PostCard post={(thread as ThreadViewPost).post} pinned />;
+      return <PostCard postView={(thread as app.bsky.feed.defs.ThreadViewPost).post} pinned />;
     }
     return <></>;
   } else if (error) {
@@ -65,7 +66,7 @@ function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
   return <></>;
 }
 
-function FeedView({ actor }: { actor: AtIdentifierString }): React.ReactElement {
+function FeedBlock({ actor }: { actor: AtIdentifierString }): React.ReactElement {
   const session = useAssertSession();
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeedQuery(
     session,
@@ -77,7 +78,7 @@ function FeedView({ actor }: { actor: AtIdentifierString }): React.ReactElement 
   if (feed) {
     return (
       <div className="flex flex-col gap-4">
-        {feed.length > 0 ? <TimelineView feed={feed} /> : <p>No posts.</p>}
+        {feed.length > 0 ? <TimelineUI feed={feed} /> : <p>No posts.</p>}
 
         {error && <p className="text-fg-danger">{error.message}</p>}
 
