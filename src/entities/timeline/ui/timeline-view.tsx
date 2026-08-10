@@ -11,7 +11,7 @@ export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React
       {feed
         .filter((post) => post.reply?.parent == null)
         .map((post) => (
-          <PostCard key={post.post.uri} post={post.post} reason={post.reason} />
+          <PostCard key={post.post.uri} postView={post.post} reason={post.reason} />
         ))}
     </div>
   );

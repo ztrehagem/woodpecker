@@ -14,13 +14,13 @@ import {
   ReplyIcon,
 } from "#src/shared/ui/icon/index.ts";
 
-import type { Post } from "../model/post";
+import type { PostView } from "../model/post";
 import { fallbackDisplayName } from "./display-name";
-import { EmbedView } from "./embed-view";
+import { EmbedView } from "./embeds/embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
-export function DetailedPostCard({ post }: { post: Post }): React.ReactElement {
+export function DetailedPostCard({ post }: { post: PostView }): React.ReactElement {
   const datetimeString = asDatetimeString(post.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
@@ -50,7 +50,7 @@ export function DetailedPostCard({ post }: { post: Post }): React.ReactElement {
               {displayName}
             </Link>
 
-            <div className="text-xs wrap-anywhere">@{post.author.handle}</div>
+            <div className="text-xs wrap-anywhere text-fg-muted">@{post.author.handle}</div>
           </div>
         </div>
 

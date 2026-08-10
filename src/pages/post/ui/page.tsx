@@ -89,7 +89,7 @@ function Parent({ parent }: { parent: ParentNode | undefined }): React.ReactElem
       return (
         <div className="mb-4 flex flex-col">
           <Parent parent={grandparent} />
-          <PostCard post={post} />
+          <PostCard postView={post} />
         </div>
       );
     }
@@ -132,7 +132,7 @@ function ReplyItem({ reply }: { reply: ReplyNode }): React.ReactElement {
 
       return (
         <div>
-          <PostCard post={post} />
+          <PostCard postView={post} />
           <Replies replies={replies} />
         </div>
       );

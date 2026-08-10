@@ -55,7 +55,7 @@ function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
     const thread = data.thread;
 
     if (thread.$type == "app.bsky.feed.defs#threadViewPost") {
-      return <PostCard post={(thread as ThreadViewPost).post} pinned />;
+      return <PostCard postView={(thread as ThreadViewPost).post} pinned />;
     }
     return <></>;
   } else if (error) {
