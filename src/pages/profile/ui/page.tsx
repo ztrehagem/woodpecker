@@ -41,7 +41,7 @@ function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactEleme
       </div>
     );
   } else if (error) {
-    return <p className="text-danger">{error.message}</p>;
+    return <p className="text-fg-danger">{error.message}</p>;
   }
 
   return <ProfileCardSkeleton />;
@@ -79,7 +79,7 @@ function FeedView({ actor }: { actor: AtIdentifierString }): React.ReactElement 
       <div className="flex flex-col gap-4">
         {feed.length > 0 ? <TimelineView feed={feed} /> : <p>No posts.</p>}
 
-        {error && <p className="text-danger">{error.message}</p>}
+        {error && <p className="text-fg-danger">{error.message}</p>}
 
         {hasNextPage && (
           <div className="self-center">
@@ -96,7 +96,7 @@ function FeedView({ actor }: { actor: AtIdentifierString }): React.ReactElement 
       </div>
     );
   } else if (error) {
-    return <p className="text-danger">{error.message}</p>;
+    return <p className="text-fg-danger">{error.message}</p>;
   }
 
   return <LoadingFallback />;
