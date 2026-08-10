@@ -7,6 +7,7 @@ import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { NewPostArea } from "./new-post-area";
+import { NewPostFab } from "./new-post-fab";
 
 export default function SignedInView(): React.ReactElement {
   const session = useAssertSession();
@@ -20,6 +21,8 @@ export default function SignedInView(): React.ReactElement {
       <Container>
         <NewPostArea />
       </Container>
+
+      {navigator.maxTouchPoints > 0 && <NewPostFab />}
 
       <Container>
         {feed ? (
