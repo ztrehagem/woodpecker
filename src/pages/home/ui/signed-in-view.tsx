@@ -7,6 +7,7 @@ import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { NewPostArea } from "./new-post-area";
+import { NewPostFab } from "./new-post-fab";
 
 export default function SignedInView(): React.ReactElement {
   const session = useAssertSession();
@@ -21,6 +22,8 @@ export default function SignedInView(): React.ReactElement {
         <NewPostArea />
       </Container>
 
+      {navigator.maxTouchPoints > 0 && <NewPostFab />}
+
       <Container>
         {feed ? (
           <div className="flex flex-col gap-4">
@@ -33,7 +36,7 @@ export default function SignedInView(): React.ReactElement {
                   processing={isFetchingNextPage}
                   emphasize
                 >
-                  もっと見る
+                  Load more
                 </NakedButton>
               </div>
             )}

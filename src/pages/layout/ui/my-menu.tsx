@@ -19,7 +19,10 @@ export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger render={(props, _state) => <button type="button" {...props} />}>
+        <Menu.Trigger
+          className="size-10"
+          render={(props, _state) => <button type="button" {...props} />}
+        >
           <img
             src={profile.avatar}
             alt={profile.displayName}

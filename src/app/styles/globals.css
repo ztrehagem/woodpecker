@@ -21,12 +21,16 @@
   --color-backdrop: var(--color-neutral-900);
   --color-filling: var(--color-stone-800);
   --color-highlight: var(--color-stone-700);
+  --color-link: var(--color-blue-500);
+  --color-link-active: var(--color-blue-400);
+  --color-danger: var(--color-red-500);
+  --color-danger-active: var(--color-red-400);
   --color-fg: var(--color-white);
   --color-fg-muted: var(--color-neutral-400);
-  --color-link: var(--color-blue-400);
-  --color-link-active: var(--color-blue-300);
-  --color-danger: var(--color-red-400);
-  --color-danger-active: var(--color-red-300);
+  --color-fg-link: var(--color-blue-400);
+  --color-fg-link-active: var(--color-blue-300);
+  --color-fg-danger: var(--color-red-400);
+  --color-fg-danger-active: var(--color-red-300);
 }
 
 @layer base {
@@ -39,10 +43,10 @@
   }
 
   a {
-    @apply text-link;
+    @apply text-fg-link;
   }
 
   a:active {
-    @apply text-link-active;
+    @apply text-fg-link-active;
   }
 }

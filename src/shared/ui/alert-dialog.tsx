@@ -74,7 +74,7 @@ export function AlertDialog({
               <div className="flex justify-end gap-3">
                 <Lib.Close
                   disabled={isProcessing}
-                  className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-link select-none active:text-link-active"
+                  className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-fg-link select-none active:text-fg-link-active"
                   render={(props) => <NakedButton {...props} />}
                 >
                   {cancel}

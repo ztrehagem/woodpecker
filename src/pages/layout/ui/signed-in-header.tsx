@@ -11,21 +11,26 @@ import { MyMenu } from "./my-menu";
 
 export function SignedInHeader(): React.ReactElement {
   return (
-    <header className="pointer-events-none sticky top-0 left-0 z-10 bg-backdrop/50 backdrop-blur-sm">
+    <header className="sticky top-0 left-0 z-10 bg-backdrop/50 backdrop-blur-sm">
       <Container>
-        <div className="flex h-15 items-stretch justify-between">
-          <h1 className="flex items-center font-brand text-lg font-medium">
+        <div className="grid h-15 grid-cols-[1fr_auto_1fr] items-stretch justify-between gap-4 max-mobile:gap-2">
+          <div className="flex items-center">
             <Link
               to="/"
-              className="pointer-events-auto flex size-10 items-center justify-center text-inherit no-underline"
+              className="flex size-10 items-center justify-center text-inherit no-underline"
               aria-label="Woodpecker"
               aria-description="Go to home"
             >
               <HomeIcon />
             </Link>
+          </div>
+
+          <h1 className="flex items-center gap-2 font-brand text-sm font-medium">
+            <img src="/favicon.webp" alt="" width="16" height="16" />
+            Woodpecker
           </h1>
 
-          <div className="pointer-events-auto flex items-center gap-4">
+          <div className="flex items-center justify-end gap-4 max-mobile:gap-2">
             <NewPostButton />
             <MySelfButton />
           </div>
@@ -40,7 +45,7 @@ function NewPostButton(): React.ReactElement {
     <NewPostDialog
       trigger={
         <NewPostDialog.Trigger
-          className="flex size-10 cursor-pointer items-center justify-center font-bold"
+          className="flex size-10 shrink-0 cursor-pointer items-center justify-center font-bold"
           render={(props) => <button type="button" {...props} />}
         >
           <EditSquareIcon />

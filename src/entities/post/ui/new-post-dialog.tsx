@@ -93,7 +93,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
                   className="w-full bg-highlight px-3 py-2 inset-shadow-sm"
                 />
 
-                {error && <p className="text-danger">{error.message}</p>}
+                {error && <p className="text-fg-danger">{error.message}</p>}
 
                 <div className="-mx-2 flex justify-between gap-4">
                   <Dialog.Close

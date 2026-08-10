@@ -8,6 +8,7 @@ import Card from "#src/shared/ui/card.tsx";
 import {
   BookmarkIcon,
   CaretRightIcon,
+  KeepIcon,
   LikeIcon,
   QuoteIcon,
   RepeatIcon,
@@ -15,22 +16,28 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { Post } from "../model/post";
+import type { Post, PostReason, PostReasonRepost } from "../model/post";
+import { fallbackDisplayName } from "./display-name";
 import { EmbedView } from "./embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
-export function PostCard({ post }: { post: Post }): React.ReactElement {
+export function PostCard({
+  post,
+  reason,
+  pinned = false,
+}: {
+  post: Post;
+  reason?: PostReason;
+  pinned?: boolean;
+}): React.ReactElement {
   const datetimeString = asDatetimeString(post.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
   const link = extractLink(post);
 
-  const displayName =
-    post.author.displayName == null || post.author.displayName == ""
-      ? post.author.handle
-      : post.author.displayName;
+  const displayName = fallbackDisplayName(post.author.displayName, post.author.handle);
 
   const text = "text" in post.record ? (post.record.text as string) : "";
   const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
@@ -46,10 +53,12 @@ export function PostCard({ post }: { post: Post }): React.ReactElement {
           className="absolute inset-0 block"
         ></Link>
 
+        {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
+
         <div className="flex gap-2">
           <Link
             to={`/profile/${post.author.handle}`}
-            className="h-10 w-10 shrink-0 overflow-clip rounded-full"
+            className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
             <img src={post.author.avatar} alt="" className="size-full" />
           </Link>
@@ -154,4 +163,50 @@ function extractLink(post: Post): string | null {
   }
 
   return null;
+}
+
+function PostReasonBlock({
+  reason,
+  pinned,
+}: {
+  reason: PostReason;
+  pinned: boolean;
+}): React.ReactElement | null {
+  if (pinned) {
+    return <PostReasonBlockPinned />;
+  }
+
+  switch (reason?.$type) {
+    case "app.bsky.feed.defs#reasonRepost":
+      return <PostReasonBlockRepost reason={reason as PostReasonRepost} />;
+    case "app.bsky.feed.defs#reasonPin":
+      return <PostReasonBlockPinned />;
+    default:
+      return null;
+  }
+}
+
+function PostReasonBlockPinned(): React.ReactElement {
+  return (
+    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
+      <KeepIcon className="size-4" />
+      <span>Pinned</span>
+    </div>
+  );
+}
+function PostReasonBlockRepost({ reason }: { reason: PostReasonRepost }): React.ReactElement {
+  return (
+    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
+      <RepeatIcon className="size-4" />
+      <span>
+        <span>Reposted by </span>
+        <Link
+          to={`/profile/${reason.by.handle}`}
+          className="relative text-fg-muted hover:underline"
+        >
+          {fallbackDisplayName(reason.by.displayName, reason.by.handle)}
+        </Link>
+      </span>
+    </div>
+  );
 }
