@@ -7,7 +7,7 @@ import type { app } from "#src/shared/api/lexicons/index.ts";
 import { TimelineUI } from "./timeline-ui";
 
 test("renders external embeds", async () => {
-  const post = {
+  const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
       uri: "at://did/app.bsky.feed.post/1",
       cid: "bafyreib3",
@@ -15,7 +15,7 @@ test("renders external embeds", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: null,
+        avatar: "https://example.test/avatar.png",
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -37,7 +37,7 @@ test("renders external embeds", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as app.bsky.feed.defs.FeedViewPost;
+  };
 
   const view = await render(
     <MemoryRouter>
@@ -49,7 +49,7 @@ test("renders external embeds", async () => {
 });
 
 test("renders embedded record post content", async () => {
-  const post = {
+  const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
       uri: "at://did/app.bsky.feed.post/1",
       cid: "bafyreib3",
@@ -57,7 +57,7 @@ test("renders embedded record post content", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: null,
+        avatar: "https://example.test/avatar.png",
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -79,7 +79,7 @@ test("renders embedded record post content", async () => {
             did: "did:plc:embed",
             handle: "bob.test",
             displayName: "Bob",
-            avatar: null,
+            avatar: "https://example.test/avatar.png",
           },
           indexedAt: "2024-01-02T00:00:00.000Z",
           replyCount: 0,
@@ -95,7 +95,7 @@ test("renders embedded record post content", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as app.bsky.feed.defs.FeedViewPost;
+  };
 
   const view = await render(
     <MemoryRouter>
@@ -108,7 +108,7 @@ test("renders embedded record post content", async () => {
 });
 
 test("renders nested embeds inside embedded record posts", async () => {
-  const post = {
+  const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
       uri: "at://did/app.bsky.feed.post/1",
       cid: "bafyreib3",
@@ -116,7 +116,7 @@ test("renders nested embeds inside embedded record posts", async () => {
         did: "did:plc:example",
         handle: "alice.test",
         displayName: "Alice",
-        avatar: null,
+        avatar: "https://example.test/avatar.png",
       },
       record: {
         $type: "app.bsky.feed.post",
@@ -146,7 +146,7 @@ test("renders nested embeds inside embedded record posts", async () => {
             did: "did:plc:embed",
             handle: "bob.test",
             displayName: "Bob",
-            avatar: null,
+            avatar: "https://example.test/avatar.png",
           },
           indexedAt: "2024-01-02T00:00:00.000Z",
           replyCount: 0,
@@ -162,7 +162,7 @@ test("renders nested embeds inside embedded record posts", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as app.bsky.feed.defs.FeedViewPost;
+  };
 
   const view = await render(
     <MemoryRouter>
