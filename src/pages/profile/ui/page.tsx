@@ -3,7 +3,7 @@ import type React from "react";
 import { useParams } from "react-router";
 
 import { PostCard, usePostQuery, type ThreadViewPost } from "#src/entities/post/index.ts";
-import { ProfileCard, useProfileQuery } from "#src/entities/profile/index.ts";
+import { ProfileCard, ProfileCardSkeleton, useProfileQuery } from "#src/entities/profile/index.ts";
 import { TimelineView } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
@@ -44,7 +44,7 @@ function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactEleme
     return <p className="text-danger">{error.message}</p>;
   }
 
-  return <LoadingFallback />;
+  return <ProfileCardSkeleton />;
 }
 
 function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
