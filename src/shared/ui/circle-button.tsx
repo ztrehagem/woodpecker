@@ -24,7 +24,7 @@ export function CircleButton({
       disabled={disabled}
       {...props}
       className={clsx(
-        "pointer-events-auto relative size-12 cursor-pointer rounded-full px-2 drop-shadow-md",
+        "pointer-events-auto relative size-15 cursor-pointer rounded-full px-2 drop-shadow-md",
         {
           "bg-link active:bg-link-active": severity === "primary",
           "bg-danger active:bg-danger-active": severity === "destructive",
