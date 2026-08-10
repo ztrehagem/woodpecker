@@ -2,7 +2,7 @@ import type { RichTextSegment } from "@atproto/api";
 import React from "react";
 import { Link } from "react-router";
 
-export function RichTextSegmentView({ segment }: { segment: RichTextSegment }): React.ReactElement {
+export function RichTextSegmentUI({ segment }: { segment: RichTextSegment }): React.ReactElement {
   switch (true) {
     case segment.isLink():
       return (

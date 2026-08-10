@@ -2,14 +2,14 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-import { ExternalEmbedView } from "./external-embed-view";
-import { GalleryEmbedView } from "./gallery-embed-view";
-import { ImagesEmbedView } from "./images-embed-view";
-import { RecordEmbedView } from "./record-embed-view";
-import { RecordWithMediaEmbedView } from "./record-with-media-embed-view";
-import { VideoEmbedView } from "./video-embed-view";
+import { ExternalEmbedUI } from "./external-embed-ui";
+import { GalleryEmbedUI } from "./gallery-embed-ui";
+import { ImagesEmbedUI } from "./images-embed-ui";
+import { RecordEmbedUI } from "./record-embed-ui";
+import { RecordWithMediaEmbedUI } from "./record-with-media-embed-ui";
+import { VideoEmbedUI } from "./video-embed-ui";
 
-export function EmbedView({
+export function EmbedUI({
   embed,
 }: {
   embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>;
@@ -23,14 +23,14 @@ function renderEmbedView(
 ): React.ReactElement {
   switch (embed.$type) {
     case "app.bsky.embed.external#view":
-      return <ExternalEmbedView key={key} embed={embed as app.bsky.embed.external.View} />;
+      return <ExternalEmbedUI key={key} embed={embed as app.bsky.embed.external.View} />;
     case "app.bsky.embed.gallery#view":
-      return <GalleryEmbedView key={key} embed={embed as app.bsky.embed.gallery.View} />;
+      return <GalleryEmbedUI key={key} embed={embed as app.bsky.embed.gallery.View} />;
     case "app.bsky.embed.images#view":
-      return <ImagesEmbedView key={key} embed={embed as app.bsky.embed.images.View} />;
+      return <ImagesEmbedUI key={key} embed={embed as app.bsky.embed.images.View} />;
     case "app.bsky.embed.record#view":
       return (
-        <RecordEmbedView
+        <RecordEmbedUI
           key={key}
           embed={embed as app.bsky.embed.record.View}
           renderEmbed={renderEmbedView}
@@ -38,10 +38,10 @@ function renderEmbedView(
       );
     case "app.bsky.embed.recordWithMedia#view":
       return (
-        <RecordWithMediaEmbedView key={key} embed={embed as app.bsky.embed.recordWithMedia.View} />
+        <RecordWithMediaEmbedUI key={key} embed={embed as app.bsky.embed.recordWithMedia.View} />
       );
     case "app.bsky.embed.video#view":
-      return <VideoEmbedView key={key} embed={embed as app.bsky.embed.video.View} />;
+      return <VideoEmbedUI key={key} embed={embed as app.bsky.embed.video.View} />;
     default:
       return (
         <div

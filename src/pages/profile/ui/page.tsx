@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 
 import { PostCard, usePostQuery } from "#src/entities/post/index.ts";
 import { ProfileCard, ProfileCardSkeleton, useProfileQuery } from "#src/entities/profile/index.ts";
-import { TimelineView } from "#src/entities/timeline/index.ts";
+import { TimelineUI } from "#src/entities/timeline/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
@@ -78,7 +78,7 @@ function FeedBlock({ actor }: { actor: AtIdentifierString }): React.ReactElement
   if (feed) {
     return (
       <div className="flex flex-col gap-4">
-        {feed.length > 0 ? <TimelineView feed={feed} /> : <p>No posts.</p>}
+        {feed.length > 0 ? <TimelineUI feed={feed} /> : <p>No posts.</p>}
 
         {error && <p className="text-fg-danger">{error.message}</p>}
 

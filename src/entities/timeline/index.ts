@@ -1,2 +1,2 @@
 export { useTimelineQuery, useInvalidateTimelineQuery } from "./api/timeline-query";
-export { TimelineView } from "./ui/timeline-view";
+export { TimelineUI } from "./ui/timeline-ui";

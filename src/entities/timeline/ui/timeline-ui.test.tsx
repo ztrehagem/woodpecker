@@ -4,7 +4,7 @@ import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-import { TimelineView } from "./timeline-view";
+import { TimelineUI } from "./timeline-ui";
 
 test("renders external embeds", async () => {
   const post = {
@@ -41,7 +41,7 @@ test("renders external embeds", async () => {
 
   const view = await render(
     <MemoryRouter>
-      <TimelineView feed={[post]} />
+      <TimelineUI feed={[post]} />
     </MemoryRouter>,
   );
 
@@ -99,7 +99,7 @@ test("renders embedded record post content", async () => {
 
   const view = await render(
     <MemoryRouter>
-      <TimelineView feed={[post]} />
+      <TimelineUI feed={[post]} />
     </MemoryRouter>,
   );
 
@@ -166,7 +166,7 @@ test("renders nested embeds inside embedded record posts", async () => {
 
   const view = await render(
     <MemoryRouter>
-      <TimelineView feed={[post]} />
+      <TimelineUI feed={[post]} />
     </MemoryRouter>,
   );
 

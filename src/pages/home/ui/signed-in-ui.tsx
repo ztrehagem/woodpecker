@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TimelineView, useTimelineQuery } from "#src/entities/timeline/index.ts";
+import { TimelineUI, useTimelineQuery } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
@@ -9,7 +9,7 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 import { NewPostArea } from "./new-post-area";
 import { NewPostFab } from "./new-post-fab";
 
-export default function SignedInView(): React.ReactElement {
+export default function SignedInUI(): React.ReactElement {
   const session = useAssertSession();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTimelineQuery(session);
@@ -27,7 +27,7 @@ export default function SignedInView(): React.ReactElement {
       <Container>
         {feed ? (
           <div className="flex flex-col gap-4">
-            <TimelineView feed={feed} />
+            <TimelineUI feed={feed} />
             {hasNextPage && (
               <div className="self-center">
                 <NakedButton

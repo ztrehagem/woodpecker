@@ -2,12 +2,12 @@ import type React from "react";
 
 import { useSession } from "#src/shared/auth/index.ts";
 
-import SignedInView from "./signed-in-view";
-import SignedOutView from "./signed-out-view";
+import SignedInUI from "./signed-in-ui";
+import SignedOutUI from "./signed-out-ui";
 
 export default function Page(): React.ReactElement {
   const session = useSession();
   const isAuthenticated = session != null;
 
-  return <>{isAuthenticated ? <SignedInView /> : <SignedOutView />}</>;
+  return <>{isAuthenticated ? <SignedInUI /> : <SignedOutUI />}</>;
 }

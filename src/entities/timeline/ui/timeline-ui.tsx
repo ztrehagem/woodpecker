@@ -3,7 +3,7 @@ import React from "react";
 import { PostCard } from "#src/entities/post/@x/timeline.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-export function TimelineView({
+export function TimelineUI({
   feed,
 }: {
   feed: readonly app.bsky.feed.defs.FeedViewPost[];

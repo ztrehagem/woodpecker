@@ -19,8 +19,8 @@ import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "./build-post-href";
 import { fallbackDisplayName } from "./display-name";
-import { EmbedView } from "./embeds/embed-view";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { EmbedUI } from "./embeds/embed-ui";
+import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
 export function PostCard({
@@ -96,12 +96,12 @@ export function PostCard({
             {post.text.length > 0 && (
               <p className="whitespace-pre-line">
                 {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentView key={index} segment={segment} />
+                  <RichTextSegmentUI key={index} segment={segment} />
                 ))}
               </p>
             )}
 
-            {postView.embed && <EmbedView embed={postView.embed} />}
+            {postView.embed && <EmbedUI embed={postView.embed} />}
 
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
               <div className="flex items-center gap-x-1">

@@ -2,7 +2,7 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-export function ExternalEmbedView({
+export function ExternalEmbedUI({
   embed,
 }: {
   embed: app.bsky.embed.external.View;

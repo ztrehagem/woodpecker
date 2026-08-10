@@ -2,11 +2,7 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-export function VideoEmbedView({
-  embed,
-}: {
-  embed: app.bsky.embed.video.View;
-}): React.ReactElement {
+export function VideoEmbedUI({ embed }: { embed: app.bsky.embed.video.View }): React.ReactElement {
   const thumbnail = embed.thumbnail;
 
   return (

@@ -16,8 +16,8 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 
 import { fallbackDisplayName } from "./display-name";
-import { EmbedView } from "./embeds/embed-view";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { EmbedUI } from "./embeds/embed-ui";
+import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
 export function DetailedPostCard({
@@ -62,11 +62,11 @@ export function DetailedPostCard({
         <div className="mt-1 flex flex-col gap-1">
           <p className="whitespace-pre-line">
             {Array.from(richText.segments()).map((segment, index) => (
-              <RichTextSegmentView key={index} segment={segment} />
+              <RichTextSegmentUI key={index} segment={segment} />
             ))}
           </p>
 
-          {postView.embed && <EmbedView embed={postView.embed} />}
+          {postView.embed && <EmbedUI embed={postView.embed} />}
 
           <time
             dateTime={datetimeString}
