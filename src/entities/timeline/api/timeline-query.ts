@@ -9,8 +9,6 @@ import {
 import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
-import type { Timeline } from "../model/timeline";
-
 export const timelineQueryKeys = {
   all: ["timeline"] as const,
   list: (limit: number) => [...timelineQueryKeys.all, limit] as const,
@@ -18,6 +16,7 @@ export const timelineQueryKeys = {
 
 type QueryKey = ReturnType<typeof timelineQueryKeys.list>;
 type PageParam = string | null;
+type Timeline = app.bsky.feed.getTimeline.$Output["body"];
 
 export function timelineQuery(
   session: Session,

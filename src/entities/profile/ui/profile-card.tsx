@@ -1,15 +1,14 @@
-import React, { use } from "react";
+import React from "react";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { Profile } from "../model/profile";
-
 export function ProfileCard({
   profile,
 }: Readonly<{
-  profile: Profile;
+  profile: app.bsky.actor.defs.ProfileViewDetailed;
 }>): React.ReactElement {
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
@@ -77,13 +76,3 @@ export function ProfileCard({
     </Card>
   );
 }
-
-ProfileCard.Promise = function ({
-  profile: profilePromise,
-}: Readonly<{
-  profile: Promise<Profile>;
-}>): React.ReactElement {
-  const profile = use(profilePromise);
-
-  return <ProfileCard profile={profile} />;
-};

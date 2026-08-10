@@ -3,12 +3,16 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import { Link } from "react-router";
 
-import type { Profile } from "#src/entities/profile/index.ts";
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useSignOut } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
 
-export function MyMenu({ profile }: { profile: Profile }): React.ReactElement {
+export function MyMenu({
+  profile,
+}: {
+  profile: app.bsky.actor.defs.ProfileViewDetailed;
+}): React.ReactElement {
   const [isShowingSignOutConfirmation, setIsShowingSignOutConfirmation] = useState(false);
   const signOut = useSignOut();
 

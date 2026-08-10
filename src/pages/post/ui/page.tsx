@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { DetailedPostCard, PostCard } from "#src/entities/post/index.ts";
-import { usePostQuery, type Thread, type ThreadViewPost } from "#src/entities/post/index.ts";
+import { usePostQuery } from "#src/entities/post/index.ts";
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
@@ -30,18 +31,22 @@ export function Page(): React.ReactElement {
   );
 }
 
-function Content({ thread }: { thread: Thread }): React.ReactElement {
+function Content({
+  thread,
+}: {
+  thread: app.bsky.feed.getPostThread.$Output["body"]["thread"];
+}): React.ReactElement {
   switch (thread.$type) {
     case "app.bsky.feed.defs#threadViewPost": {
-      const { post, replies, parent } = thread as ThreadViewPost;
+      const { post, replies, parent } = thread as app.bsky.feed.defs.ThreadViewPost;
 
       return (
         <div>
-          <Parent parent={parent} />
+          <ParentCardList parent={parent} />
           <ScrollIntoViewOnMount>
-            <DetailedPostCard post={post} />
+            <DetailedPostCard postView={post} />
           </ScrollIntoViewOnMount>
-          <Replies replies={replies} />
+          <ReplyCardList replies={replies} />
         </div>
       );
     }
@@ -75,41 +80,47 @@ function ScrollIntoViewOnMount({ children }: { children: React.ReactNode }): Rea
   );
 }
 
-type ParentNode = NonNullable<ThreadViewPost["parent"]>;
+type ParentView = NonNullable<app.bsky.feed.defs.ThreadViewPost["parent"]>;
 
-function Parent({ parent }: { parent: ParentNode | undefined }): React.ReactElement | null {
+function ParentCardList({ parent }: { parent: ParentView | undefined }): React.ReactElement | null {
   if (parent == null) {
     return null;
   }
 
   switch (parent.$type) {
     case "app.bsky.feed.defs#threadViewPost": {
-      const { post, parent: grandparent } = parent as ThreadViewPost;
+      const { post, parent: grandparent } = parent as app.bsky.feed.defs.ThreadViewPost;
 
       return (
         <div className="mb-4 flex flex-col">
-          <Parent parent={grandparent} />
+          <ParentCardList parent={grandparent} />
           <PostCard postView={post} />
         </div>
       );
     }
     case "app.bsky.feed.defs#notFoundPost":
-      return <div>Post not found</div>;
+      return <></>;
     case "app.bsky.feed.defs#blockedPost":
-      return <div>Post is blocked</div>;
+      return <></>;
     default:
       return (
         <div>
           <p>Unknown post type</p>
-          <pre className="text-2xs">{JSON.stringify(parent, null, 2)}</pre>
+          {import.meta.env.DEV && (
+            <pre className="text-2xs text-fg-muted">{JSON.stringify(parent, null, 2)}</pre>
+          )}
         </div>
       );
   }
 }
 
-type ReplyNode = NonNullable<ThreadViewPost["replies"]>[number];
+type ReplyView = NonNullable<app.bsky.feed.defs.ThreadViewPost["replies"]>[number];
 
-function Replies({ replies }: { replies: ReplyNode[] | undefined }): React.ReactElement | null {
+function ReplyCardList({
+  replies,
+}: {
+  replies: ReplyView[] | undefined;
+}): React.ReactElement | null {
   if (replies == null || replies.length === 0) {
     return null;
   }
@@ -118,22 +129,22 @@ function Replies({ replies }: { replies: ReplyNode[] | undefined }): React.React
     <ul className="mt-4 flex flex-col gap-4 border-l border-highlight pl-4">
       {replies.map((reply, index) => (
         <li key={index}>
-          <ReplyItem reply={reply} />
+          <ReplyCardListItem reply={reply} />
         </li>
       ))}
     </ul>
   );
 }
 
-function ReplyItem({ reply }: { reply: ReplyNode }): React.ReactElement {
+function ReplyCardListItem({ reply }: { reply: ReplyView }): React.ReactElement {
   switch (reply.$type) {
     case "app.bsky.feed.defs#threadViewPost": {
-      const { post, replies } = reply as ThreadViewPost;
+      const { post, replies } = reply as app.bsky.feed.defs.ThreadViewPost;
 
       return (
         <div>
           <PostCard postView={post} />
-          <Replies replies={replies} />
+          <ReplyCardList replies={replies} />
         </div>
       );
     }

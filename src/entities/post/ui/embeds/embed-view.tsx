@@ -7,14 +7,20 @@ import { GalleryEmbedView } from "./gallery-embed-view";
 import { ImagesEmbedView } from "./images-embed-view";
 import { RecordEmbedView } from "./record-embed-view";
 import { RecordWithMediaEmbedView } from "./record-with-media-embed-view";
-import type { Embed } from "./types";
 import { VideoEmbedView } from "./video-embed-view";
 
-export function EmbedView({ embed }: { embed: Embed }): React.ReactElement {
+export function EmbedView({
+  embed,
+}: {
+  embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>;
+}): React.ReactElement {
   return renderEmbedView(embed);
 }
 
-function renderEmbedView(embed: Embed, key?: React.Key): React.ReactElement {
+function renderEmbedView(
+  embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
+  key?: React.Key,
+): React.ReactElement {
   switch (embed.$type) {
     case "app.bsky.embed.external#view":
       return <ExternalEmbedView key={key} embed={embed as app.bsky.embed.external.View} />;

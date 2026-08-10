@@ -2,7 +2,8 @@ import { MemoryRouter } from "react-router";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 
-import type { FeedViewPost } from "../model/feed-view-post";
+import type { app } from "#src/shared/api/lexicons/index.ts";
+
 import { TimelineView } from "./timeline-view";
 
 test("renders external embeds", async () => {
@@ -36,7 +37,7 @@ test("renders external embeds", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as FeedViewPost;
+  } as unknown as app.bsky.feed.defs.FeedViewPost;
 
   const view = await render(
     <MemoryRouter>
@@ -94,7 +95,7 @@ test("renders embedded record post content", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as FeedViewPost;
+  } as unknown as app.bsky.feed.defs.FeedViewPost;
 
   const view = await render(
     <MemoryRouter>
@@ -161,7 +162,7 @@ test("renders nested embeds inside embedded record posts", async () => {
       likeCount: 0,
       bookmarkCount: 0,
     },
-  } as unknown as FeedViewPost;
+  } as unknown as app.bsky.feed.defs.FeedViewPost;
 
   const view = await render(
     <MemoryRouter>

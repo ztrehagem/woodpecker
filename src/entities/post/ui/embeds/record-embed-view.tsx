@@ -6,19 +6,20 @@ import { Link } from "react-router";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { Post } from "../../model/post";
 import { buildPostHref } from "../build-post-href";
 import { fallbackDisplayName } from "../display-name";
 import { RichTextSegmentView } from "../rich-text-segment-view";
 import { timeAgo } from "../time-ago";
-import type { Embed } from "./types";
 
 export function RecordEmbedView({
   embed,
   renderEmbed,
 }: {
   embed: app.bsky.embed.record.View;
-  renderEmbed: (embed: Embed, key: React.Key) => React.ReactElement;
+  renderEmbed: (
+    embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
+    key: React.Key,
+  ) => React.ReactElement;
 }): React.ReactElement {
   const { record } = embed;
 
@@ -48,9 +49,13 @@ function RecordEmbedPostView({
   renderEmbed,
 }: {
   record: app.bsky.embed.record.ViewRecord;
-  renderEmbed: (embed: Embed, key: React.Key) => React.ReactElement;
+  renderEmbed: (
+    embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
+    key: React.Key,
+  ) => React.ReactElement;
 }): React.ReactElement {
-  const post = record.value.$type === "app.bsky.feed.post" ? (record.value as Post) : null;
+  const post =
+    record.value.$type === "app.bsky.feed.post" ? (record.value as app.bsky.feed.post.Main) : null;
 
   if (!post) {
     return <RecordEmbedUnknownView />;
@@ -115,7 +120,9 @@ function RecordEmbedPostView({
             </p>
           )}
 
-          {record.embeds?.map((recordEmbed, index) => renderEmbed(recordEmbed as Embed, index))}
+          {record.embeds?.map((recordEmbed, index) =>
+            renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>, index),
+          )}
         </div>
       </div>
     </article>

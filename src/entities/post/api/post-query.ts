@@ -4,18 +4,13 @@ import { queryOptions, useQuery, type UseQueryResult } from "@tanstack/react-que
 import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
-import type { Thread, ThreadGate } from "../model/post";
-
 const postQueryKeys = {
   all: ["posts"] as const,
   detail: (uri: AtUriString, depth?: number, parentHeight?: number) =>
     [...postQueryKeys.all, uri, depth, parentHeight] as const,
 };
 
-interface Output {
-  thread: Thread;
-  threadgate?: ThreadGate;
-}
+type Output = app.bsky.feed.getPostThread.$Output["body"];
 
 function postQuery(
   session: Session,

@@ -4,6 +4,7 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import {
   BookmarkIcon,
@@ -14,21 +15,25 @@ import {
   ReplyIcon,
 } from "#src/shared/ui/icon/index.ts";
 
-import type { PostView } from "../model/post";
 import { fallbackDisplayName } from "./display-name";
 import { EmbedView } from "./embeds/embed-view";
 import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
-export function DetailedPostCard({ post }: { post: PostView }): React.ReactElement {
-  const datetimeString = asDatetimeString(post.record.createdAt as string);
+export function DetailedPostCard({
+  postView,
+}: {
+  postView: app.bsky.feed.defs.PostView;
+}): React.ReactElement {
+  const datetimeString = asDatetimeString(postView.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
-  const displayName = fallbackDisplayName(post.author.displayName, post.author.handle);
+  const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
-  const text = "text" in post.record ? (post.record.text as string) : "";
-  const facets = "facets" in post.record ? (post.record.facets as RichTextProps["facets"]) : void 0;
+  const text = "text" in postView.record ? (postView.record.text as string) : "";
+  const facets =
+    "facets" in postView.record ? (postView.record.facets as RichTextProps["facets"]) : void 0;
   const richText = new RichText({ text, facets });
 
   return (
@@ -36,21 +41,21 @@ export function DetailedPostCard({ post }: { post: PostView }): React.ReactEleme
       <article className="relative px-5 py-4">
         <div className="flex gap-2">
           <Link
-            to={`/profile/${post.author.handle}`}
+            to={`/profile/${postView.author.handle}`}
             className="h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
-            <img src={post.author.avatar} alt="" className="size-full" />
+            <img src={postView.author.avatar} alt="" className="size-full" />
           </Link>
 
           <div className="flex grow flex-col">
             <Link
-              to={`/profile/${post.author.handle}`}
+              to={`/profile/${postView.author.handle}`}
               className="relative font-bold wrap-anywhere text-inherit hover:underline"
             >
               {displayName}
             </Link>
 
-            <div className="text-xs wrap-anywhere text-fg-muted">@{post.author.handle}</div>
+            <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
           </div>
         </div>
 
@@ -61,7 +66,7 @@ export function DetailedPostCard({ post }: { post: PostView }): React.ReactEleme
             ))}
           </p>
 
-          {post.embed && <EmbedView embed={post.embed} />}
+          {postView.embed && <EmbedView embed={postView.embed} />}
 
           <time
             dateTime={datetimeString}
@@ -77,35 +82,35 @@ export function DetailedPostCard({ post }: { post: PostView }): React.ReactEleme
               <dt>
                 <ReplyIcon aria-label="Replies" className="size-4" />
               </dt>
-              <dd>{post.replyCount}</dd>
+              <dd>{postView.replyCount}</dd>
             </div>
 
             <div className="flex items-center gap-x-1">
               <dt>
                 <RepeatIcon aria-label="Reposts" className="size-4" />
               </dt>
-              <dd>{post.repostCount}</dd>
+              <dd>{postView.repostCount}</dd>
             </div>
 
             <div className="flex items-center gap-x-1">
               <dt>
                 <QuoteIcon aria-label="Quotes" className="size-4" />
               </dt>
-              <dd>{post.quoteCount}</dd>
+              <dd>{postView.quoteCount}</dd>
             </div>
 
             <div className="flex items-center gap-x-1">
               <dt>
                 <LikeIcon aria-label="Likes" className="size-4" />
               </dt>
-              <dd>{post.likeCount}</dd>
+              <dd>{postView.likeCount}</dd>
             </div>
 
             <div className="flex items-center gap-x-1">
               <dt>
                 <BookmarkIcon aria-label="Bookmarks" className="size-4" />
               </dt>
-              <dd>{post.bookmarkCount}</dd>
+              <dd>{postView.bookmarkCount}</dd>
             </div>
           </dl>
 
@@ -117,7 +122,7 @@ export function DetailedPostCard({ post }: { post: PostView }): React.ReactEleme
               </Collapsible.Trigger>
               <Collapsible.Panel>
                 <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
-                  {JSON.stringify(post, null, 2)}
+                  {JSON.stringify(postView, null, 2)}
                 </pre>
               </Collapsible.Panel>
             </Collapsible.Root>

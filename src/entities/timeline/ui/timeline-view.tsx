@@ -1,11 +1,13 @@
-import React, { use } from "react";
+import React from "react";
 
 import { PostCard } from "#src/entities/post/@x/timeline.ts";
+import type { app } from "#src/shared/api/lexicons/index.ts";
 
-import type { FeedViewPost } from "../model/feed-view-post";
-import type { Timeline } from "../model/timeline";
-
-export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React.ReactElement {
+export function TimelineView({
+  feed,
+}: {
+  feed: readonly app.bsky.feed.defs.FeedViewPost[];
+}): React.ReactElement {
   return (
     <div className="grid grid-cols-1 gap-4">
       {feed
@@ -16,13 +18,3 @@ export function TimelineView({ feed }: { feed: readonly FeedViewPost[] }): React
     </div>
   );
 }
-
-TimelineView.Promise = function ({
-  timeline: timelinePromise,
-}: {
-  timeline: Promise<Timeline>;
-}): React.ReactElement {
-  const timeline = use(timelinePromise);
-
-  return <TimelineView feed={timeline.feed} />;
-};

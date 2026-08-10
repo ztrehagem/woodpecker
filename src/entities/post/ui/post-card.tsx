@@ -4,6 +4,7 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import {
   BookmarkIcon,
@@ -16,7 +17,6 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import type { PostView, PostReason, PostReasonRepost, Post } from "../model/post";
 import { buildPostHref } from "./build-post-href";
 import { fallbackDisplayName } from "./display-name";
 import { EmbedView } from "./embeds/embed-view";
@@ -28,11 +28,14 @@ export function PostCard({
   reason,
   pinned = false,
 }: {
-  postView: PostView;
-  reason?: PostReason;
+  postView: app.bsky.feed.defs.PostView;
+  reason?: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned?: boolean;
 }): React.ReactElement {
-  const post = postView.record.$type === "app.bsky.feed.post" ? (postView.record as Post) : null;
+  const post =
+    postView.record.$type === "app.bsky.feed.post"
+      ? (postView.record as app.bsky.feed.post.Main)
+      : null;
 
   if (!post) {
     return <></>;
@@ -161,7 +164,7 @@ function PostReasonBlock({
   reason,
   pinned,
 }: {
-  reason: PostReason;
+  reason: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned: boolean;
 }): React.ReactElement | null {
   if (pinned) {
@@ -170,7 +173,7 @@ function PostReasonBlock({
 
   switch (reason?.$type) {
     case "app.bsky.feed.defs#reasonRepost":
-      return <PostReasonBlockRepost reason={reason as PostReasonRepost} />;
+      return <PostReasonBlockRepost reason={reason as app.bsky.feed.defs.ReasonRepost} />;
     case "app.bsky.feed.defs#reasonPin":
       return <PostReasonBlockPinned />;
     default:
@@ -186,7 +189,11 @@ function PostReasonBlockPinned(): React.ReactElement {
     </div>
   );
 }
-function PostReasonBlockRepost({ reason }: { reason: PostReasonRepost }): React.ReactElement {
+function PostReasonBlockRepost({
+  reason,
+}: {
+  reason: app.bsky.feed.defs.ReasonRepost;
+}): React.ReactElement {
   return (
     <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
       <RepeatIcon className="size-4" />
