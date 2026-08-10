@@ -10,6 +10,10 @@ import { EditSquareIcon, HomeIcon } from "#src/shared/ui/icon/index.ts";
 import { MyMenu } from "./my-menu";
 
 export function SignedInHeader(): React.ReactElement {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header className="sticky top-0 left-0 z-10 bg-backdrop/50 backdrop-blur-sm">
       <Container>
@@ -25,9 +29,15 @@ export function SignedInHeader(): React.ReactElement {
             </Link>
           </div>
 
-          <h1 className="flex items-center gap-2 font-brand text-sm font-medium">
-            <img src="/favicon.webp" alt="" width="16" height="16" />
-            Woodpecker
+          <h1 className="flex items-center">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="flex cursor-pointer items-center gap-2 font-brand text-sm font-medium"
+            >
+              <img src="/favicon.webp" alt="" width="16" height="16" />
+              Woodpecker
+            </button>
           </h1>
 
           <div className="flex items-center justify-end gap-4 max-mobile:gap-2">
