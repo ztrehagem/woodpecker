@@ -1,7 +1,8 @@
-import type { AtIdentifierString } from "@atproto/lex";
+import type { AtIdentifierString, AtUriString } from "@atproto/lex";
 import type React from "react";
 import { useParams } from "react-router";
 
+import { PostCard, usePostQuery, type ThreadViewPost } from "#src/entities/post/index.ts";
 import { ProfileCard, useProfileQuery } from "#src/entities/profile/index.ts";
 import { TimelineView } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -12,34 +13,73 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 import { useAuthorFeedQuery } from "../api/author-feed-query.ts";
 
 export default function Page(): React.ReactElement {
-  const session = useAssertSession();
   const { handle } = useParams();
   const actor = handle as AtIdentifierString;
-  const { data: profile, error: profileError } = useProfileQuery(session, actor);
-  const {
-    data,
-    error: authorFeedError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useAuthorFeedQuery(session, actor);
+
+  return (
+    <div className="flex flex-col gap-4 py-4">
+      <Container>
+        <ProfileView actor={actor} />
+      </Container>
+
+      <Container>
+        <FeedView actor={actor} />
+      </Container>
+    </div>
+  );
+}
+
+function ProfileView({ actor }: { actor: AtIdentifierString }): React.ReactElement {
+  const session = useAssertSession();
+  const { data: profile, error } = useProfileQuery(session, actor);
+
+  if (profile) {
+    return (
+      <div className="flex flex-col gap-4">
+        <ProfileCard profile={profile} />
+        {profile.pinnedPost && <PinnedView uri={profile.pinnedPost.uri} />}
+      </div>
+    );
+  } else if (error) {
+    return <p className="text-danger">{error.message}</p>;
+  }
+
+  return <LoadingFallback />;
+}
+
+function PinnedView({ uri }: { uri: AtUriString }): React.ReactElement {
+  const session = useAssertSession();
+  const { data, error } = usePostQuery(session, uri, { depth: 0, parentHeight: 0 });
+
+  if (data) {
+    const thread = data.thread;
+
+    if (thread.$type == "app.bsky.feed.defs#threadViewPost") {
+      return <PostCard post={(thread as ThreadViewPost).post} pinned />;
+    }
+    return <></>;
+  } else if (error) {
+    return <></>;
+  }
+
+  return <></>;
+}
+
+function FeedView({ actor }: { actor: AtIdentifierString }): React.ReactElement {
+  const session = useAssertSession();
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeedQuery(
+    session,
+    actor,
+  );
 
   const feed = data?.pages.flatMap((page) => page.feed);
 
-  let profileContent: React.ReactNode = <LoadingFallback />;
-  if (profileError) {
-    profileContent = <p className="text-danger">{profileError.message}</p>;
-  } else if (profile) {
-    profileContent = <ProfileCard profile={profile} />;
-  }
-
-  let authorFeedContent: React.ReactNode = <LoadingFallback />;
   if (feed) {
-    authorFeedContent = (
+    return (
       <div className="flex flex-col gap-4">
         {feed.length > 0 ? <TimelineView feed={feed} /> : <p>No posts.</p>}
 
-        {authorFeedError && <p className="text-danger">{authorFeedError.message}</p>}
+        {error && <p className="text-danger">{error.message}</p>}
 
         {hasNextPage && (
           <div className="self-center">
@@ -55,15 +95,9 @@ export default function Page(): React.ReactElement {
         )}
       </div>
     );
-  } else if (authorFeedError) {
-    authorFeedContent = <p className="text-danger">{authorFeedError.message}</p>;
+  } else if (error) {
+    return <p className="text-danger">{error.message}</p>;
   }
 
-  return (
-    <div className="flex flex-col gap-4 py-4">
-      <Container>{profileContent}</Container>
-
-      <Container>{authorFeedContent}</Container>
-    </div>
-  );
+  return <LoadingFallback />;
 }

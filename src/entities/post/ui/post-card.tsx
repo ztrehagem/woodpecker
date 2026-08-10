@@ -25,9 +25,11 @@ import { timeAgo } from "./time-ago";
 export function PostCard({
   post,
   reason,
+  pinned = false,
 }: {
   post: Post;
   reason?: PostReason;
+  pinned?: boolean;
 }): React.ReactElement {
   const datetimeString = asDatetimeString(post.record.createdAt as string);
   const date = new Date(datetimeString);
@@ -51,12 +53,12 @@ export function PostCard({
           className="absolute inset-0 block"
         ></Link>
 
-        {reason && <PostReasonBlock reason={reason} />}
+        {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
 
         <div className="flex gap-2">
           <Link
             to={`/profile/${post.author.handle}`}
-            className="h-10 w-10 shrink-0 overflow-clip rounded-full"
+            className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
             <img src={post.author.avatar} alt="" className="size-full" />
           </Link>
@@ -163,39 +165,48 @@ function extractLink(post: Post): string | null {
   return null;
 }
 
-function PostReasonBlock({ reason }: { reason: PostReason }): React.ReactElement | null {
-  if (reason == null) {
-    return null;
+function PostReasonBlock({
+  reason,
+  pinned,
+}: {
+  reason: PostReason;
+  pinned: boolean;
+}): React.ReactElement | null {
+  if (pinned) {
+    return <PostReasonBlockPinned />;
   }
 
-  switch (reason.$type) {
-    case "app.bsky.feed.defs#reasonRepost": {
-      const repost = reason as PostReasonRepost;
-
-      return (
-        <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
-          <RepeatIcon className="size-4" />
-          <span>
-            <span>Reposted by </span>
-            <Link
-              to={`/profile/${repost.by.handle}`}
-              className="relative text-fg-muted hover:underline"
-            >
-              {fallbackDisplayName(repost.by.displayName, repost.by.handle)}
-            </Link>
-          </span>
-        </div>
-      );
-    }
-
+  switch (reason?.$type) {
+    case "app.bsky.feed.defs#reasonRepost":
+      return <PostReasonBlockRepost reason={reason as PostReasonRepost} />;
     case "app.bsky.feed.defs#reasonPin":
-      return (
-        <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
-          <KeepIcon className="size-4" />
-          <span>Pinned</span>
-        </div>
-      );
+      return <PostReasonBlockPinned />;
     default:
       return null;
   }
+}
+
+function PostReasonBlockPinned(): React.ReactElement {
+  return (
+    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
+      <KeepIcon className="size-4" />
+      <span>Pinned</span>
+    </div>
+  );
+}
+function PostReasonBlockRepost({ reason }: { reason: PostReasonRepost }): React.ReactElement {
+  return (
+    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
+      <RepeatIcon className="size-4" />
+      <span>
+        <span>Reposted by </span>
+        <Link
+          to={`/profile/${reason.by.handle}`}
+          className="relative text-fg-muted hover:underline"
+        >
+          {fallbackDisplayName(reason.by.displayName, reason.by.handle)}
+        </Link>
+      </span>
+    </div>
+  );
 }

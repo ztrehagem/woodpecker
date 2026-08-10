@@ -8,4 +8,3 @@ export type ThreadViewPost = app.bsky.feed.defs.ThreadViewPost;
 export type Post = app.bsky.feed.defs.PostView;
 export type PostReason = app.bsky.feed.defs.FeedViewPost["reason"];
 export type PostReasonRepost = app.bsky.feed.defs.ReasonRepost;
-export type PostReasonPin = app.bsky.feed.defs.ReasonPin;
