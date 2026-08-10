@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router/dom";
 import "../styles/globals.css";
 import { AtProtoProvider } from "#src/shared/auth/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.tsx";
+import { ReloadPrompt } from "#src/shared/ui/reload-prompt.tsx";
 
 import { router } from "../routes";
 import { oauthClientPromise, oauthResultPromise, sessionPromise } from "./atproto";
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
           session={sessionPromise}
         >
           <RouterProvider router={router} />
+          <ReloadPrompt />
         </AtProtoProvider>
       </QueryClientProvider>
     </ErrorBoundary>
