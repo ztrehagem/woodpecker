@@ -11,7 +11,7 @@ import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { createPost } from "../api/create-post";
-import { useExternalEmbedQuery } from "../api/external-embed-query";
+import { type ExternalEmbedPreview, useExternalEmbedQuery } from "../api/external-embed-query";
 import { ExternalEmbedUI } from "./embeds/external-embed-ui";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
@@ -60,7 +60,8 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
     isPending,
     error,
   } = useMutation({
-    mutationFn: (text: string) => createPost(session, text),
+    mutationFn: ({ text, embed }: { text: string; embed: ExternalEmbedPreview | undefined }) =>
+      createPost(session, text, embed),
     onSuccess: () => {
       setIsDialogOpen(false);
       setText("");
@@ -77,7 +78,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
       return;
     }
 
-    submitPost(trimmedText);
+    submitPost({ text: trimmedText, embed: externalEmbedPreview });
   };
 
   return (

@@ -5,4 +5,5 @@ export const scopes = [
   "rpc:app.bsky.feed.getAuthorFeed?aud=*",
   "rpc:app.bsky.feed.getPostThread?aud=*",
   "repo:*",
+  "blob:*/*",
 ];

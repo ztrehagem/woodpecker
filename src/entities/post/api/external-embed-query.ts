@@ -7,7 +7,7 @@ const externalEmbedQueryKeys = {
 
 type UriString = `${string}:${string}`;
 
-interface ExternalEmbedPreview {
+export interface ExternalEmbedPreview {
   uri: UriString;
   title: string;
   description: string;
