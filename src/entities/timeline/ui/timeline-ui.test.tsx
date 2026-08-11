@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { MemoryRouter } from "react-router";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 
 import { TimelineUI } from "./timeline-ui";
 
@@ -40,9 +42,13 @@ test("renders external embeds", async () => {
   };
 
   const view = await render(
-    <MemoryRouter>
-      <TimelineUI feed={[post]} />
-    </MemoryRouter>,
+    <AtProtoMockProvider>
+      <MemoryRouter>
+        <Suspense>
+          <TimelineUI feed={[post]} />
+        </Suspense>
+      </MemoryRouter>
+    </AtProtoMockProvider>,
   );
 
   await expect.element(view.getByText("Example", { exact: true })).toBeInTheDocument();
@@ -98,9 +104,13 @@ test("renders embedded record post content", async () => {
   };
 
   const view = await render(
-    <MemoryRouter>
-      <TimelineUI feed={[post]} />
-    </MemoryRouter>,
+    <AtProtoMockProvider>
+      <MemoryRouter>
+        <Suspense>
+          <TimelineUI feed={[post]} />
+        </Suspense>
+      </MemoryRouter>
+    </AtProtoMockProvider>,
   );
 
   await expect.element(view.getByRole("link", { name: "Bob" })).toBeInTheDocument();
@@ -176,9 +186,13 @@ test("renders nested embeds inside embedded record posts", async () => {
   };
 
   const view = await render(
-    <MemoryRouter>
-      <TimelineUI feed={[post]} />
-    </MemoryRouter>,
+    <AtProtoMockProvider>
+      <MemoryRouter>
+        <Suspense>
+          <TimelineUI feed={[post]} />
+        </Suspense>
+      </MemoryRouter>
+    </AtProtoMockProvider>,
   );
 
   await expect.element(view.getByText("Embedded Link", { exact: true })).toBeInTheDocument();
