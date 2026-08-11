@@ -1,6 +1,6 @@
 import { Menu } from "@base-ui/react";
 import { clsx } from "clsx";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -74,17 +74,17 @@ export function PostActionUI({
 
 function useLikeState(postView: app.bsky.feed.defs.PostView) {
   const session = useAssertSession();
-  const likeUriRef = useRef<string | null>(postView.viewer?.like ?? null);
-  const [isLiked, setIsLiked] = useState(postView.viewer?.like != null);
+
+  const [isLiked, setIsLiked] = useState(session.likeCache.get(postView) != null);
 
   const like = (): void => {
-    if (likeUriRef.current != null) {
+    if (session.likeCache.get(postView) != null) {
       return;
     }
     setIsLiked(true);
     likePost(session, postView.uri, postView.cid)
-      .then(({ uri }) => {
-        likeUriRef.current = uri;
+      .then(({ uri: likeUri }) => {
+        session.likeCache.set(postView, likeUri);
       })
       .catch(() => {
         setIsLiked(false);
@@ -92,14 +92,14 @@ function useLikeState(postView: app.bsky.feed.defs.PostView) {
   };
 
   const unlike = (): void => {
-    if (likeUriRef.current == null) {
+    const likeUri = session.likeCache.get(postView);
+    if (likeUri == null) {
       return;
     }
-    const uri = likeUriRef.current;
     setIsLiked(false);
-    unlikePost(session, uri)
+    unlikePost(session, likeUri)
       .then(() => {
-        likeUriRef.current = null;
+        session.likeCache.set(postView, null);
       })
       .catch(() => {
         setIsLiked(true);

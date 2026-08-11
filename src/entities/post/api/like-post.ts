@@ -1,11 +1,13 @@
+import type { AtUriString } from "@atproto/lex";
+
 import type { Session } from "#src/shared/auth/index.ts";
 
 export async function likePost(
   session: Session,
-  uri: string,
+  uri: AtUriString,
   cid: string,
 ): Promise<{
-  uri: string;
+  uri: AtUriString;
   cid: string;
 }> {
   // return await session.client.create(app.bsky.feed.like, {
@@ -15,5 +17,6 @@ export async function likePost(
   //   },
   //   createdAt: toDatetimeString(new Date()),
   // });
-  return await session.agent.like(uri, cid);
+  const result = await session.agent.like(uri, cid);
+  return { uri: result.uri as AtUriString, cid: result.cid };
 }
