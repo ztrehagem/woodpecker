@@ -17,7 +17,7 @@ export default function SignedInUI(): React.ReactElement {
   const feed = data?.pages.flatMap((page) => page.feed);
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
       <Container>
         <NewPostArea />
       </Container>

@@ -6,17 +6,11 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
-import {
-  BookmarkIcon,
-  CaretRightIcon,
-  LikeIcon,
-  QuoteIcon,
-  RepeatIcon,
-  ReplyIcon,
-} from "#src/shared/ui/icon/index.ts";
+import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import { fallbackDisplayName } from "./display-name";
 import { EmbedUI } from "./embeds/embed-ui";
+import { PostActionUI } from "./post-action-ui";
 import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
@@ -38,7 +32,7 @@ export function DetailedPostCard({
 
   return (
     <Card>
-      <article className="relative px-5 py-4">
+      <article className="relative p-3 tablet:px-5 tablet:py-4">
         <div className="flex gap-2">
           <Link
             to={`/profile/${postView.author.handle}`}
@@ -77,44 +71,9 @@ export function DetailedPostCard({
             <span className="text-xs">{datetimeLocaleString}</span>
           </time>
 
-          <dl className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
-            <div className="flex items-center gap-x-1">
-              <dt>
-                <ReplyIcon aria-label="Replies" className="size-4" />
-              </dt>
-              <dd>{postView.replyCount}</dd>
-            </div>
+          <PostActionUI postView={postView} />
 
-            <div className="flex items-center gap-x-1">
-              <dt>
-                <RepeatIcon aria-label="Reposts" className="size-4" />
-              </dt>
-              <dd>{postView.repostCount}</dd>
-            </div>
-
-            <div className="flex items-center gap-x-1">
-              <dt>
-                <QuoteIcon aria-label="Quotes" className="size-4" />
-              </dt>
-              <dd>{postView.quoteCount}</dd>
-            </div>
-
-            <div className="flex items-center gap-x-1">
-              <dt>
-                <LikeIcon aria-label="Likes" className="size-4" />
-              </dt>
-              <dd>{postView.likeCount}</dd>
-            </div>
-
-            <div className="flex items-center gap-x-1">
-              <dt>
-                <BookmarkIcon aria-label="Bookmarks" className="size-4" />
-              </dt>
-              <dd>{postView.bookmarkCount}</dd>
-            </div>
-          </dl>
-
-          {import.meta.env.DEV && (
+          {import.meta.env.DEV && import.meta.env.DEBUG != null && (
             <Collapsible.Root className="flex flex-col items-start">
               <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                 Show raw data

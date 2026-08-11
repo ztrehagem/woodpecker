@@ -14,6 +14,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/test/**/*", "src/shared/api/lexicons/**/*"],
     },
 
     browser: {

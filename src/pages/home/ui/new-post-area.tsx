@@ -14,7 +14,7 @@ export function NewPostArea(): React.ReactElement {
 
   return (
     <Card>
-      <div className="flex items-center gap-4 px-5 py-4">
+      <div className="flex items-center gap-4 p-3 tablet:px-5 tablet:py-4">
         {profile ? (
           <Link to={`/profile/${profile.handle}`} className="shrink-0">
             <img

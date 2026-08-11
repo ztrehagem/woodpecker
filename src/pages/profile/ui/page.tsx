@@ -18,7 +18,7 @@ export default function Page(): React.ReactElement {
   const actor = handle as AtIdentifierString;
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
       <Container>
         <ProfileBlock actor={actor} />
       </Container>
@@ -36,7 +36,7 @@ function ProfileBlock({ actor }: { actor: AtIdentifierString }): React.ReactElem
 
   if (profile) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 tablet:gap-4">
         <ProfileCard profile={profile} />
         {profile.pinnedPost && <PinnedCard uri={profile.pinnedPost.uri} />}
       </div>

@@ -8,7 +8,7 @@ export default function Container({
   width?: "tablet" | "mobile";
 }>): React.ReactElement {
   return (
-    <div className="px-4 tablet:px-8">
+    <div className="px-3 tablet:px-8">
       <div
         className={clsx("mx-auto w-full", {
           "max-w-tablet": width === "tablet",

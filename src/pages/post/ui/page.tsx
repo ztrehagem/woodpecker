@@ -25,7 +25,7 @@ export function Page(): React.ReactElement {
   }
 
   return (
-    <div className="py-4">
+    <div className="py-2 tablet:py-4">
       <Container>{content}</Container>
     </div>
   );
@@ -92,7 +92,7 @@ function ParentCardList({ parent }: { parent: ParentView | undefined }): React.R
       const { post, parent: grandparent } = parent as app.bsky.feed.defs.ThreadViewPost;
 
       return (
-        <div className="mb-4 flex flex-col">
+        <div className="mb-2 flex flex-col tablet:mb-4">
           <ParentCardList parent={grandparent} />
           <PostCard postView={post} />
         </div>
@@ -126,7 +126,7 @@ function ReplyCardList({
   }
 
   return (
-    <ul className="mt-4 flex flex-col gap-4 border-l border-highlight pl-4">
+    <ul className="mt-2 flex flex-col gap-2 border-l border-highlight pl-4 tablet:mt-4 tablet:gap-4">
       {replies.map((reply, index) => (
         <li key={index}>
           <ReplyCardListItem reply={reply} />

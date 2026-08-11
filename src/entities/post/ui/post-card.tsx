@@ -6,20 +6,13 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
-import {
-  BookmarkIcon,
-  CaretRightIcon,
-  KeepIcon,
-  LikeIcon,
-  QuoteIcon,
-  RepeatIcon,
-  ReplyIcon,
-} from "#src/shared/ui/icon/index.ts";
+import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "./build-post-href";
 import { fallbackDisplayName } from "./display-name";
 import { EmbedUI } from "./embeds/embed-ui";
+import { PostActionUI } from "./post-action-ui";
 import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
@@ -53,7 +46,7 @@ export function PostCard({
 
   return (
     <Card>
-      <article className="relative px-5 py-4 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight">
+      <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
         <Link
           to={link ?? ""}
           aria-label="View post"
@@ -107,44 +100,9 @@ export function PostCard({
               </div>
             )}
 
-            <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
-              <div className="flex items-center gap-x-1">
-                <dt>
-                  <ReplyIcon aria-label="Replies" className="size-4" />
-                </dt>
-                <dd>{postView.replyCount}</dd>
-              </div>
+            <PostActionUI postView={postView} />
 
-              <div className="flex items-center gap-x-1">
-                <dt>
-                  <RepeatIcon aria-label="Reposts" className="size-4" />
-                </dt>
-                <dd>{postView.repostCount}</dd>
-              </div>
-
-              <div className="flex items-center gap-x-1">
-                <dt>
-                  <QuoteIcon aria-label="Quotes" className="size-4" />
-                </dt>
-                <dd>{postView.quoteCount}</dd>
-              </div>
-
-              <div className="flex items-center gap-x-1">
-                <dt>
-                  <LikeIcon aria-label="Likes" className="size-4" />
-                </dt>
-                <dd>{postView.likeCount}</dd>
-              </div>
-
-              <div className="flex items-center gap-x-1">
-                <dt>
-                  <BookmarkIcon aria-label="Bookmarks" className="size-4" />
-                </dt>
-                <dd>{postView.bookmarkCount}</dd>
-              </div>
-            </dl>
-
-            {import.meta.env.DEV && (
+            {import.meta.env.DEV && import.meta.env.DEBUG != null && (
               <Collapsible.Root className="flex flex-col items-start">
                 <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                   Show raw data
@@ -152,7 +110,7 @@ export function PostCard({
                 </Collapsible.Trigger>
                 <Collapsible.Panel>
                   <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
-                    {JSON.stringify(post, null, 2)}
+                    {JSON.stringify(postView, null, 2)}
                   </pre>
                 </Collapsible.Panel>
               </Collapsible.Root>
