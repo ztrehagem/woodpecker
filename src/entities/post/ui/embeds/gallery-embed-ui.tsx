@@ -10,7 +10,7 @@ export function GalleryEmbedUI({
   const items = embed.items as Array<app.bsky.embed.gallery.ViewImage>;
 
   return (
-    <div className="my-3 grid w-full grid-cols-1 grid-rows-1 overflow-x-auto">
+    <div className="grid w-full grid-cols-1 grid-rows-1 overflow-x-auto">
       <div className="grid w-max auto-cols-fr grid-flow-col grid-rows-1 gap-1">
         {items.map((image, index) => (
           <a

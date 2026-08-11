@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
@@ -9,7 +10,7 @@ export function ImagesEmbedUI({
 }): React.ReactElement {
   if (embed.images.length == 1) {
     return (
-      <div className="my-3 grid grid-cols-1 grid-rows-1">
+      <div className="grid grid-cols-1 grid-rows-1">
         {embed.images.map((image, index) => (
           <a
             key={index}
@@ -25,7 +26,7 @@ export function ImagesEmbedUI({
   }
 
   return (
-    <div className="my-3 grid gap-2 mobile:grid-cols-2">
+    <div className="grid grid-cols-1 gap-2 mobile:grid-cols-2">
       {embed.images.map((image, index) => (
         <a
           key={index}
@@ -33,7 +34,14 @@ export function ImagesEmbedUI({
           target="_blank"
           className="relative overflow-hidden rounded-md border border-filling"
         >
-          <img src={image.thumb} alt={image.alt} className="h-60 w-full object-cover" />
+          <img
+            src={image.thumb}
+            alt={image.alt}
+            className={clsx(
+              "h-30 w-full object-cover",
+              embed.images.length > 2 ? "mobile:h-30" : "mobile:h-60",
+            )}
+          />
         </a>
       ))}
     </div>
