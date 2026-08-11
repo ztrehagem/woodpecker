@@ -1,11 +1,12 @@
 import type { AtUriString } from "@atproto/lex";
-import { queryOptions, useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { queryOptions, useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
 const postQueryKeys = {
   all: ["posts"] as const,
+  single: (uri: AtUriString) => [...postQueryKeys.all, uri] as const,
   detail: (uri: AtUriString, depth?: number, parentHeight?: number) =>
     [...postQueryKeys.all, uri, depth, parentHeight] as const,
 };
@@ -41,4 +42,12 @@ export function usePostQuery(
   } = {},
 ): UseQueryResult<Output> {
   return useQuery(postQuery(session, uri, { depth, parentHeight }));
+}
+
+export function useInvalidatePostQuery(): (uri: AtUriString) => Promise<void> {
+  const queryClient = useQueryClient();
+
+  return async (uri) => {
+    await queryClient.invalidateQueries({ queryKey: postQueryKeys.detail(uri) });
+  };
 }

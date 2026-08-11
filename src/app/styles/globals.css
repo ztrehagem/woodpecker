@@ -31,6 +31,7 @@
   --color-fg-link-active: var(--color-blue-300);
   --color-fg-danger: var(--color-red-400);
   --color-fg-danger-active: var(--color-red-300);
+  --color-fg-like: var(--color-pink-400);
 }
 
 @layer base {

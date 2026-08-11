@@ -110,7 +110,7 @@ export function PostCard({
                 </Collapsible.Trigger>
                 <Collapsible.Panel>
                   <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
-                    {JSON.stringify(post, null, 2)}
+                    {JSON.stringify(postView, null, 2)}
                   </pre>
                 </Collapsible.Panel>
               </Collapsible.Root>

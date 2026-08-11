@@ -1,15 +1,27 @@
 import { Menu } from "@base-ui/react";
 import { clsx } from "clsx";
-import React from "react";
+import React, { useRef, useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { LikeIcon, MoreHorizIcon, RepeatIcon, ReplyIcon } from "#src/shared/ui/icon/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
+import {
+  FavoriteFillIcon,
+  FavoriteIcon,
+  MoreHorizIcon,
+  RepeatIcon,
+  ReplyIcon,
+} from "#src/shared/ui/icon/index.ts";
+
+import { likePost } from "../api/like-post";
+import { unlikePost } from "../api/unlike-post";
 
 export function PostActionUI({
   postView,
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
+  const { isLiked, toggleLike } = useLikeState(postView);
+
   return (
     <div className="mt-1 flex items-center justify-between gap-4">
       <ul className="grid grow grid-cols-3 gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
@@ -36,10 +48,21 @@ export function PostActionUI({
         <li className="flex items-center gap-x-1">
           <button
             type="button"
-            className="relative flex cursor-pointer items-center gap-x-1 text-fg-muted"
+            onClick={toggleLike}
+            aria-pressed={isLiked}
+            className={clsx(
+              "relative flex cursor-pointer items-center gap-x-1",
+              isLiked ? "text-fg-like" : "text-fg-muted",
+            )}
           >
-            <LikeIcon aria-label="Likes" className="size-4" />
-            {postView.likeCount ?? 0}
+            {isLiked ? (
+              <FavoriteFillIcon aria-label="Likes" className="size-4" />
+            ) : (
+              <FavoriteIcon aria-label="Likes" className="size-4" />
+            )}
+            {(postView.likeCount ?? 0) -
+              (postView.viewer?.like != null ? 1 : 0) +
+              (isLiked ? 1 : 0)}
           </button>
         </li>
       </ul>
@@ -47,6 +70,45 @@ export function PostActionUI({
       <MoreMenu />
     </div>
   );
+}
+
+function useLikeState(postView: app.bsky.feed.defs.PostView) {
+  const session = useAssertSession();
+  const likeUriRef = useRef<string | null>(postView.viewer?.like ?? null);
+  const [isLiked, setIsLiked] = useState(postView.viewer?.like != null);
+
+  const like = (): void => {
+    if (likeUriRef.current != null) {
+      return;
+    }
+    setIsLiked(true);
+    likePost(session, postView.uri, postView.cid)
+      .then(({ uri }) => {
+        likeUriRef.current = uri;
+      })
+      .catch(() => {
+        setIsLiked(false);
+      });
+  };
+
+  const unlike = (): void => {
+    if (likeUriRef.current == null) {
+      return;
+    }
+    const uri = likeUriRef.current;
+    setIsLiked(false);
+    unlikePost(session, uri)
+      .then(() => {
+        likeUriRef.current = null;
+      })
+      .catch(() => {
+        setIsLiked(true);
+      });
+  };
+
+  const toggleLike = isLiked ? unlike : like;
+
+  return { isLiked, toggleLike };
 }
 
 function MoreMenu(): React.ReactElement {
