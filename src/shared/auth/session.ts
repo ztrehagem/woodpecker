@@ -1,17 +1,19 @@
-import type { Did } from "@atproto/api";
+import { Agent, type Did } from "@atproto/api";
 import { Client } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
 export class Session {
-  readonly #session: OAuthSession;
+  readonly #oauthSession: OAuthSession;
+  readonly agent: Agent;
   readonly client: Client;
 
-  constructor(session: OAuthSession) {
-    this.#session = session;
-    this.client = new Client(session);
+  constructor(oauthSession: OAuthSession) {
+    this.#oauthSession = oauthSession;
+    this.agent = new Agent(oauthSession);
+    this.client = new Client(oauthSession);
   }
 
   get did(): Did {
-    return this.#session.did;
+    return this.#oauthSession.did;
   }
 }

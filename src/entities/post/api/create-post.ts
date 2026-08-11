@@ -1,11 +1,21 @@
-import { toDatetimeString, type CreateOutput } from "@atproto/lex";
+import { RichText } from "@atproto/api";
+import { toDatetimeString } from "@atproto/lex";
 
-import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
-export function createPost(session: Session, text: string): Promise<CreateOutput> {
-  return session.client.create(app.bsky.feed.post, {
-    text,
+export async function createPost(
+  session: Session,
+  text: string,
+): Promise<{
+  uri: string;
+  cid: string;
+}> {
+  const rt = new RichText({ text });
+  await rt.detectFacets(session.agent);
+
+  return await session.agent.post({
+    text: rt.text,
+    facets: rt.facets,
     createdAt: toDatetimeString(new Date()),
   });
 }
