@@ -16,10 +16,7 @@ export function RecordEmbedUI({
   renderEmbed,
 }: {
   embed: app.bsky.embed.record.View;
-  renderEmbed: (
-    embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
-    key: React.Key,
-  ) => React.ReactElement;
+  renderEmbed: (embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>) => React.ReactElement;
 }): React.ReactElement {
   const { record } = embed;
 
@@ -49,10 +46,7 @@ function RecordEmbedPostView({
   renderEmbed,
 }: {
   record: app.bsky.embed.record.ViewRecord;
-  renderEmbed: (
-    embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
-    key: React.Key,
-  ) => React.ReactElement;
+  renderEmbed: (embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>) => React.ReactElement;
 }): React.ReactElement {
   const post =
     record.value.$type === "app.bsky.feed.post" ? (record.value as app.bsky.feed.post.Main) : null;
@@ -72,7 +66,7 @@ function RecordEmbedPostView({
   const richText = new RichText({ text: post.text, facets: post.facets });
 
   return (
-    <article className="relative my-3 rounded-md border border-highlight px-3 py-2">
+    <article className="relative rounded-md border border-highlight px-3 py-2">
       <Link
         to={link ?? ""}
         aria-label="View post"
@@ -88,7 +82,7 @@ function RecordEmbedPostView({
           <img src={record.author.avatar} alt="" className="size-full" />
         </Link>
 
-        <div className="min-w-0">
+        <div className="min-w-0 grow">
           <div className="flex flex-wrap items-center gap-x-2">
             <Link
               to={`/profile/${record.author.handle}`}
@@ -120,9 +114,11 @@ function RecordEmbedPostView({
             </p>
           )}
 
-          {record.embeds?.map((recordEmbed, index) =>
-            renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>, index),
-          )}
+          {record.embeds?.map((recordEmbed, index) => (
+            <div className="mt-3" key={index}>
+              {renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>)}
+            </div>
+          ))}
         </div>
       </div>
     </article>
@@ -131,7 +127,7 @@ function RecordEmbedPostView({
 
 function RecordEmbedUnknownView(): React.ReactElement {
   return (
-    <div className="my-3 rounded-md border border-filling px-3 py-2 text-sm text-fg-muted">
+    <div className="rounded-md border border-filling px-3 py-2 text-sm text-fg-muted">
       Embedded record
     </div>
   );

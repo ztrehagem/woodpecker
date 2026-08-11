@@ -1,21 +1,29 @@
+import { RichText } from "@atproto/api";
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
-import { SendIcon } from "#src/shared/ui/icon/index.ts";
+import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { createPost } from "../api/create-post";
+import { useExternalEmbedQuery } from "../api/external-embed-query";
+import { ExternalEmbedUI } from "./embeds/external-embed-ui";
 
 export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
 
   const [text, setText] = useState("");
+  const debouncedText = useDebouncedValue(text, 400);
+  const firstEmbedLink = useMemo(() => getFirstEmbedLink(debouncedText), [debouncedText]);
+
+  const { data: externalEmbedPreview, isLoading: isExternalEmbedPreviewLoading } =
+    useExternalEmbedQuery(firstEmbedLink?.toString() ?? null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -93,6 +101,28 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
                   className="w-full bg-highlight px-3 py-2 inset-shadow-sm"
                 />
 
+                {firstEmbedLink &&
+                  (isExternalEmbedPreviewLoading ? (
+                    <div className="flex justify-center py-2">
+                      <LoadingDotsIcon className="size-6 text-fg-muted" />
+                    </div>
+                  ) : (
+                    externalEmbedPreview && (
+                      <ExternalEmbedUI
+                        embed={{
+                          $type: "app.bsky.embed.external#view",
+                          external: {
+                            $type: "app.bsky.embed.external#viewExternal",
+                            uri: externalEmbedPreview.uri,
+                            title: externalEmbedPreview.title,
+                            description: externalEmbedPreview.description,
+                            thumb: externalEmbedPreview.thumb,
+                          },
+                        }}
+                      />
+                    )
+                  ))}
+
                 {error && <p className="text-fg-danger">{error.message}</p>}
 
                 <div className="-mx-2 flex justify-between gap-4">
@@ -137,3 +167,31 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
 }
 
 NewPostDialog.Trigger = Dialog.Trigger;
+
+function getFirstEmbedLink(text: string): URL | null {
+  const rt = new RichText({ text });
+  rt.detectFacetsWithoutResolution();
+
+  for (const segment of rt.segments()) {
+    if (segment.isLink()) {
+      try {
+        return new URL(segment.link?.uri ?? "");
+      } catch {
+        //
+      }
+    }
+  }
+
+  return null;
+}
+
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}

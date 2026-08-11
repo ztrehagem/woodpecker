@@ -101,7 +101,11 @@ export function PostCard({
               </p>
             )}
 
-            {postView.embed && <EmbedUI embed={postView.embed} />}
+            {postView.embed && (
+              <div className="my-3">
+                <EmbedUI embed={postView.embed} />
+              </div>
+            )}
 
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
               <div className="flex items-center gap-x-1">

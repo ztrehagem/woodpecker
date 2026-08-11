@@ -6,7 +6,7 @@ export function VideoEmbedUI({ embed }: { embed: app.bsky.embed.video.View }): R
   const thumbnail = embed.thumbnail;
 
   return (
-    <div className="my-3 overflow-hidden rounded-md border border-filling">
+    <div className="overflow-hidden rounded-md border border-filling">
       {thumbnail != null && (
         <img src={thumbnail} alt={embed.alt ?? ""} className="h-40 w-full object-cover" />
       )}
