@@ -27,7 +27,9 @@ export function ExternalEmbedUI({
         </a>
 
         {external.description && (
-          <div className="text-xs wrap-anywhere text-fg-muted">{external.description}</div>
+          <div className="line-clamp-2 text-xs wrap-anywhere text-fg-muted">
+            {external.description}
+          </div>
         )}
 
         <div className="mt-auto text-2xs wrap-anywhere text-fg-muted">{url.hostname}</div>
