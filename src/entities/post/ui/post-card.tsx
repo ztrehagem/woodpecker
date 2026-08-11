@@ -46,7 +46,7 @@ export function PostCard({
 
   return (
     <Card>
-      <article className="relative px-5 py-4 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight">
+      <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
         <Link
           to={link ?? ""}
           aria-label="View post"
@@ -102,7 +102,7 @@ export function PostCard({
 
             <PostActionUI postView={postView} />
 
-            {import.meta.env.DEV && (
+            {import.meta.env.DEV && import.meta.env.DEBUG != null && (
               <Collapsible.Root className="flex flex-col items-start">
                 <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                   Show raw data

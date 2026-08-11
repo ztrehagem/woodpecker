@@ -23,14 +23,14 @@ export function PostActionUI({
   const { isLiked, toggleLike } = useLikeState(postView);
 
   return (
-    <div className="mt-1 flex items-center justify-between gap-4">
+    <div className="mt-2 flex items-center justify-between gap-4">
       <ul className="grid grow grid-cols-3 gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
         <li className="flex items-center gap-x-1">
           <button
             type="button"
-            className="relative flex cursor-pointer items-center gap-x-1 text-fg-muted"
+            className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
           >
-            <ReplyIcon aria-label="Replies" className="size-4" />
+            <ReplyIcon aria-label="Replies" className="size-5" />
             {postView.replyCount ?? 0}
           </button>
         </li>
@@ -38,9 +38,9 @@ export function PostActionUI({
         <li className="flex items-center gap-x-1">
           <button
             type="button"
-            className="relative flex cursor-pointer items-center gap-x-1 text-fg-muted"
+            className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
           >
-            <RepeatIcon aria-label="Reposts" className="size-4" />
+            <RepeatIcon aria-label="Reposts" className="size-5" />
             {(postView.repostCount ?? 0) + (postView.quoteCount ?? 0)}
           </button>
         </li>
@@ -51,14 +51,14 @@ export function PostActionUI({
             onClick={toggleLike}
             aria-pressed={isLiked}
             className={clsx(
-              "relative flex cursor-pointer items-center gap-x-1",
+              "relative -m-2 flex cursor-pointer items-center gap-x-1 p-2",
               isLiked ? "text-fg-like" : "text-fg-muted",
             )}
           >
             {isLiked ? (
-              <FavoriteFillIcon aria-label="Likes" className="size-4" />
+              <FavoriteFillIcon aria-label="Likes" className="size-5" />
             ) : (
-              <FavoriteIcon aria-label="Likes" className="size-4" />
+              <FavoriteIcon aria-label="Likes" className="size-5" />
             )}
             {(postView.likeCount ?? 0) -
               (postView.viewer?.like != null ? 1 : 0) +
@@ -119,16 +119,16 @@ function MoreMenu(): React.ReactElement {
   return (
     <Menu.Root>
       <Menu.Trigger
-        className="relative flex cursor-pointer items-center gap-x-1 text-fg-muted"
+        className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
         render={(props) => <button type="button" {...props} />}
       >
-        <MoreHorizIcon aria-label="More" className="size-4" />
+        <MoreHorizIcon aria-label="More" className="size-5" />
       </Menu.Trigger>
 
       <Menu.Portal className="relative z-50">
         <Menu.Positioner side="bottom" sideOffset={8} align="end">
           <Menu.Popup className="relative rounded-md border bg-filling/75 py-2 shadow-2xl backdrop-blur-sm">
-            <Menu.Item className={itemClassName}>Coming soon</Menu.Item>
+            <Menu.Item className={itemClassName}>More actions (Coming soon)</Menu.Item>
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>

@@ -32,7 +32,7 @@ export function DetailedPostCard({
 
   return (
     <Card>
-      <article className="relative px-5 py-4">
+      <article className="relative p-3 tablet:px-5 tablet:py-4">
         <div className="flex gap-2">
           <Link
             to={`/profile/${postView.author.handle}`}
@@ -73,7 +73,7 @@ export function DetailedPostCard({
 
           <PostActionUI postView={postView} />
 
-          {import.meta.env.DEV && (
+          {import.meta.env.DEV && import.meta.env.DEBUG != null && (
             <Collapsible.Root className="flex flex-col items-start">
               <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                 Show raw data
