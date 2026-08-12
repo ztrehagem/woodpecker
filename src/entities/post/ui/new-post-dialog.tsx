@@ -44,7 +44,7 @@ export function NewPostDialog(): React.ReactElement {
     }
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
-  }, [text]);
+  }, [text, isDialogOpen]);
 
   const {
     mutate: submitPost,
@@ -60,9 +60,7 @@ export function NewPostDialog(): React.ReactElement {
     },
   });
 
-  const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
+  const submit = () => {
     const trimmedText = text.trim();
 
     if (trimmedText.length == 0) {
@@ -72,63 +70,78 @@ export function NewPostDialog(): React.ReactElement {
     submitPost({ text: trimmedText, embed: externalEmbedPreview });
   };
 
+  const onKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      submit();
+    }
+  };
+
+  const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    submit();
+  };
+
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen} handle={handle}>
       <Dialog.Portal className="relative z-50">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
-        <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-          <div className="mx-auto w-full max-w-xl">
-            <Card>
-              <div className="flex flex-col gap-4 px-5 py-4">
-                <div className="flex justify-between gap-4">
-                  <h2 className="font-bold">New post</h2>
+        <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
+          <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
+            <div className="mx-auto w-full max-w-xl">
+              <Card>
+                <div className="flex flex-col gap-4 px-5 py-4">
+                  <div className="flex justify-between gap-4">
+                    <h2 className="font-bold">New post</h2>
+                  </div>
+
+                  <textarea
+                    ref={textareaRef}
+                    name="text"
+                    placeholder="What's on your mind?"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    onKeyUp={onKeyUp}
+                    rows={3}
+                    className="max-h-[40svh] w-full resize-none border-b border-white px-3 py-2"
+                  />
+
+                  {firstEmbedLink &&
+                    (isExternalEmbedPreviewLoading ? (
+                      <div className="flex justify-center py-2">
+                        <LoadingDotsIcon className="size-6 text-fg-muted" />
+                      </div>
+                    ) : (
+                      externalEmbedPreview && (
+                        <ExternalEmbedUI embed={toEmbedExternalView(externalEmbedPreview)} />
+                      )
+                    ))}
+
+                  {error && <p className="text-fg-danger">{error.message}</p>}
+
+                  <div className="-mx-2 flex justify-between gap-4">
+                    <Dialog.Close
+                      render={(props) => <NakedButton severity="destructive" {...props} />}
+                    >
+                      Cancel
+                    </Dialog.Close>
+
+                    <NakedButton
+                      onClick={onClickSubmit}
+                      disabled={isPending}
+                      severity="primary"
+                      emphasize
+                      processing={isPending}
+                    >
+                      Send
+                      <SendIcon />
+                    </NakedButton>
+                  </div>
                 </div>
-
-                <textarea
-                  ref={textareaRef}
-                  name="text"
-                  placeholder="What's on your mind?"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  rows={3}
-                  className="w-full resize-none bg-highlight px-3 py-2 inset-shadow-sm"
-                />
-
-                {firstEmbedLink &&
-                  (isExternalEmbedPreviewLoading ? (
-                    <div className="flex justify-center py-2">
-                      <LoadingDotsIcon className="size-6 text-fg-muted" />
-                    </div>
-                  ) : (
-                    externalEmbedPreview && (
-                      <ExternalEmbedUI embed={toEmbedExternalView(externalEmbedPreview)} />
-                    )
-                  ))}
-
-                {error && <p className="text-fg-danger">{error.message}</p>}
-
-                <div className="-mx-2 flex justify-between gap-4">
-                  <Dialog.Close
-                    render={(props) => <NakedButton severity="destructive" {...props} />}
-                  >
-                    Cancel
-                  </Dialog.Close>
-
-                  <NakedButton
-                    onClick={onClickSubmit}
-                    disabled={isPending}
-                    severity="primary"
-                    emphasize
-                    processing={isPending}
-                  >
-                    Send
-                    <SendIcon />
-                  </NakedButton>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </Dialog.Popup>
+              </Card>
+            </div>
+          </Dialog.Popup>
+        </Dialog.Viewport>
       </Dialog.Portal>
     </Dialog.Root>
   );
