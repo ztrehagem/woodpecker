@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
-import Container from "./container";
 import { NakedButton } from "./naked-button";
 
 export function ReloadPrompt(): React.ReactElement {
@@ -38,7 +37,7 @@ export function ReloadPrompt(): React.ReactElement {
     <div className="pointer-events-none m-0 size-0 p-0">
       {(offlineReady || needRefresh) && (
         <div className="fixed inset-x-0 bottom-5 z-20">
-          <Container>
+          <div className="mx-auto max-w-2xl px-3 tablet:px-8">
             <div className="pointer-events-auto mx-5 flex flex-wrap items-center justify-between gap-2 rounded-md bg-highlight px-5 py-4 text-sm shadow-xl">
               <div className="ReloadPrompt-message">
                 {offlineReady
@@ -55,7 +54,7 @@ export function ReloadPrompt(): React.ReactElement {
                 )}
               </div>
             </div>
-          </Container>
+          </div>
         </div>
       )}
     </div>

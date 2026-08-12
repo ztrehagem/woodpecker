@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 
 import Layout from "#src/pages/layout/index.ts";
+import type { RouteHandle } from "#src/shared/lib/route-handle.ts";
 
 export const router = createBrowserRouter([
   {
@@ -10,6 +11,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         Component: lazy(() => import("#src/pages/home/index.ts")),
+        handle: { title: "Home" } satisfies RouteHandle,
       },
       {
         path: "/callback",
@@ -18,10 +20,32 @@ export const router = createBrowserRouter([
       {
         path: "/profile/:handle",
         Component: lazy(() => import("#src/pages/profile/index.ts")),
+        handle: { title: "Profile" } satisfies RouteHandle,
       },
       {
         path: "/profile/:handle/post/:postId",
         Component: lazy(() => import("#src/pages/post/index.ts")),
+        handle: { title: "Post" } satisfies RouteHandle,
+      },
+      {
+        path: "/search",
+        Component: lazy(() => import("#src/pages/search/index.ts")),
+        handle: { title: "Search" } satisfies RouteHandle,
+      },
+      {
+        path: "/notifications",
+        Component: lazy(() => import("#src/pages/notifications/index.ts")),
+        handle: { title: "Notifications" } satisfies RouteHandle,
+      },
+      {
+        path: "/likes",
+        Component: lazy(() => import("#src/pages/likes/index.ts")),
+        handle: { title: "Likes" } satisfies RouteHandle,
+      },
+      {
+        path: "/bookmarks",
+        Component: lazy(() => import("#src/pages/bookmarks/index.ts")),
+        handle: { title: "Bookmarks" } satisfies RouteHandle,
       },
       {
         path: "/*",

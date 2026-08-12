@@ -1,7 +1,7 @@
 import { RichText } from "@atproto/api";
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -14,7 +14,9 @@ import { createPost } from "../api/create-post";
 import { type ExternalEmbedPreview, useExternalEmbedQuery } from "../api/external-embed-query";
 import { ExternalEmbedUI } from "./embeds/external-embed-ui";
 
-export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.ReactElement {
+export function NewPostDialog(): React.ReactElement {
+  const handle = use(HandleContext);
+
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
 
@@ -82,12 +84,11 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   };
 
   return (
-    <Dialog.Root open={isDialogOpen} onOpenChange={onChangeOpen}>
-      {trigger}
+    <Dialog.Root open={isDialogOpen} onOpenChange={onChangeOpen} handle={handle}>
       <Dialog.Portal className="relative z-50">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-          <div className="mx-auto w-full max-w-tablet">
+          <div className="max-w-tablet mx-auto w-full">
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
                 <div className="flex justify-between gap-4">
@@ -167,7 +168,15 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
   );
 }
 
-NewPostDialog.Trigger = Dialog.Trigger;
+const HandleContext = createContext(Dialog.createHandle());
+
+function Trigger(props: React.ComponentProps<typeof Dialog.Trigger>): React.ReactElement {
+  const handle = use(HandleContext);
+
+  return <Dialog.Trigger {...props} handle={handle} />;
+}
+
+NewPostDialog.Trigger = Trigger;
 
 function getFirstEmbedLink(text: string): URL | null {
   const rt = new RichText({ text });

@@ -1,4 +1,7 @@
+import type { RichTextSegment } from "@atproto/api";
+import { RichText } from "@atproto/api";
 import React from "react";
+import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -13,6 +16,8 @@ export function ProfileCard({
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
   const hasDescription = profile.description != null && profile.description.length > 0;
+  const descriptionRichText = new RichText({ text: profile.description ?? "" });
+  descriptionRichText.detectFacetsWithoutResolution();
 
   return (
     <Card>
@@ -53,9 +58,13 @@ export function ProfileCard({
             </div>
           </div>
 
-          {hasDescription ? (
-            <p className="mt-5 text-sm leading-6 whitespace-pre-line">{profile.description}</p>
-          ) : null}
+          {hasDescription && (
+            <p className="mt-5 text-sm leading-6 whitespace-pre-line">
+              {Array.from(descriptionRichText.segments()).map((segment, index) => (
+                <RichTextSegmentElement key={index} segment={segment} />
+              ))}
+            </p>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-fg-muted">
             <div>
@@ -75,4 +84,32 @@ export function ProfileCard({
       </section>
     </Card>
   );
+}
+
+function RichTextSegmentElement({ segment }: { segment: RichTextSegment }): React.ReactElement {
+  switch (true) {
+    case segment.isLink():
+      return (
+        <a
+          href={segment.text}
+          target="_blank"
+          className="text-fg-link hover:underline active:text-fg-link-active"
+        >
+          {segment.text}
+        </a>
+      );
+    case segment.isMention():
+      return (
+        <Link
+          to={`/profile/${segment.text.slice(1)}`}
+          className="text-fg-link hover:underline active:text-fg-link-active"
+        >
+          {segment.text}
+        </Link>
+      );
+    case segment.isTag():
+      return <span>{segment.text}</span>;
+    default:
+      return <>{segment.text}</>;
+  }
 }

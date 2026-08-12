@@ -5,7 +5,6 @@ import { DetailedPostCard, PostCard } from "#src/entities/post/index.ts";
 import { usePostQuery } from "#src/entities/post/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 export function Page(): React.ReactElement {
@@ -24,11 +23,7 @@ export function Page(): React.ReactElement {
     content = <Content thread={data.thread} />;
   }
 
-  return (
-    <div className="py-2 tablet:py-4">
-      <Container>{content}</Container>
-    </div>
-  );
+  return <div className="py-2 tablet:py-4">{content}</div>;
 }
 
 function Content({
