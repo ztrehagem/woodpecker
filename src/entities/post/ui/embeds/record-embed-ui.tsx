@@ -4,10 +4,10 @@ import React from "react";
 import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "../build-post-href";
-import { fallbackDisplayName } from "../display-name";
 import { RichTextSegmentUI } from "../rich-text-segment-ui";
 import { timeAgo } from "../time-ago";
 

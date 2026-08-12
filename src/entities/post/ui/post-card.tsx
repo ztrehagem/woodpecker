@@ -5,12 +5,12 @@ import React from "react";
 import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "./build-post-href";
-import { fallbackDisplayName } from "./display-name";
 import { EmbedUI } from "./embeds/embed-ui";
 import { PostActionUI } from "./post-action-ui";
 import { RichTextSegmentUI } from "./rich-text-segment-ui";
