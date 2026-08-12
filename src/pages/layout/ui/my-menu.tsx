@@ -24,7 +24,7 @@ export function MyMenu({
     <>
       <Menu.Root>
         <Menu.Trigger
-          className="size-10"
+          className="size-10 overflow-clip rounded-full"
           render={(props, _state) => <button type="button" {...props} />}
         >
           <img
@@ -32,7 +32,7 @@ export function MyMenu({
             alt={profile.displayName}
             width="40"
             height="40"
-            className="cursor-pointer rounded-full"
+            className="cursor-pointer"
           />
         </Menu.Trigger>
         <Menu.Portal className="relative z-50">

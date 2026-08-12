@@ -1,6 +1,7 @@
 import { Drawer } from "@base-ui/react";
+import clsx from "clsx";
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useMatch } from "react-router";
 
 import {
   HomeIcon,
@@ -35,62 +36,57 @@ NavigationDrawer.Trigger = Drawer.Trigger;
 function Content({ onClickLink }: { onClickLink?: () => void }): React.ReactElement {
   return (
     <Drawer.Content>
-      <ul className="grid grid-flow-row auto-rows-15 grid-cols-1 justify-items-stretch">
-        <li className="grid px-2 laptop:px-4">
-          <Link
-            to="/"
-            onClick={onClickLink}
-            className="flex w-full items-center gap-2 px-4 text-inherit"
-          >
-            <HomeIcon className="size-6" />
-            <span className="">Home</span>
-          </Link>
-        </li>
+      <div className="flex h-15 items-center justify-start gap-2 px-6">
+        <img src="/favicon.webp" alt="Woodpecker" width="24" height="24" />
+        <span className="font-brand font-medium" aria-hidden>
+          Woodpecker
+        </span>
+      </div>
 
-        <li className="grid px-2 laptop:px-4">
-          <Link
-            to="/search"
-            onClick={onClickLink}
-            className="flex w-full items-center gap-2 px-4 text-inherit"
-          >
-            <SearchIcon className="size-6" />
-            <span className="">Search</span>
-          </Link>
-        </li>
-
-        <li className="grid px-2 laptop:px-4">
-          <Link
+      <nav className="mt-2 tablet:mt-4">
+        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch">
+          <Item to="/" name="Home" icon={HomeIcon} onClick={onClickLink} />
+          <Item to="/search" name="Search" icon={SearchIcon} onClick={onClickLink} />
+          <Item
             to="/notifications"
+            name="Notifications"
+            icon={NotificationsIcon}
             onClick={onClickLink}
-            className="flex w-full items-center gap-2 px-4 text-inherit"
-          >
-            <NotificationsIcon className="size-6" />
-            <span className="">Notifications</span>
-          </Link>
-        </li>
-
-        <li className="grid px-2 laptop:px-4">
-          <Link
-            to="/likes"
-            onClick={onClickLink}
-            className="flex w-full items-center gap-2 px-4 text-inherit"
-          >
-            <FavoriteIcon className="size-6" />
-            <span className="">Likes</span>
-          </Link>
-        </li>
-
-        <li className="grid px-2 laptop:px-4">
-          <Link
-            to="/bookmarks"
-            onClick={onClickLink}
-            className="flex w-full items-center gap-2 px-4 text-inherit"
-          >
-            <BookmarkIcon className="size-6" />
-            <span className="">Bookmarks</span>
-          </Link>
-        </li>
-      </ul>
+          />
+          <Item to="/likes" name="Likes" icon={FavoriteIcon} onClick={onClickLink} />
+          <Item to="/bookmarks" name="Bookmarks" icon={BookmarkIcon} onClick={onClickLink} />
+        </ul>
+      </nav>
     </Drawer.Content>
+  );
+}
+
+function Item({
+  to,
+  name,
+  icon: Icon,
+  onClick,
+}: {
+  to: string;
+  name: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  onClick?: () => void;
+}): React.ReactElement {
+  const isCurrent = useMatch({ path: to });
+
+  return (
+    <li className="grid px-4 laptop:px-4">
+      <Link
+        to={to}
+        onClick={onClick}
+        className={clsx(
+          "flex h-12 w-full items-center gap-2 rounded-full px-2 text-inherit hover:bg-highlight",
+          { "bg-filling": isCurrent },
+        )}
+      >
+        <Icon className="size-6" />
+        <span className="text-sm">{name}</span>
+      </Link>
+    </li>
   );
 }
