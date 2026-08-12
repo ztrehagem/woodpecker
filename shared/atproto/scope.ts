@@ -5,6 +5,7 @@ export const scopes = [
   "rpc:app.bsky.feed.getAuthorFeed?aud=*",
   "rpc:app.bsky.feed.getPostThread?aud=*",
   "rpc:app.bsky.feed.getActorLikes?aud=*",
+  "rpc:app.bsky.bookmark.getBookmarks?aud=*",
   "rpc:app.bsky.notification.listNotifications?aud=*",
   "rpc:app.bsky.notification.getUnreadCount?aud=*",
   "rpc:app.bsky.notification.updateSeen?aud=*",
