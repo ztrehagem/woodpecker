@@ -87,7 +87,7 @@ export function NewPostDialog({ trigger }: { trigger: React.ReactNode }): React.
       <Dialog.Portal className="relative z-50">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-          <div className="mx-auto w-full max-w-tablet">
+          <div className="max-w-tablet mx-auto w-full">
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
                 <div className="flex justify-between gap-4">

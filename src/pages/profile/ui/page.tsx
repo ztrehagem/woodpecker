@@ -7,7 +7,6 @@ import { ProfileCard, ProfileCardSkeleton, useProfileQuery } from "#src/entities
 import { TimelineUI } from "#src/entities/timeline/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
@@ -19,13 +18,8 @@ export default function Page(): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
-      <Container>
-        <ProfileBlock actor={actor} />
-      </Container>
-
-      <Container>
-        <FeedBlock actor={actor} />
-      </Container>
+      <ProfileBlock actor={actor} />
+      <FeedBlock actor={actor} />
     </div>
   );
 }

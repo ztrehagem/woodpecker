@@ -1,8 +1,6 @@
 import React, { type ErrorInfo } from "react";
 import { Link } from "react-router";
 
-import Container from "./container";
-
 type Props = React.PropsWithChildren<{ fallback?: (error: Error) => React.ReactNode }>;
 
 interface State {
@@ -29,7 +27,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
       // You can render any custom fallback UI
       return (
         this.props.fallback?.(this.state.error) ?? (
-          <Container>
+          <div className="px-3 tablet:px-8">
             <div className="flex flex-col gap-2 py-4">
               <p>Something went wrong!</p>
               <p className="text-xs text-fg-muted">{this.state.error.message}</p>
@@ -37,7 +35,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                 <Link to="/">Go back to the home page</Link>
               </p>
             </div>
-          </Container>
+          </div>
         )
       );
     }

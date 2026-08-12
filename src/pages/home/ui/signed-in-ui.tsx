@@ -2,12 +2,8 @@ import React from "react";
 
 import { TimelineUI, useTimelineQuery } from "#src/entities/timeline/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import Container from "#src/shared/ui/container.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
-
-import { NewPostArea } from "./new-post-area";
-import { NewPostFab } from "./new-post-fab";
 
 export default function SignedInUI(): React.ReactElement {
   const session = useAssertSession();
@@ -18,33 +14,27 @@ export default function SignedInUI(): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
-      <Container>
-        <NewPostArea />
-      </Container>
+      {/* <NewPostArea /> */}
 
-      {navigator.maxTouchPoints > 0 && <NewPostFab />}
-
-      <Container>
-        {feed ? (
-          <div className="flex flex-col gap-4">
-            <TimelineUI feed={feed} />
-            {hasNextPage && (
-              <div className="self-center">
-                <NakedButton
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                  processing={isFetchingNextPage}
-                  emphasize
-                >
-                  Load more
-                </NakedButton>
-              </div>
-            )}
-          </div>
-        ) : (
-          <LoadingFallback />
-        )}
-      </Container>
+      {feed ? (
+        <div className="flex flex-col gap-4">
+          <TimelineUI feed={feed} />
+          {hasNextPage && (
+            <div className="self-center">
+              <NakedButton
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                processing={isFetchingNextPage}
+                emphasize
+              >
+                Load more
+              </NakedButton>
+            </div>
+          )}
+        </div>
+      ) : (
+        <LoadingFallback />
+      )}
     </div>
   );
 }

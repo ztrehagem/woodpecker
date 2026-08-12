@@ -19,3 +19,6 @@ export { BookmarkIcon } from "./bookmark.tsx";
 export { HomeIcon } from "./home.tsx";
 export { KeepIcon } from "./keep.tsx";
 export { MoreHorizIcon } from "./more-horiz.tsx";
+export { SearchIcon } from "./search.tsx";
+export { NotificationsIcon } from "./notifications.tsx";
+export { MenuIcon } from "./menu.tsx";
