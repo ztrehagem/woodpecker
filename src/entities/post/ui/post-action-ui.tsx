@@ -14,6 +14,7 @@ import {
 
 import { likePost } from "../api/like-post";
 import { unlikePost } from "../api/unlike-post";
+import { formatCompactCount } from "../lib/format-compact-count";
 
 export function PostActionUI({
   postView,
@@ -31,7 +32,7 @@ export function PostActionUI({
             className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
           >
             <ReplyIcon aria-label="Replies" className="size-5" />
-            {postView.replyCount ?? 0}
+            {formatCompactCount(postView.replyCount ?? 0)}
           </button>
         </li>
 
@@ -41,7 +42,7 @@ export function PostActionUI({
             className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
           >
             <RepeatIcon aria-label="Reposts" className="size-5" />
-            {(postView.repostCount ?? 0) + (postView.quoteCount ?? 0)}
+            {formatCompactCount((postView.repostCount ?? 0) + (postView.quoteCount ?? 0))}
           </button>
         </li>
 
@@ -60,9 +61,11 @@ export function PostActionUI({
             ) : (
               <FavoriteIcon aria-label="Likes" className="size-5" />
             )}
-            {(postView.likeCount ?? 0) -
-              (postView.viewer?.like != null ? 1 : 0) +
-              (isLiked ? 1 : 0)}
+            {formatCompactCount(
+              (postView.likeCount ?? 0) -
+                (postView.viewer?.like != null ? 1 : 0) +
+                (isLiked ? 1 : 0),
+            )}
           </button>
         </li>
       </ul>
