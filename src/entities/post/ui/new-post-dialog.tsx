@@ -1,19 +1,12 @@
 import { RichText } from "@atproto/api";
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, use, useEffect, useMemo, useRef, useState } from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
+import { useCloseWatcherEffect } from "#src/shared/lib/close-watcher.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { LoadingDotsIcon, SendIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
@@ -37,34 +30,8 @@ export function NewPostDialog(): React.ReactElement {
     useExternalEmbedQuery(firstEmbedLink?.toString() ?? null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
-  const onChangeOpen = useCallback((isOpen: boolean) => {
-    // if (!isOpen) {
-    //   if (text.trim().length > 0) {
-    //     setIsConfirmationOpen(true);
-    //     return;
-    //   }
-    // }
-
-    setIsDialogOpen(isOpen);
-  }, []);
-
-  useEffect(() => {
-    // Enables closing the dialog with the back gesture / button (Chromium-based browsers).
-    if (!isDialogOpen || typeof CloseWatcher === "undefined") {
-      return;
-    }
-
-    const closeWatcher = new CloseWatcher();
-    closeWatcher.addEventListener("close", () => {
-      onChangeOpen(false);
-    });
-
-    return () => {
-      closeWatcher.destroy();
-    };
-  }, [isDialogOpen, onChangeOpen]);
+  useCloseWatcherEffect(isDialogOpen, setIsDialogOpen);
 
   useEffect(() => {
     textareaRef.current?.focus();
@@ -97,7 +64,7 @@ export function NewPostDialog(): React.ReactElement {
   };
 
   return (
-    <Dialog.Root open={isDialogOpen} onOpenChange={onChangeOpen} handle={handle}>
+    <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen} handle={handle}>
       <Dialog.Portal className="relative z-50">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
@@ -124,18 +91,7 @@ export function NewPostDialog(): React.ReactElement {
                     </div>
                   ) : (
                     externalEmbedPreview && (
-                      <ExternalEmbedUI
-                        embed={{
-                          $type: "app.bsky.embed.external#view",
-                          external: {
-                            $type: "app.bsky.embed.external#viewExternal",
-                            uri: externalEmbedPreview.uri,
-                            title: externalEmbedPreview.title,
-                            description: externalEmbedPreview.description,
-                            thumb: externalEmbedPreview.thumb,
-                          },
-                        }}
-                      />
+                      <ExternalEmbedUI embed={toEmbedExternalView(externalEmbedPreview)} />
                     )
                   ))}
 
@@ -161,20 +117,6 @@ export function NewPostDialog(): React.ReactElement {
                 </div>
               </div>
             </Card>
-
-            <AlertDialog
-              open={isConfirmationOpen}
-              onOpenChange={setIsConfirmationOpen}
-              onConfirm={() => {
-                setIsDialogOpen(false);
-                setIsConfirmationOpen(false);
-              }}
-              title="ポストを破棄しますか？"
-              description="入力中の内容は保存されません。"
-              cancel="入力に戻る"
-              confirm="破棄する"
-              destructive
-            />
           </div>
         </Dialog.Popup>
       </Dialog.Portal>
@@ -207,6 +149,19 @@ function getFirstEmbedLink(text: string): URL | null {
   }
 
   return null;
+}
+
+function toEmbedExternalView(preview: ExternalEmbedPreview): app.bsky.embed.external.View {
+  return {
+    $type: "app.bsky.embed.external#view",
+    external: {
+      $type: "app.bsky.embed.external#viewExternal",
+      uri: preview.uri,
+      title: preview.title,
+      description: preview.description,
+      thumb: preview.thumb,
+    },
+  };
 }
 
 function useDebouncedValue<T>(value: T, delay: number): T {
