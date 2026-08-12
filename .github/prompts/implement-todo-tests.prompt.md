@@ -27,6 +27,7 @@ agent: "agent"
   - 見た目クラス依存の `querySelector(".class")` は原則使わない。
   - 可能な限り `getByRole` / `getByText` / 属性検証を使う。
   - `alt=""` の装飾画像は Playwright の accessibility tree で `role="img"` に該当しないため `getByRole("img")` では取得できない。その場合は `getByAltText("")` を使う。
+  - `processing` 中に文字が `invisible` などで視認できなくなっても DOM 上には残る場合がある。`getByRole("button", { name: "Load more", includeHidden: true })` のように `includeHidden: true` を使って hidden 要素も対象に含めると、こうした状態を安定して検証できる。
 - ルーター依存の UI（`Link` など）がある場合は、必要なラッパー（例: `MemoryRouter`）を使う。
 - すべての `todo` を置き換え、対象テストファイルを実行する。
 - テスト実行はCLIコマンドを直接叩くのではなく、可能な限りワークスペース内で利用可能なテスト実行機能を優先する。

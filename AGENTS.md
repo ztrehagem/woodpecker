@@ -34,6 +34,8 @@ pnpm run vitest
 pnpm run playwright
 ```
 
+- When running tests, prefer the VS Code Testing API (for example, the Test Explorer or test runner integration) over invoking `vitest` directly in the terminal whenever possible.
+- Use the `vitest` CLI only when the VS Code Testing API cannot cover the required scenario or when a targeted terminal-based command is explicitly needed.
 - Prefer to run steiger, vitest, and playwright outside the sandbox. Ask the user if needed.
 
 ## Output Expectations
