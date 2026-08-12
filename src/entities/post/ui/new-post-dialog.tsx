@@ -1,7 +1,15 @@
 import { RichText } from "@atproto/api";
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -20,6 +28,7 @@ export function NewPostDialog(): React.ReactElement {
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
   const debouncedText = useDebouncedValue(text, 400);
   const firstEmbedLink = useMemo(() => getFirstEmbedLink(debouncedText), [debouncedText]);
@@ -57,6 +66,10 @@ export function NewPostDialog(): React.ReactElement {
     };
   }, [isDialogOpen, onChangeOpen]);
 
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   const {
     mutate: submitPost,
     isPending,
@@ -88,7 +101,7 @@ export function NewPostDialog(): React.ReactElement {
       <Dialog.Portal className="relative z-50">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Dialog.Popup className="fixed inset-x-5 inset-y-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-          <div className="max-w-tablet mx-auto w-full">
+          <div className="mx-auto w-full max-w-xl">
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
                 <div className="flex justify-between gap-4">
@@ -96,6 +109,7 @@ export function NewPostDialog(): React.ReactElement {
                 </div>
 
                 <textarea
+                  ref={textareaRef}
                   name="text"
                   placeholder="What's on your mind?"
                   value={text}

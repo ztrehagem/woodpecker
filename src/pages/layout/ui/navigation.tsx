@@ -1,5 +1,6 @@
+import clsx from "clsx";
 import React from "react";
-import { Link } from "react-router";
+import { Link, useMatch } from "react-router";
 
 import {
   BookmarkIcon,
@@ -12,63 +13,49 @@ import {
 export function Navigation(): React.ReactElement {
   return (
     <div className="sticky top-0 w-20 laptop:w-46">
-      <div className="flex h-15 items-center justify-center">
-        <img src="/favicon.webp" alt="" width="24" height="24" />
+      <div className="flex h-15 items-center justify-center gap-2 px-6 laptop:justify-start">
+        <img src="/favicon.webp" alt="Woodpecker" width="24" height="24" />
+        <span className="font-brand font-medium max-laptop:hidden" aria-hidden>
+          Woodpecker
+        </span>
       </div>
 
-      <nav>
-        <ul className="grid grid-flow-row auto-rows-15 grid-cols-1 justify-items-stretch">
-          <li className="grid px-2 laptop:px-4">
-            <Link
-              to="/"
-              className="flex w-full items-center justify-center gap-2 text-inherit laptop:justify-start"
-            >
-              <HomeIcon className="size-6" />
-              <span className="max-laptop:hidden">Home</span>
-            </Link>
-          </li>
-
-          <li className="grid px-2 laptop:px-4">
-            <Link
-              to="/search"
-              className="flex w-full items-center justify-center gap-2 text-inherit laptop:justify-start"
-            >
-              <SearchIcon className="size-6" />
-              <span className="max-laptop:hidden">Search</span>
-            </Link>
-          </li>
-
-          <li className="grid px-2 laptop:px-4">
-            <Link
-              to="/notifications"
-              className="flex w-full items-center justify-center gap-2 text-inherit laptop:justify-start"
-            >
-              <NotificationsIcon className="size-6" />
-              <span className="max-laptop:hidden">Notifications</span>
-            </Link>
-          </li>
-
-          <li className="grid px-2 laptop:px-4">
-            <Link
-              to="/likes"
-              className="flex w-full items-center justify-center gap-2 text-inherit laptop:justify-start"
-            >
-              <FavoriteIcon className="size-6" />
-              <span className="max-laptop:hidden">Likes</span>
-            </Link>
-          </li>
-
-          <li className="grid px-2 laptop:px-4">
-            <Link
-              to="/bookmarks"
-              className="flex w-full items-center justify-center gap-2 text-inherit laptop:justify-start"
-            >
-              <BookmarkIcon className="size-6" />
-              <span className="max-laptop:hidden">Bookmarks</span>
-            </Link>
-          </li>
+      <nav className="mt-2 tablet:mt-4">
+        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch">
+          <Item to="/" name="Home" icon={HomeIcon} />
+          <Item to="/search" name="Search" icon={SearchIcon} />
+          <Item to="/notifications" name="Notifications" icon={NotificationsIcon} />
+          <Item to="/likes" name="Likes" icon={FavoriteIcon} />
+          <Item to="/bookmarks" name="Bookmarks" icon={BookmarkIcon} />
         </ul>
       </nav>
     </div>
+  );
+}
+
+function Item({
+  to,
+  name,
+  icon: Icon,
+}: {
+  to: string;
+  name: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}): React.ReactElement {
+  const isCurrent = useMatch({ path: to });
+
+  return (
+    <li className="grid px-2 laptop:px-4">
+      <Link
+        to={to}
+        className={clsx(
+          "flex h-12 w-full items-center justify-center gap-2 rounded-full px-2 text-inherit hover:bg-highlight laptop:justify-start",
+          { "bg-filling": isCurrent },
+        )}
+      >
+        <Icon className="size-6" />
+        <span className="text-sm max-laptop:hidden">{name}</span>
+      </Link>
+    </li>
   );
 }
