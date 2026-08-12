@@ -37,6 +37,15 @@ export function NewPostDialog(): React.ReactElement {
     textareaRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [text]);
+
   const {
     mutate: submitPost,
     isPending,
@@ -81,7 +90,8 @@ export function NewPostDialog(): React.ReactElement {
                   placeholder="What's on your mind?"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  className="w-full bg-highlight px-3 py-2 inset-shadow-sm"
+                  rows={3}
+                  className="w-full resize-none bg-highlight px-3 py-2 inset-shadow-sm"
                 />
 
                 {firstEmbedLink &&
