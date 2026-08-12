@@ -1,15 +1,25 @@
-import type { BrowserOAuthClient, OAuthSession } from "@atproto/oauth-client-browser";
+import type { BrowserOAuthClient } from "@atproto/oauth-client-browser";
 import React from "react";
 
-import { Session } from "../shared/auth";
+import type { Session } from "../shared/auth";
 import { AtProtoProvider, type OAuthResult } from "../shared/auth";
+import { createMockSession, mockOAuthClient, mockOAuthResult } from "./atproto-mock";
 
-export function AtProtoMockProvider({ children }: React.PropsWithChildren): React.ReactElement {
+export function AtProtoMockProvider({
+  oauthClient = mockOAuthClient,
+  oauthResult = mockOAuthResult,
+  session = createMockSession(),
+  children,
+}: React.PropsWithChildren<{
+  oauthClient?: BrowserOAuthClient;
+  oauthResult?: OAuthResult;
+  session?: Session;
+}>): React.ReactElement {
   return (
     <AtProtoProvider
-      oauthClient={Promise.resolve({} as unknown as BrowserOAuthClient)}
-      oauthResult={Promise.resolve({} as unknown as OAuthResult)}
-      session={Promise.resolve(new Session({} as unknown as OAuthSession))}
+      oauthClient={Promise.resolve(oauthClient)}
+      oauthResult={Promise.resolve(oauthResult)}
+      session={Promise.resolve(session)}
     >
       {children}
     </AtProtoProvider>
