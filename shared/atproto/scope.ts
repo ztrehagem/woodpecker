@@ -4,6 +4,7 @@ export const scopes = [
   "rpc:app.bsky.feed.getTimeline?aud=*",
   "rpc:app.bsky.feed.getAuthorFeed?aud=*",
   "rpc:app.bsky.feed.getPostThread?aud=*",
+  "rpc:app.bsky.feed.getActorLikes?aud=*",
   "repo:*",
   "blob:*/*",
 ];
