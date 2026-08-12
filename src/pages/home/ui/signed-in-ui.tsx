@@ -14,8 +14,6 @@ export default function SignedInUI(): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
-      {/* <NewPostArea /> */}
-
       {feed ? (
         <div className="flex flex-col gap-4">
           <TimelineUI feed={feed} />

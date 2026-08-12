@@ -39,16 +39,12 @@ export function SignedInHeader(): React.ReactElement {
 
 function NewPostButton(): React.ReactElement {
   return (
-    <NewPostDialog
-      trigger={
-        <NewPostDialog.Trigger
-          className="flex size-10 shrink-0 cursor-pointer items-center justify-center font-bold"
-          render={(props) => <button type="button" {...props} />}
-        >
-          <EditSquareIcon />
-        </NewPostDialog.Trigger>
-      }
-    />
+    <NewPostDialog.Trigger
+      className="flex size-10 shrink-0 cursor-pointer items-center justify-center font-bold"
+      render={(props) => <button type="button" {...props} />}
+    >
+      <EditSquareIcon />
+    </NewPostDialog.Trigger>
   );
 }
 

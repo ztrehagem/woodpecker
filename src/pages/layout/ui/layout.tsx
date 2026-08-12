@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Outlet } from "react-router";
 
+import { NewPostDialog } from "#src/entities/post/index.ts";
 import { useSession } from "#src/shared/auth/index.ts";
 import ErrorBoundary from "#src/shared/ui/error-boundary.tsx";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
@@ -24,7 +25,12 @@ export default function Layout(): React.ReactElement {
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <Outlet />
-              {isAuthenticated && <NewPostFab />}
+              {isAuthenticated && (
+                <>
+                  <NewPostFab />
+                  <NewPostDialog />
+                </>
+              )}
             </Suspense>
           </ErrorBoundary>
         </div>
