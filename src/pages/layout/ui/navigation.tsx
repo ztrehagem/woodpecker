@@ -13,14 +13,14 @@ import {
 export function Navigation(): React.ReactElement {
   return (
     <div className="sticky top-0 w-20 laptop:w-46">
-      <div className="flex h-15 items-center justify-center gap-2 px-6 laptop:justify-start">
+      <div className="flex h-height-header items-center justify-center gap-2 px-6 laptop:justify-start">
         <img src="/favicon.webp" alt="Woodpecker" width="24" height="24" />
         <span className="font-brand font-medium max-laptop:hidden" aria-hidden>
           Woodpecker
         </span>
       </div>
 
-      <nav className="mt-2 tablet:mt-4">
+      <nav aria-label="Main navigation" className="mt-2 tablet:mt-4">
         <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch gap-2">
           <Item to="/" name="Home" icon={HomeIcon} />
           <Item to="/search" name="Search" icon={SearchIcon} />
@@ -48,6 +48,7 @@ function Item({
     <li className="grid px-2 laptop:px-4">
       <Link
         to={to}
+        aria-current={isCurrent ? "page" : void 0}
         className={clsx(
           "flex h-12 w-full items-center justify-center gap-2 rounded-full px-2 text-inherit hover:bg-highlight laptop:justify-start",
           { "bg-filling": isCurrent },
