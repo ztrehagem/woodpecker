@@ -38,7 +38,7 @@ export function ReloadPrompt(): React.ReactElement {
       {(offlineReady || needRefresh) && (
         <div className="fixed inset-x-0 bottom-5 z-20">
           <div className="mx-auto max-w-2xl px-3 tablet:px-8">
-            <div className="pointer-events-auto mx-5 flex flex-wrap items-center justify-between gap-2 rounded-md bg-highlight px-5 py-4 text-sm shadow-xl">
+            <div className="pointer-events-auto mx-5 flex flex-wrap items-center justify-between gap-2 rounded-md bg-highlight px-5 py-4 text-sm">
               <div className="ReloadPrompt-message">
                 {offlineReady
                   ? "App ready to work offline."

@@ -3,14 +3,17 @@ import type React from "react";
 import { useParams } from "react-router";
 
 import { PostCard, usePostQuery } from "#src/entities/post/index.ts";
-import { ProfileCard, ProfileCardSkeleton, useProfileQuery } from "#src/entities/profile/index.ts";
+import {
+  ProfileCard,
+  ProfileCardSkeleton,
+  useAuthorFeedQuery,
+  useProfileQuery,
+} from "#src/entities/profile/index.ts";
 import { TimelineUI } from "#src/entities/timeline/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
-
-import { useAuthorFeedQuery } from "../api/author-feed-query.ts";
 
 export default function Page(): React.ReactElement {
   const { handle } = useParams();

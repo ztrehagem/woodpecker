@@ -17,7 +17,7 @@ export function MyMenu({
   const signOut = useSignOut();
 
   const itemClassName = clsx(
-    "flex cursor-pointer items-center gap-2 px-5 py-3 text-inherit hover:bg-highlight",
+    "flex cursor-pointer items-center gap-2 px-5 py-3 text-sm text-inherit hover:bg-highlight",
   );
 
   return (
@@ -37,7 +37,7 @@ export function MyMenu({
         </Menu.Trigger>
         <Menu.Portal className="relative z-50">
           <Menu.Positioner align="end" sideOffset={8}>
-            <Menu.Popup className="relative rounded-md border bg-filling/75 py-2 shadow-2xl backdrop-blur-sm">
+            <Menu.Popup className="relative rounded-md border border-highlight bg-filling/75 py-2 backdrop-blur-sm">
               <Menu.Item
                 className={itemClassName}
                 render={(props) => <Link to={`/profile/${profile.handle}`} {...props} />}

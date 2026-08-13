@@ -29,6 +29,7 @@ agent: "agent"
   - `alt=""` の装飾画像は Playwright の accessibility tree で `role="img"` に該当しないため `getByRole("img")` では取得できない。その場合は `getByAltText("")` を使う。
   - `processing` 中に文字が `invisible` などで視認できなくなっても DOM 上には残る場合がある。`getByRole("button", { name: "Load more", includeHidden: true })` のように `includeHidden: true` を使って hidden 要素も対象に含めると、こうした状態を安定して検証できる。
 - ルーター依存の UI（`Link` など）がある場合は、必要なラッパー（例: `MemoryRouter`）を使う。
+- Ctrl+Enter / Cmd+Enter などのキーボード操作は `userEvent.keyboard("{Control>}{Enter}{/Control}")` のような user-event 構文を使う。`userEvent` は `"vitest/browser"` からインポートする（`"@vitest/browser/context"` は直接の依存として宣言されておらず `tsc` が解決できないため使わない）。
 - すべての `todo` を置き換え、対象テストファイルを実行する。
 - テスト実行はCLIコマンドを直接叩くのではなく、可能な限りワークスペース内で利用可能なテスト実行機能を優先する。
 - 失敗時は原因を特定して修正し、再実行して全件通過を確認する。

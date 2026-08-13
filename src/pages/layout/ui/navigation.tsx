@@ -21,7 +21,7 @@ export function Navigation(): React.ReactElement {
       </div>
 
       <nav className="mt-2 tablet:mt-4">
-        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch">
+        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch gap-2">
           <Item to="/" name="Home" icon={HomeIcon} />
           <Item to="/search" name="Search" icon={SearchIcon} />
           <Item to="/notifications" name="Notifications" icon={NotificationsIcon} />
