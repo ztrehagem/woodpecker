@@ -11,8 +11,9 @@ import type { Session } from "#src/shared/auth/index.ts";
 
 const authorFeedQueryKeys = {
   all: ["author-feed"] as const,
+  actor: (actor: AtIdentifierString) => [...authorFeedQueryKeys.all, actor] as const,
   list: (actor: AtIdentifierString, limit: number) =>
-    [...authorFeedQueryKeys.all, actor, limit] as const,
+    [...authorFeedQueryKeys.actor(actor), limit] as const,
 };
 
 type QueryKey = ReturnType<typeof authorFeedQueryKeys.list>;
