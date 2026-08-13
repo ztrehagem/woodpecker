@@ -65,7 +65,7 @@ function Item({
   to,
   name,
   icon: Icon,
-  onClick,
+  onClick: onClickProp,
 }: {
   to: string;
   name: string;
@@ -73,6 +73,16 @@ function Item({
   onClick?: () => void;
 }): React.ReactElement {
   const isCurrent = useMatch({ path: to });
+  const isExact = useMatch({ path: to, end: true }) != null;
+
+  const onClick = (e: React.MouseEvent) => {
+    if (isExact) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    onClickProp?.();
+  };
 
   return (
     <li className="grid px-4 laptop:px-4">

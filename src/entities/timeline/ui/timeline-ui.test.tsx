@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { MemoryRouter } from "react-router";
 import { expect, test } from "vitest";
@@ -40,15 +41,17 @@ test("renders external embeds", async () => {
       bookmarkCount: 0,
     },
   };
-
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const view = await render(
-    <AtProtoMockProvider>
-      <MemoryRouter>
-        <Suspense>
-          <TimelineUI feed={[post]} />
-        </Suspense>
-      </MemoryRouter>
-    </AtProtoMockProvider>,
+    <QueryClientProvider client={queryClient}>
+      <AtProtoMockProvider>
+        <MemoryRouter>
+          <Suspense>
+            <TimelineUI feed={[post]} />
+          </Suspense>
+        </MemoryRouter>
+      </AtProtoMockProvider>
+    </QueryClientProvider>,
   );
 
   await expect.element(view.getByText("Example", { exact: true })).toBeInTheDocument();
@@ -102,15 +105,17 @@ test("renders embedded record post content", async () => {
       bookmarkCount: 0,
     },
   };
-
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const view = await render(
-    <AtProtoMockProvider>
-      <MemoryRouter>
-        <Suspense>
-          <TimelineUI feed={[post]} />
-        </Suspense>
-      </MemoryRouter>
-    </AtProtoMockProvider>,
+    <QueryClientProvider client={queryClient}>
+      <AtProtoMockProvider>
+        <MemoryRouter>
+          <Suspense>
+            <TimelineUI feed={[post]} />
+          </Suspense>
+        </MemoryRouter>
+      </AtProtoMockProvider>
+    </QueryClientProvider>,
   );
 
   await expect.element(view.getByRole("link", { name: "Bob" })).toBeInTheDocument();
@@ -184,15 +189,17 @@ test("renders nested embeds inside embedded record posts", async () => {
       bookmarkCount: 0,
     },
   };
-
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const view = await render(
-    <AtProtoMockProvider>
-      <MemoryRouter>
-        <Suspense>
-          <TimelineUI feed={[post]} />
-        </Suspense>
-      </MemoryRouter>
-    </AtProtoMockProvider>,
+    <QueryClientProvider client={queryClient}>
+      <AtProtoMockProvider>
+        <MemoryRouter>
+          <Suspense>
+            <TimelineUI feed={[post]} />
+          </Suspense>
+        </MemoryRouter>
+      </AtProtoMockProvider>
+    </QueryClientProvider>,
   );
 
   await expect.element(view.getByText("Embedded Link", { exact: true })).toBeInTheDocument();

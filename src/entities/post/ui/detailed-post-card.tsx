@@ -10,7 +10,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import { EmbedUI } from "./embeds/embed-ui";
-import { PostActionUI } from "./post-action-ui";
+import { PostActionBar } from "./post-action/post-action-bar";
 import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
@@ -71,7 +71,7 @@ export function DetailedPostCard({
             <span className="text-xs">{datetimeLocaleString}</span>
           </time>
 
-          <PostActionUI postView={postView} />
+          <PostActionBar postView={postView} />
 
           {import.meta.env.DEV && import.meta.env.DEBUG != null && (
             <Collapsible.Root className="flex flex-col items-start">

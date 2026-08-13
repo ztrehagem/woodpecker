@@ -43,11 +43,20 @@ function Item({
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }): React.ReactElement {
   const isCurrent = useMatch({ path: to });
+  const isExact = useMatch({ path: to, end: true }) != null;
+
+  const onClick = (e: React.MouseEvent) => {
+    if (isExact) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <li className="grid px-2 laptop:px-4">
       <Link
         to={to}
+        onClick={onClick}
         aria-current={isCurrent ? "page" : void 0}
         className={clsx(
           "flex h-12 w-full items-center justify-center gap-2 rounded-full px-2 text-inherit hover:bg-highlight laptop:justify-start",
