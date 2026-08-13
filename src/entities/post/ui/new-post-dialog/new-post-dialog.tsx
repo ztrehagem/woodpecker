@@ -13,6 +13,7 @@ import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
+import { ProfileView } from "./profile-view";
 import { Textarea } from "./textarea";
 import { useExternalEmbedPreview } from "./use-external-embed-preview";
 import { useGraphemesCount } from "./use-graphemes-count";
@@ -69,8 +70,10 @@ export function NewPostDialog(): React.ReactElement {
             <div className="mx-auto w-full max-w-xl">
               <Card>
                 <div className="flex flex-col gap-4 px-5 py-4">
-                  <div className="flex justify-between gap-4">
-                    <h2 className="font-bold">New post</h2>
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <Dialog.Title className="font-bold">New post</Dialog.Title>
+
+                    <ProfileView />
                   </div>
 
                   <div className="flex flex-col gap-1">

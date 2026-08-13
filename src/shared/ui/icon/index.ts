@@ -22,3 +22,4 @@ export { MoreHorizIcon } from "./more-horiz.tsx";
 export { SearchIcon } from "./search.tsx";
 export { NotificationsIcon } from "./notifications.tsx";
 export { MenuIcon } from "./menu.tsx";
+export { CloseIcon } from "./close.tsx";
