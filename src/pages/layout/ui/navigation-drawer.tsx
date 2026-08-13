@@ -22,7 +22,7 @@ export function NavigationDrawer({ trigger }: { trigger: React.ReactNode }): Rea
         <Drawer.Backdrop className="fixed inset-0 bg-backdrop/75 opacity-100 transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0" />
 
         <Drawer.Viewport className="fixed inset-0">
-          <Drawer.Popup className="h-full w-max bg-backdrop/50 shadow-lg backdrop-blur-sm transition-transform duration-200 ease-out data-ending-style:-translate-x-full data-starting-style:-translate-x-full">
+          <Drawer.Popup className="h-full w-max bg-backdrop/50 backdrop-blur-sm transition-transform duration-200 ease-out data-ending-style:-translate-x-full data-starting-style:-translate-x-full">
             <Content onClickLink={() => setIsOpen(false)} />
           </Drawer.Popup>
         </Drawer.Viewport>
@@ -44,7 +44,7 @@ function Content({ onClickLink }: { onClickLink?: () => void }): React.ReactElem
       </div>
 
       <nav className="mt-2 tablet:mt-4">
-        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch">
+        <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch gap-2">
           <Item to="/" name="Home" icon={HomeIcon} onClick={onClickLink} />
           <Item to="/search" name="Search" icon={SearchIcon} onClick={onClickLink} />
           <Item

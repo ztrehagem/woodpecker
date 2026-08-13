@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useProfileQuery } from "#src/entities/profile/index.ts";
+import { useProfileQuery } from "#src/entities/profile/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 
 export function ProfileView(): React.ReactElement {

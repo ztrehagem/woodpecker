@@ -116,7 +116,7 @@ function useLikeState(postView: app.bsky.feed.defs.PostView) {
 
 function MoreMenu(): React.ReactElement {
   const itemClassName = clsx(
-    "flex cursor-pointer items-center gap-2 px-5 py-1 text-inherit hover:bg-highlight",
+    "flex cursor-pointer items-center gap-2 px-5 py-2 text-sm text-inherit hover:bg-highlight",
   );
 
   return (
@@ -130,7 +130,7 @@ function MoreMenu(): React.ReactElement {
 
       <Menu.Portal className="relative z-50">
         <Menu.Positioner side="bottom" sideOffset={8} align="end">
-          <Menu.Popup className="relative rounded-md border bg-filling/75 py-2 shadow-2xl backdrop-blur-sm">
+          <Menu.Popup className="relative rounded-md border border-highlight bg-filling/75 py-2 backdrop-blur-sm">
             <Menu.Item className={itemClassName}>More actions (Coming soon)</Menu.Item>
           </Menu.Popup>
         </Menu.Positioner>

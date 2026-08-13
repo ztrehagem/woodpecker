@@ -10,7 +10,7 @@ export function ProfileCardSkeleton(): React.ReactElement {
 
         <div className="relative px-5 pt-0 pb-6 tablet:px-8">
           <div className="-mt-14 flex flex-wrap items-end gap-4 tablet:-mt-16">
-            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-filling bg-slate-300 shadow-md tablet:h-28 tablet:w-28" />
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-filling bg-slate-300 tablet:h-28 tablet:w-28" />
 
             <div className="flex flex-1 flex-wrap items-start justify-between gap-3 pb-2">
               <div className="w-full space-y-2">

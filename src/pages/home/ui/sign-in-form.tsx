@@ -31,7 +31,7 @@ export default function SignInForm({
       action={dispatch}
       noValidate
       name="signin"
-      className="mx-auto w-full max-w-sm rounded-2xl bg-filling px-10 py-8 shadow-2xl"
+      className="mx-auto w-full max-w-sm rounded-2xl bg-filling px-10 py-8"
     >
       <div className="grid auto-cols-auto">
         <label htmlFor="handle">Handle</label>
