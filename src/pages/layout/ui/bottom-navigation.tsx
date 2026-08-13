@@ -27,11 +27,20 @@ function Item({
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }): React.ReactElement {
   const isCurrent = useMatch({ path: to }) != null;
+  const isExact = useMatch({ path: to, end: true }) != null;
+
+  const onClick = (e: React.MouseEvent) => {
+    if (isExact) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <li>
       <Link
         to={to}
+        onClick={onClick}
         aria-current={isCurrent ? "page" : void 0}
         className={clsx("flex h-full w-full items-center justify-center border-b-2 text-inherit", {
           "border-link": isCurrent,
