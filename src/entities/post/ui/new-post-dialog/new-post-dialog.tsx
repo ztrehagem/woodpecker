@@ -1,6 +1,6 @@
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { createContext, use, useState } from "react";
+import React, { use, useState } from "react";
 
 import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -13,13 +13,14 @@ import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
+import { NewPostDialogContext } from "./new-post-dialog-context";
 import { ProfileView } from "./profile-view";
 import { Textarea } from "./textarea";
 import { useExternalEmbedPreview } from "./use-external-embed-preview";
 import { useGraphemesCount } from "./use-graphemes-count";
 
 export function NewPostDialog(): React.ReactElement {
-  const handle = use(HandleContext);
+  const handle = use(NewPostDialogContext);
 
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
@@ -120,10 +121,8 @@ export function NewPostDialog(): React.ReactElement {
   );
 }
 
-const HandleContext = createContext(Dialog.createHandle());
-
 function Trigger(props: React.ComponentProps<typeof Dialog.Trigger>): React.ReactElement {
-  const handle = use(HandleContext);
+  const handle = use(NewPostDialogContext);
 
   return <Dialog.Trigger {...props} handle={handle} />;
 }
