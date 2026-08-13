@@ -12,8 +12,10 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
+import { GraphemesCounter } from "./graphemes-counter";
 import { Textarea } from "./textarea";
 import { useExternalEmbedPreview } from "./use-external-embed-preview";
+import { useGraphemesCount } from "./use-graphemes-count";
 
 export function NewPostDialog(): React.ReactElement {
   const handle = use(HandleContext);
@@ -24,6 +26,7 @@ export function NewPostDialog(): React.ReactElement {
   const [text, setText] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const graphemesCount = useGraphemesCount(text);
   const externalEmbedPreviewProps = useExternalEmbedPreview(text);
 
   useCloseWatcherEffect(isDialogOpen, setIsDialogOpen);
@@ -70,11 +73,17 @@ export function NewPostDialog(): React.ReactElement {
                     <h2 className="font-bold">New post</h2>
                   </div>
 
-                  <Textarea
-                    text={text}
-                    onChange={(e) => setText(e.target.value)}
-                    onSubmitIntent={submit}
-                  />
+                  <div className="flex flex-col gap-1">
+                    <Textarea
+                      text={text}
+                      onChange={(e) => setText(e.target.value)}
+                      onSubmitIntent={submit}
+                    />
+
+                    <div className="self-end">
+                      <GraphemesCounter count={graphemesCount} />
+                    </div>
+                  </div>
 
                   <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
 
