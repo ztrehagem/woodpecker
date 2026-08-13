@@ -23,3 +23,4 @@ export { SearchIcon } from "./search.tsx";
 export { NotificationsIcon } from "./notifications.tsx";
 export { MenuIcon } from "./menu.tsx";
 export { CloseIcon } from "./close.tsx";
+export { DeleteIcon } from "./delete.tsx";

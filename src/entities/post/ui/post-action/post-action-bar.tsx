@@ -21,7 +21,7 @@ export function PostActionBar({
   return (
     <div className="mt-2 flex items-center justify-between gap-4">
       <MainButtons postView={postView} />
-      <MoreMenu />
+      <MoreMenu postView={postView} />
     </div>
   );
 }
