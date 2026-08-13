@@ -20,7 +20,7 @@ export function Textarea({
     resizeTextarea(textareaRef);
   }, [text]);
 
-  const onKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       onSubmitIntent();
@@ -34,7 +34,7 @@ export function Textarea({
       placeholder="What's on your mind?"
       value={text}
       onChange={onChange}
-      onKeyUp={onKeyUp}
+      onKeyDown={onKeyDown}
       rows={3}
       className="w-full resize-none scrollbar-none overflow-clip border-b border-white px-3 py-2"
     />

@@ -22,6 +22,7 @@
   --color-danger-active: var(--color-red-400);
   --color-fg: var(--color-white);
   --color-fg-muted: var(--color-neutral-400);
+  --color-fg-disabled: var(--color-neutral-600);
   --color-fg-link: var(--color-blue-400);
   --color-fg-link-active: var(--color-blue-300);
   --color-fg-danger: var(--color-red-400);

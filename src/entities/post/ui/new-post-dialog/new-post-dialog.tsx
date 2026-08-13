@@ -47,10 +47,11 @@ export function NewPostDialog(): React.ReactElement {
     },
   });
 
-  const submit = () => {
-    const trimmedText = text.trim();
+  const trimmedText = text.trim();
+  const canSubmit = !isPending && graphemesCount <= 300 && trimmedText.length > 0;
 
-    if (trimmedText.length == 0) {
+  const submit = () => {
+    if (!canSubmit) {
       return;
     }
 
@@ -102,7 +103,7 @@ export function NewPostDialog(): React.ReactElement {
 
                     <NakedButton
                       onClick={onClickSubmit}
-                      disabled={isPending}
+                      disabled={!canSubmit}
                       severity="primary"
                       emphasize
                       processing={isPending}
