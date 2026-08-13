@@ -36,14 +36,14 @@ NavigationDrawer.Trigger = Drawer.Trigger;
 function Content({ onClickLink }: { onClickLink?: () => void }): React.ReactElement {
   return (
     <Drawer.Content>
-      <div className="flex h-15 items-center justify-start gap-2 px-6">
+      <div className="flex h-height-header items-center justify-start gap-2 px-6">
         <img src="/favicon.webp" alt="Woodpecker" width="24" height="24" />
         <span className="font-brand font-medium" aria-hidden>
           Woodpecker
         </span>
       </div>
 
-      <nav className="mt-2 tablet:mt-4">
+      <nav aria-label="Main navigation" className="mt-2 tablet:mt-4">
         <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch gap-2">
           <Item to="/" name="Home" icon={HomeIcon} onClick={onClickLink} />
           <Item to="/search" name="Search" icon={SearchIcon} onClick={onClickLink} />
@@ -79,6 +79,7 @@ function Item({
       <Link
         to={to}
         onClick={onClick}
+        aria-current={isCurrent ? "page" : void 0}
         className={clsx(
           "flex h-12 w-full items-center gap-2 rounded-full px-2 text-inherit hover:bg-highlight",
           { "bg-filling": isCurrent },
