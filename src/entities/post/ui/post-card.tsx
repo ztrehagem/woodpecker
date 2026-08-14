@@ -61,7 +61,9 @@ export function PostCard({
             to={`/profile/${postView.author.handle}`}
             className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
-            <img src={postView.author.avatar} alt="" className="size-full" />
+            {postView.author.avatar != null && (
+              <img src={postView.author.avatar} alt="" className="size-full" />
+            )}
           </Link>
 
           <div className="grow">
