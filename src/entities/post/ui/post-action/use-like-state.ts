@@ -18,7 +18,7 @@ export function useLikeState(
       return;
     }
     setIsLiked(true);
-    likePost(session, postView.uri, postView.cid)
+    likePost(session, postView)
       .then(({ uri: likeUri }) => {
         session.likeCache.set(postView, likeUri);
       })

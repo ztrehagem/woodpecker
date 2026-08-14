@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { TimelineUI } from "#src/entities/timeline/index.ts";
+import { PostCard } from "#src/entities/post/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
@@ -23,7 +23,15 @@ export function Page(): React.ReactElement {
   } else if (feed) {
     content = (
       <div className="flex flex-col gap-4">
-        {feed.length > 0 ? <TimelineUI feed={feed} all /> : <p>No likes.</p>}
+        {feed.length > 0 ? (
+          <div className="grid grid-cols-1 gap-2 tablet:gap-4">
+            {feed.map((post) => (
+              <PostCard key={post.post.uri} postView={post.post} />
+            ))}
+          </div>
+        ) : (
+          <p>No likes.</p>
+        )}
 
         {hasNextPage && (
           <div className="self-center">

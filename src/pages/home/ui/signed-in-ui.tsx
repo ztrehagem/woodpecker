@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TimelineUI, useTimelineQuery } from "#src/entities/timeline/index.ts";
+import { TimelineUI, useTimelineQuery } from "#src/entities/post/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";

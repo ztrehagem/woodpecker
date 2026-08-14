@@ -2,14 +2,13 @@ import type { AtIdentifierString, AtUriString } from "@atproto/lex";
 import type React from "react";
 import { useParams } from "react-router";
 
-import { PostCard, usePostQuery } from "#src/entities/post/index.ts";
+import { PostCard, TimelineUI, usePostQuery } from "#src/entities/post/index.ts";
 import {
   ProfileCard,
   ProfileCardSkeleton,
   useAuthorFeedQuery,
   useProfileQuery,
 } from "#src/entities/profile/index.ts";
-import { TimelineUI } from "#src/entities/timeline/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";

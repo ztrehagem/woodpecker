@@ -2,7 +2,6 @@ import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import React, { use, useState } from "react";
 
-import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { useCloseWatcherEffect } from "#src/shared/lib/close-watcher.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -11,6 +10,7 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
+import { useInvalidateTimelineQuery } from "../../api/timeline-query";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
 import { NewPostDialogContext } from "./new-post-dialog-context";
