@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router";
 
-import { PostCard } from "#src/entities/post/@x/timeline.ts";
-import { buildPostHref } from "#src/entities/post/ui/build-post-href.tsx";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { MoreVertIcon } from "#src/shared/ui/icon/index.ts";
+
+import { buildPostHref } from "./build-post-href";
+import { PostCard } from "./post-card";
 
 export function TimelineUI({
   feed,

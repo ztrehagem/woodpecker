@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { useAssertSession } from "#src/shared/auth/atproto-context.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import { DeleteIcon, MoreHorizIcon } from "#src/shared/ui/icon/index.ts";
 

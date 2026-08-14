@@ -2,11 +2,11 @@ import type { AtUriString } from "@atproto/lex";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { useInvalidateTimelineQuery } from "#src/entities/timeline/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 
 import { deletePost } from "../../api/delete-post";
+import { useInvalidateTimelineQuery } from "../../api/timeline-query";
 
 export function useDelete(postView: app.bsky.feed.defs.PostView): {
   isDialogOpen: boolean;
