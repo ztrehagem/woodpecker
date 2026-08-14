@@ -2,6 +2,7 @@ import { Agent, type Did } from "@atproto/api";
 import { Client } from "@atproto/lex";
 import type { OAuthSession } from "@atproto/oauth-client-browser";
 
+import { BookmarkCache } from "../user-cache/bookmark-cache";
 import { LikeCache } from "../user-cache/like-cache";
 
 export class Session {
@@ -9,6 +10,7 @@ export class Session {
   readonly agent: Agent;
   readonly client: Client;
   readonly likeCache = new LikeCache();
+  readonly bookmarkCache = new BookmarkCache();
 
   constructor(oauthSession: OAuthSession) {
     this.#oauthSession = oauthSession;

@@ -5,8 +5,14 @@ import React from "react";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
-import { DeleteIcon, MoreHorizIcon } from "#src/shared/ui/icon/index.ts";
+import {
+  BookmarkFillIcon,
+  BookmarkIcon,
+  DeleteIcon,
+  MoreHorizIcon,
+} from "#src/shared/ui/icon/index.ts";
 
+import { useBookmark } from "./use-bookmark-state";
 import { useDelete } from "./use-delete";
 
 export function MoreMenu({
@@ -38,6 +44,8 @@ export function MoreMenu({
         <Menu.Portal className="relative z-50">
           <Menu.Positioner side="bottom" sideOffset={8} align="end">
             <Menu.Popup className="relative rounded-md border border-highlight bg-filling/75 py-2 backdrop-blur-sm">
+              <BookmarkItem postView={postView} />
+
               {isMine && (
                 <Menu.Item
                   onClick={onClickDelete}
@@ -69,5 +77,32 @@ export function MoreMenu({
         destructive
       />
     </>
+  );
+}
+
+function BookmarkItem({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
+  const { isSaved, save, unsave } = useBookmark(postView);
+
+  const onClick = isSaved ? unsave : save;
+
+  return (
+    <Menu.Item
+      onClick={onClick}
+      className={clsx(
+        "flex cursor-pointer items-center gap-2 px-5 py-2 text-sm text-inherit hover:bg-highlight",
+      )}
+    >
+      {isSaved ? (
+        <>
+          <BookmarkFillIcon className="size-5 text-fg-link" />
+          Saved
+        </>
+      ) : (
+        <>
+          <BookmarkIcon className="size-5" />
+          Save
+        </>
+      )}
+    </Menu.Item>
   );
 }
