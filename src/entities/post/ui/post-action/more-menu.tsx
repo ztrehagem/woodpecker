@@ -57,10 +57,6 @@ export function MoreMenu({
                   Delete
                 </Menu.Item>
               )}
-
-              <Menu.Item className="flex cursor-pointer items-center gap-2 px-5 py-2 text-sm text-inherit hover:bg-highlight">
-                More actions (Coming soon)
-              </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>
         </Menu.Portal>
