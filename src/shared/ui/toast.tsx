@@ -1,5 +1,8 @@
 import { Toast, type ToastObject } from "@base-ui/react/toast";
+import clsx from "clsx";
 import type React from "react";
+
+import css from "./toast.module.css";
 
 export function ToastRenderer(): React.ReactElement {
   return (
@@ -27,7 +30,10 @@ function ToastItem({ toast }: { toast: ToastObject<any> }): React.ReactElement {
   return (
     <Toast.Root
       toast={toast}
-      className="mx-4 my-2 rounded-md border border-highlight bg-filling/75 px-4 py-2 shadow-md shadow-backdrop/50 backdrop-blur-sm tablet:my-4"
+      className={clsx(
+        "mx-4 my-2 rounded-md border border-highlight bg-filling/75 px-4 py-2 shadow-md shadow-backdrop/50 backdrop-blur-sm transition-all duration-200 tablet:my-4",
+        css.toastRootTransition,
+      )}
     >
       <Toast.Content className="flex items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
