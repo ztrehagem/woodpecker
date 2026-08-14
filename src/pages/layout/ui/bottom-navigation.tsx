@@ -8,7 +8,7 @@ export function BottomNavigation(): React.ReactElement {
   return (
     <nav
       aria-label="Bottom navigation"
-      className="sticky bottom-0 -mx-x-mobile bg-backdrop/50 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm tablet:hidden"
+      className="sticky bottom-0 -mx-x-mobile border-t border-highlight bg-backdrop/50 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm tablet:hidden"
     >
       <ul className="grid h-height-bottom-navigation grid-flow-col auto-rows-fr grid-rows-1">
         <Item to="/" icon={HomeIcon} />

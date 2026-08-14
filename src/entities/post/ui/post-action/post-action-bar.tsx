@@ -10,7 +10,7 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 
 import { formatCompactCount } from "../../lib/format-compact-count";
-import { MoreMenu } from "./more-menu";
+import { MoreActions } from "./more-actions";
 import { useLikeState } from "./use-like-state";
 
 export function PostActionBar({
@@ -20,13 +20,13 @@ export function PostActionBar({
 }): React.ReactElement {
   return (
     <div className="mt-2 flex items-center justify-between gap-4">
-      <MainButtons postView={postView} />
-      <MoreMenu postView={postView} />
+      <MainActions postView={postView} />
+      <MoreActions postView={postView} />
     </div>
   );
 }
 
-function MainButtons({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
+function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
   return (
     <ul className="grid grow grid-cols-3 gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
       <li className="flex items-center gap-x-1">

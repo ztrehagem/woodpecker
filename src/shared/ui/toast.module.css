@@ -1,0 +1,32 @@
+.toastRootTransition {
+  transition: 300ms ease;
+  transition-property: opacity, transform;
+  opacity: 1;
+  transform: none;
+}
+
+.toastRootTransition[data-starting-style] {
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+}
+
+.toastRootTransition[data-ending-style] {
+  opacity: 0;
+  transform: translateY(-150%);
+}
+
+.toastRootTransition[data-ending-style][data-swipe-direction="up"] {
+  transform: translateY(calc(var(--toast-swipe-movement-y, 0px) - 150%));
+}
+
+.toastRootTransition[data-ending-style][data-swipe-direction="down"] {
+  transform: translateY(calc(var(--toast-swipe-movement-y, 0px) + 150%));
+}
+
+.toastRootTransition[data-ending-style][data-swipe-direction="left"] {
+  transform: translateX(calc(var(--toast-swipe-movement-x, 0px) - 100%));
+}
+
+.toastRootTransition[data-ending-style][data-swipe-direction="right"] {
+  transform: translateX(calc(var(--toast-swipe-movement-x, 0px) + 100%));
+}

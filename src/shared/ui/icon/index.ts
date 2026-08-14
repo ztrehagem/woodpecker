@@ -16,6 +16,8 @@ export { QuoteIcon } from "./quote.tsx";
 export { FavoriteIcon } from "./favorite.tsx";
 export { FavoriteFillIcon } from "./favorite-fill.tsx";
 export { BookmarkIcon } from "./bookmark.tsx";
+export { BookmarkFillIcon } from "./bookmark-fill.tsx";
+export { BookmarkAddedIcon } from "./bookmark-added.tsx";
 export { HomeIcon } from "./home.tsx";
 export { KeepIcon } from "./keep.tsx";
 export { MoreHorizIcon } from "./more-horiz.tsx";
