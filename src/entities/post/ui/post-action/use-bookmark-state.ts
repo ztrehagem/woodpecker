@@ -1,3 +1,4 @@
+import { Toast } from "@base-ui/react";
 import { useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
@@ -12,6 +13,7 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
   unsave: () => void;
 } {
   const session = useAssertSession();
+  const toastManager = Toast.useToastManager();
 
   const [isSaved, setIsSaved] = useState(session.bookmarkCache.get(postView));
 
@@ -23,6 +25,9 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
     savePost(session, postView)
       .then(() => {
         session.bookmarkCache.set(postView, true);
+        toastManager.add({
+          title: "Post saved",
+        });
       })
       .catch(() => {
         setIsSaved(false);
@@ -37,6 +42,9 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
     unsavePost(session, postView)
       .then(() => {
         session.bookmarkCache.set(postView, false);
+        toastManager.add({
+          title: "Removed from saved posts",
+        });
       })
       .catch(() => {
         setIsSaved(true);
