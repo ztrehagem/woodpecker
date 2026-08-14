@@ -12,6 +12,8 @@ import {
 
 import { useBookmark } from "./use-bookmark-state";
 
+import styles from "./more-actions-drawer.module.css";
+
 export function MoreActionsDrawer({
   postView,
   isMine,
@@ -42,12 +44,17 @@ export function MoreActionsDrawer({
       </Drawer.Trigger>
 
       <Drawer.Portal>
-        <Drawer.Backdrop className="fixed inset-0 bg-backdrop/75 transition-opacity duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0 data-swiping:duration-0" />
+        <Drawer.Backdrop className={clsx("fixed inset-0 bg-backdrop/75", styles.backdrop)} />
         <Drawer.Viewport className="fixed inset-0 flex items-end justify-center">
-          <Drawer.Popup className="w-full transform-[translateY(var(--drawer-swipe-movement-y))] rounded-t-lg border-t border-highlight bg-filling px-4 backdrop-blur-sm transition-transform duration-300 data-ending-style:transform-[translateY(calc(100%+2px))] data-starting-style:transform-[translateY(calc(100%+2px))] data-swiping:select-none">
-            <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-fg-muted"></div>
+          <Drawer.Popup
+            className={clsx(
+              "w-full rounded-t-lg border-t border-highlight bg-filling/75 px-4 backdrop-blur-sm",
+              styles.popup,
+            )}
+          >
+            <div className="pointer-events-none mx-auto mt-3 h-1 w-10 rounded-full bg-fg-muted"></div>
 
-            <Drawer.Content className="flex flex-col gap-1 py-4">
+            <Drawer.Content className="my-4 flex flex-col gap-1">
               <BookmarkButton postView={postView} onClick={onClickToClose} />
               {isMine && <DeleteButton onClick={onClickDeleteAndClose} />}
             </Drawer.Content>
@@ -74,9 +81,7 @@ function BookmarkButton({
   return (
     <button
       onClick={onClick}
-      className={clsx(
-        "flex w-full cursor-pointer items-center gap-2 rounded px-5 py-3 text-sm text-inherit hover:bg-highlight",
-      )}
+      className="flex w-full cursor-pointer items-center gap-2 rounded px-5 py-3 text-sm text-inherit hover:bg-highlight"
     >
       {isSaved ? (
         <>

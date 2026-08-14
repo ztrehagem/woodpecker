@@ -7,7 +7,7 @@ import css from "./toast.module.css";
 export function ToastRenderer(): React.ReactElement {
   return (
     <Toast.Portal className="relative z-100">
-      <Toast.Viewport className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-column-main">
+      <Toast.Viewport className="fixed inset-x-0 top-15 mx-auto w-full max-w-column-main">
         <ToastList />
       </Toast.Viewport>
     </Toast.Portal>
@@ -30,6 +30,7 @@ function ToastItem({ toast }: { toast: ToastObject<any> }): React.ReactElement {
   return (
     <Toast.Root
       toast={toast}
+      swipeDirection={["right", "up"]}
       className={clsx(
         "mx-4 my-2 rounded-md border border-highlight bg-filling/75 px-4 py-2 shadow-md shadow-backdrop/50 backdrop-blur-sm transition-all duration-200 tablet:my-4",
         css.toastRootTransition,
