@@ -77,7 +77,7 @@ export function PostCard({
 
               <Tooltip
                 side="top"
-                className="relative"
+                className="tablet:relative"
                 tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
               >
                 <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
