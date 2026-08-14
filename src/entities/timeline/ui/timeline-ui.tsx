@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router";
 
 import { PostCard } from "#src/entities/post/@x/timeline.ts";
@@ -10,20 +10,31 @@ export function TimelineUI({
 }: {
   feed: readonly app.bsky.feed.defs.FeedViewPost[];
 }): React.ReactElement {
-  const filteredFeed: app.bsky.feed.defs.FeedViewPost[] = [];
+  const timelineFeed = useMemo(() => createTimelineFeed(feed), [feed]);
 
-  for (const feedPost of feed) {
+  return (
+    <div className="grid grid-cols-1 gap-2 tablet:gap-4">
+      {timelineFeed.map((post) => (
+        <TimelineItem key={post.post.uri} post={post} />
+      ))}
+    </div>
+  );
+}
+
+function createTimelineFeed(
+  rawFeed: readonly app.bsky.feed.defs.FeedViewPost[],
+): readonly app.bsky.feed.defs.FeedViewPost[] {
+  const filteredFeed: app.bsky.feed.defs.FeedViewPost[] = [];
+  const listedThreadRootCids = new Set<string>();
+
+  for (const feedPost of rawFeed) {
     const rootCid =
       feedPost.reply != null && isPostView(feedPost.reply.root) ? feedPost.reply.root.cid : null;
 
     // すでに表示済みのスレッドと同一スレッドなら無視
-    const isAlreadyListed = filteredFeed.some(
-      (filteredFeedPost) =>
-        filteredFeedPost.reply != null &&
-        isPostView(filteredFeedPost.reply.root) &&
-        (filteredFeedPost.reply.root.cid == rootCid ||
-          filteredFeedPost.reply.root.cid == feedPost.post.cid),
-    );
+    const isAlreadyListed =
+      (rootCid != null && listedThreadRootCids.has(rootCid)) ||
+      listedThreadRootCids.has(feedPost.post.cid);
     if (isAlreadyListed) {
       continue;
     }
@@ -52,15 +63,10 @@ export function TimelineUI({
     }
 
     filteredFeed.push(feedPost);
+    listedThreadRootCids.add(feedPost.reply.root.cid);
   }
 
-  return (
-    <div className="grid grid-cols-1 gap-2 tablet:gap-4">
-      {filteredFeed.map((post) => (
-        <TimelineItem key={post.post.uri} post={post} />
-      ))}
-    </div>
-  );
+  return filteredFeed;
 }
 
 function isPostView(item: { $type: string }): item is { $type: "app.bsky.feed.defs#postView" } {
