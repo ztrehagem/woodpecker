@@ -12,7 +12,7 @@ import { TimelineUI } from "./timeline-ui";
 test("renders external embeds", async () => {
   const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
-      uri: "at://did/app.bsky.feed.post/1",
+      uri: "at://did:plc:alice/app.bsky.feed.post/1",
       cid: "bafyreib3",
       author: {
         did: "did:plc:example",
@@ -60,7 +60,7 @@ test("renders external embeds", async () => {
 test("renders embedded record post content", async () => {
   const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
-      uri: "at://did/app.bsky.feed.post/1",
+      uri: "at://did:plc:alice/app.bsky.feed.post/1",
       cid: "bafyreib3",
       author: {
         did: "did:plc:example",
@@ -78,7 +78,7 @@ test("renders embedded record post content", async () => {
         record: {
           $type: "app.bsky.embed.record#viewRecord",
           cid: "bafyreib3",
-          uri: "at://did/app.bsky.feed.post/2",
+          uri: "at://did:plc:alice/app.bsky.feed.post/2",
           value: {
             $type: "app.bsky.feed.post",
             text: "Embedded post",
@@ -125,7 +125,7 @@ test("renders embedded record post content", async () => {
 test("renders nested embeds inside embedded record posts", async () => {
   const post: app.bsky.feed.defs.FeedViewPost = {
     post: {
-      uri: "at://did/app.bsky.feed.post/1",
+      uri: "at://did:plc:alice/app.bsky.feed.post/1",
       cid: "bafyreib3",
       author: {
         did: "did:plc:example",
@@ -143,7 +143,7 @@ test("renders nested embeds inside embedded record posts", async () => {
         record: {
           $type: "app.bsky.embed.record#viewRecord",
           cid: "bafyreib3",
-          uri: "at://did/app.bsky.feed.post/2",
+          uri: "at://did:plc:alice/app.bsky.feed.post/2",
           value: {
             $type: "app.bsky.feed.post",
             text: "Embedded post",

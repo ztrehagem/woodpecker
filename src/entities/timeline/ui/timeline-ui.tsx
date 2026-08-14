@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Link } from "react-router";
 
 import { PostCard } from "#src/entities/post/@x/timeline.ts";
+import { buildPostHref } from "#src/entities/post/ui/build-post-href.tsx";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { MoreVertIcon } from "#src/shared/ui/icon/index.ts";
 
@@ -97,7 +98,7 @@ function TimelineItem({ post }: { post: app.bsky.feed.defs.FeedViewPost }): Reac
       <div className="flex flex-col gap-2 border-l border-highlight pl-4 tablet:gap-4">
         {!parentIsRoot && hasEllipsis && (
           <Link
-            to={`/profile/${post.reply.root.author.handle}/post/${post.reply.root.uri.split("/").pop()}`}
+            to={buildPostHref(post.reply.root) ?? ""}
             className="flex items-center text-sm text-fg-muted"
           >
             <MoreVertIcon />
