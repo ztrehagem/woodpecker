@@ -29,11 +29,17 @@ export function NewPostDialog(): React.ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [text, setText] = useState("");
+  const isPreventClose = text.length > 0;
 
-  useCloseWatcherEffect(isDialogOpen, setIsDialogOpen);
+  useCloseWatcherEffect(isDialogOpen, setIsDialogOpen, {
+    preventClose: isPreventClose,
+    onPreventClose: () => {
+      setIsConfirmationOpen(true);
+    },
+  });
 
   const onOpenChange = (isOpen: boolean) => {
-    if (!isOpen && text.length > 0) {
+    if (!isOpen && isPreventClose) {
       setIsConfirmationOpen(true);
     } else {
       setText("");
