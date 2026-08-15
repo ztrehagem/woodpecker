@@ -2,10 +2,16 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { ActionMenu } from "#src/shared/ui/action-menu/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
+import {
+  BookmarkFillIcon,
+  BookmarkIcon,
+  DeleteIcon,
+  MoreHorizIcon,
+} from "#src/shared/ui/icon/index.ts";
 
-import { MoreActionsDrawer } from "./more-actions-drawer";
-import { MoreActionsMenu } from "./more-actions-menu";
+import { useBookmark } from "./use-bookmark-state";
 import { useDelete } from "./use-delete";
 
 export function MoreActions({
@@ -25,13 +31,22 @@ export function MoreActions({
 
   return (
     <>
-      <div className="tablet:hidden">
-        <MoreActionsDrawer postView={postView} isMine={isMine} onClickDelete={onClickDelete} />
-      </div>
+      <ActionMenu
+        trigger={
+          <ActionMenu.Trigger>
+            <MoreHorizIcon aria-label="More" className="size-5" />
+          </ActionMenu.Trigger>
+        }
+      >
+        <BookmarkItem postView={postView} />
 
-      <div className="max-tablet:hidden">
-        <MoreActionsMenu postView={postView} isMine={isMine} onClickDelete={onClickDelete} />
-      </div>
+        {isMine && (
+          <ActionMenu.Item destructive onClick={onClickDelete}>
+            <DeleteIcon className="size-5" />
+            Delete
+          </ActionMenu.Item>
+        )}
+      </ActionMenu>
 
       <AlertDialog
         open={isDeleteDialogOpen}
@@ -44,5 +59,26 @@ export function MoreActions({
         destructive
       />
     </>
+  );
+}
+
+function BookmarkItem({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
+  const { isSaved, save, unsave } = useBookmark(postView);
+  const onClick = isSaved ? unsave : save;
+
+  return (
+    <ActionMenu.Item onClick={onClick}>
+      {isSaved ? (
+        <>
+          <BookmarkFillIcon className="size-5 text-fg-link" />
+          Saved
+        </>
+      ) : (
+        <>
+          <BookmarkIcon className="size-5" />
+          Save
+        </>
+      )}
+    </ActionMenu.Item>
   );
 }
