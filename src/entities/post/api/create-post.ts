@@ -1,14 +1,22 @@
 import { RichText, type AppBskyEmbedExternal, type BlobRef } from "@atproto/api";
 import { toDatetimeString } from "@atproto/lex";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
 import type { ExternalEmbedPreview } from "./external-embed-query";
 
 export async function createPost(
   session: Session,
-  text: string,
-  externalEmbed?: ExternalEmbedPreview,
+  {
+    text,
+    reply,
+    externalEmbed,
+  }: {
+    text: string;
+    reply?: app.bsky.feed.post.ReplyRef;
+    externalEmbed?: ExternalEmbedPreview;
+  },
 ): Promise<{
   uri: string;
   cid: string;
@@ -21,6 +29,7 @@ export async function createPost(
   return await session.agent.post({
     text: rt.text,
     facets: rt.facets,
+    reply,
     embed,
     createdAt: toDatetimeString(new Date()),
   });

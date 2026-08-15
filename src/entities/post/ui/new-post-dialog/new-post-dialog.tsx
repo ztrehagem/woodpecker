@@ -2,8 +2,10 @@ import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import React, { use, useState } from "react";
 
+import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { useCloseWatcherEffect } from "#src/shared/lib/close-watcher.ts";
+import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
 import { SendIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
@@ -22,114 +24,61 @@ import { useGraphemesCount } from "./use-graphemes-count";
 
 export function NewPostDialog(): React.ReactElement {
   const handle = use(NewPostDialogContext);
-
-  const session = useAssertSession();
-  const invalidateTimelineQuery = useInvalidateTimelineQuery();
-
-  const [text, setText] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const graphemesCount = useGraphemesCount(text);
-  const externalEmbedPreviewProps = useExternalEmbedPreview(text);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [text, setText] = useState("");
 
   useCloseWatcherEffect(isDialogOpen, setIsDialogOpen);
 
-  const {
-    mutate: submitPost,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: ({ text, embed }: { text: string; embed: ExternalEmbedPreview | undefined }) =>
-      createPost(session, text, embed),
-    onSuccess: () => {
-      setIsDialogOpen(false);
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen && text.length > 0) {
+      setIsConfirmationOpen(true);
+    } else {
       setText("");
-      void invalidateTimelineQuery();
-    },
-  });
-
-  const trimmedText = text.trim();
-  const canSubmit = !isPending && graphemesCount <= 300 && trimmedText.length > 0;
-
-  const submit = () => {
-    if (!canSubmit) {
-      return;
+      setIsDialogOpen(isOpen);
     }
-
-    submitPost({ text: trimmedText, embed: externalEmbedPreviewProps.preview });
   };
 
-  const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    submit();
+  const onConfirmDiscard = () => {
+    setIsConfirmationOpen(false);
+    setIsDialogOpen(false);
   };
 
   return (
     <Dialog.Root<NewPostDialogPayload>
       open={isDialogOpen}
-      onOpenChange={setIsDialogOpen}
+      onOpenChange={onOpenChange}
       handle={handle}
     >
       {({ payload }) => (
-        <Dialog.Portal className="relative z-50">
-          <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
-          <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
-            <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-              <div className="mx-auto w-full max-w-xl">
-                <Card>
-                  <div className="flex flex-col gap-4 px-5 py-4">
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <Dialog.Title className="font-bold">New post</Dialog.Title>
+        <>
+          <Dialog.Portal className="relative z-50">
+            <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
+            <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
+              <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
+                <div className="mx-auto w-full max-w-xl">
+                  <NewPostDialogCard
+                    text={text}
+                    onTextChange={setText}
+                    setIsDialogOpen={setIsDialogOpen}
+                    payload={payload}
+                  />
+                </div>
+              </Dialog.Popup>
+            </Dialog.Viewport>
+          </Dialog.Portal>
 
-                      <ProfileView />
-                    </div>
-
-                    {payload?.replyPostView && (
-                      <pre className="text-2xs">
-                        {JSON.stringify(payload.replyPostView.record, null, 2)}
-                      </pre>
-                    )}
-
-                    <div className="flex flex-col gap-1">
-                      <Textarea
-                        text={text}
-                        onChange={(e) => setText(e.target.value)}
-                        onSubmitIntent={submit}
-                      />
-
-                      <div className="self-end">
-                        <GraphemesCounter count={graphemesCount} />
-                      </div>
-                    </div>
-
-                    <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
-
-                    {error && <p className="text-fg-danger">{error.message}</p>}
-
-                    <div className="-mx-2 flex justify-between gap-4">
-                      <Dialog.Close
-                        render={(props) => <NakedButton severity="destructive" {...props} />}
-                      >
-                        Cancel
-                      </Dialog.Close>
-
-                      <NakedButton
-                        onClick={onClickSubmit}
-                        disabled={!canSubmit}
-                        severity="primary"
-                        emphasize
-                        processing={isPending}
-                      >
-                        Send
-                        <SendIcon />
-                      </NakedButton>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </Dialog.Popup>
-          </Dialog.Viewport>
-        </Dialog.Portal>
+          <AlertDialog
+            open={isConfirmationOpen}
+            onOpenChange={setIsConfirmationOpen}
+            title="Discard post?"
+            description="Are you sure you want to discard this post? This action cannot be undone."
+            destructive
+            confirm="Discard"
+            cancel="Cancel"
+            onConfirm={onConfirmDiscard}
+          />
+        </>
       )}
     </Dialog.Root>
   );
@@ -144,3 +93,126 @@ function Trigger(
 }
 
 NewPostDialog.Trigger = Trigger;
+
+function NewPostDialogCard({
+  text,
+  onTextChange,
+  setIsDialogOpen,
+  payload,
+}: {
+  text: string;
+  onTextChange: (text: string) => void;
+  setIsDialogOpen: (isOpen: boolean) => void;
+  payload: NewPostDialogPayload;
+}): React.ReactElement {
+  const session = useAssertSession();
+  const invalidateTimelineQuery = useInvalidateTimelineQuery();
+  const graphemesCount = useGraphemesCount(text);
+  const externalEmbedPreviewProps = useExternalEmbedPreview(text);
+
+  const {
+    mutate: submitPost,
+    isPending,
+    error,
+  } = useMutation({
+    mutationFn: ({
+      text,
+      externalEmbed,
+    }: {
+      text: string;
+      externalEmbed: ExternalEmbedPreview | undefined;
+    }) => {
+      const reply = payload?.replyPostView ? buildReplyRefAssert(payload.replyPostView) : void 0;
+      return createPost(session, { text, reply, externalEmbed });
+    },
+    onSuccess: () => {
+      setIsDialogOpen(false);
+      void invalidateTimelineQuery();
+    },
+  });
+
+  const onChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onTextChange(e.target.value);
+  };
+
+  const trimmedText = text.trim();
+  const canSubmit = !isPending && graphemesCount <= 300 && trimmedText.length > 0;
+
+  const submit = () => {
+    if (canSubmit) {
+      submitPost({ text, externalEmbed: externalEmbedPreviewProps.preview });
+    }
+  };
+
+  const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    submit();
+  };
+
+  return (
+    <Card>
+      <div className="flex flex-col gap-4 px-5 py-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <Dialog.Title className="font-bold">New post</Dialog.Title>
+
+          <ProfileView />
+        </div>
+
+        {payload?.replyPostView && (
+          <pre className="text-2xs">{JSON.stringify(payload.replyPostView.record, null, 2)}</pre>
+        )}
+
+        <div className="flex flex-col gap-1">
+          <Textarea text={text} onChange={onChangeTextarea} onSubmitIntent={submit} />
+
+          <div className="self-end">
+            <GraphemesCounter count={graphemesCount} />
+          </div>
+        </div>
+
+        <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
+
+        {error && <p className="text-fg-danger">{error.message}</p>}
+
+        <div className="-mx-2 flex justify-between gap-4">
+          <Dialog.Close render={(props) => <NakedButton severity="destructive" {...props} />}>
+            Cancel
+          </Dialog.Close>
+
+          <NakedButton
+            onClick={onClickSubmit}
+            disabled={!canSubmit}
+            severity="primary"
+            emphasize
+            processing={isPending}
+          >
+            Send
+            <SendIcon />
+          </NakedButton>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function buildReplyRefAssert(postView: app.bsky.feed.defs.PostView): app.bsky.feed.post.ReplyRef {
+  const record =
+    postView.record.$type === "app.bsky.feed.post"
+      ? (postView.record as app.bsky.feed.post.Main)
+      : null;
+
+  if (!record) {
+    throw new Error("record is not a post");
+  }
+
+  return {
+    root: record.reply?.root ?? {
+      uri: postView.uri,
+      cid: postView.cid,
+    },
+    parent: {
+      uri: postView.uri,
+      cid: postView.cid,
+    },
+  };
+}
