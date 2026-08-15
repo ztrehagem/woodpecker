@@ -10,6 +10,7 @@ import {
 } from "#src/shared/ui/icon/index.ts";
 
 import { formatCompactCount } from "../../lib/format-compact-count";
+import { NewPostDialog } from "../new-post-dialog/new-post-dialog";
 import { MoreActions } from "./more-actions";
 import { useLikeState } from "./use-like-state";
 
@@ -46,13 +47,13 @@ function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): R
 
 function ReplyButton({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
   return (
-    <button
-      type="button"
+    <NewPostDialog.Trigger
       className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
+      payload={{ replyPostView: postView }}
     >
       <ReplyIcon aria-label="Replies" className="size-5" />
       {formatCompactCount(postView.replyCount ?? 0)}
-    </button>
+    </NewPostDialog.Trigger>
   );
 }
 

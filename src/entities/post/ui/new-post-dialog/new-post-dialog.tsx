@@ -14,6 +14,7 @@ import { useInvalidateTimelineQuery } from "../../api/timeline-query";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
 import { NewPostDialogContext } from "./new-post-dialog-context";
+import type { NewPostDialogPayload } from "./new-post-dialog-payload";
 import { ProfileView } from "./profile-view";
 import { Textarea } from "./textarea";
 import { useExternalEmbedPreview } from "./use-external-embed-preview";
@@ -64,65 +65,79 @@ export function NewPostDialog(): React.ReactElement {
   };
 
   return (
-    <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen} handle={handle}>
-      <Dialog.Portal className="relative z-50">
-        <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
-        <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
-          <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
-            <div className="mx-auto w-full max-w-xl">
-              <Card>
-                <div className="flex flex-col gap-4 px-5 py-4">
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <Dialog.Title className="font-bold">New post</Dialog.Title>
+    <Dialog.Root<NewPostDialogPayload>
+      open={isDialogOpen}
+      onOpenChange={setIsDialogOpen}
+      handle={handle}
+    >
+      {({ payload }) => (
+        <Dialog.Portal className="relative z-50">
+          <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
+          <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
+            <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">
+              <div className="mx-auto w-full max-w-xl">
+                <Card>
+                  <div className="flex flex-col gap-4 px-5 py-4">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <Dialog.Title className="font-bold">New post</Dialog.Title>
 
-                    <ProfileView />
-                  </div>
+                      <ProfileView />
+                    </div>
 
-                  <div className="flex flex-col gap-1">
-                    <Textarea
-                      text={text}
-                      onChange={(e) => setText(e.target.value)}
-                      onSubmitIntent={submit}
-                    />
+                    {payload?.replyPostView && (
+                      <pre className="text-2xs">
+                        {JSON.stringify(payload.replyPostView.record, null, 2)}
+                      </pre>
+                    )}
 
-                    <div className="self-end">
-                      <GraphemesCounter count={graphemesCount} />
+                    <div className="flex flex-col gap-1">
+                      <Textarea
+                        text={text}
+                        onChange={(e) => setText(e.target.value)}
+                        onSubmitIntent={submit}
+                      />
+
+                      <div className="self-end">
+                        <GraphemesCounter count={graphemesCount} />
+                      </div>
+                    </div>
+
+                    <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
+
+                    {error && <p className="text-fg-danger">{error.message}</p>}
+
+                    <div className="-mx-2 flex justify-between gap-4">
+                      <Dialog.Close
+                        render={(props) => <NakedButton severity="destructive" {...props} />}
+                      >
+                        Cancel
+                      </Dialog.Close>
+
+                      <NakedButton
+                        onClick={onClickSubmit}
+                        disabled={!canSubmit}
+                        severity="primary"
+                        emphasize
+                        processing={isPending}
+                      >
+                        Send
+                        <SendIcon />
+                      </NakedButton>
                     </div>
                   </div>
-
-                  <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
-
-                  {error && <p className="text-fg-danger">{error.message}</p>}
-
-                  <div className="-mx-2 flex justify-between gap-4">
-                    <Dialog.Close
-                      render={(props) => <NakedButton severity="destructive" {...props} />}
-                    >
-                      Cancel
-                    </Dialog.Close>
-
-                    <NakedButton
-                      onClick={onClickSubmit}
-                      disabled={!canSubmit}
-                      severity="primary"
-                      emphasize
-                      processing={isPending}
-                    >
-                      Send
-                      <SendIcon />
-                    </NakedButton>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </Dialog.Popup>
-        </Dialog.Viewport>
-      </Dialog.Portal>
+                </Card>
+              </div>
+            </Dialog.Popup>
+          </Dialog.Viewport>
+        </Dialog.Portal>
+      )}
     </Dialog.Root>
   );
 }
 
-function Trigger(props: React.ComponentProps<typeof Dialog.Trigger>): React.ReactElement {
+function Trigger(
+  props: React.ComponentProps<typeof Dialog.Trigger<NewPostDialogPayload>>,
+): React.ReactElement {
   const handle = use(NewPostDialogContext);
 
   return <Dialog.Trigger {...props} handle={handle} />;
