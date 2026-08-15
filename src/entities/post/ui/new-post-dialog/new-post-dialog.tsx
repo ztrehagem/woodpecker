@@ -13,6 +13,7 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { useInvalidateTimelineQuery } from "../../api/timeline-query";
+import { PostCard } from "../post-card";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
 import { NewPostDialogContext } from "./new-post-dialog-context";
@@ -153,14 +154,14 @@ function NewPostDialogCard({
     <Card>
       <div className="flex flex-col gap-4 px-5 py-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <Dialog.Title className="font-bold">New post</Dialog.Title>
+          <Dialog.Title className="font-bold">
+            {payload?.replyPostView ? "Replying to post" : "New post"}
+          </Dialog.Title>
 
           <ProfileView />
         </div>
 
-        {payload?.replyPostView && (
-          <pre className="text-2xs">{JSON.stringify(payload.replyPostView.record, null, 2)}</pre>
-        )}
+        {payload?.replyPostView && <PostCard postView={payload.replyPostView} preview />}
 
         <div className="flex flex-col gap-1">
           <Textarea text={text} onChange={onChangeTextarea} onSubmitIntent={submit} />

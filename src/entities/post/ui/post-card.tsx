@@ -20,10 +20,12 @@ export function PostCard({
   postView,
   reason,
   pinned = false,
+  preview = false,
 }: {
   postView: app.bsky.feed.defs.PostView;
   reason?: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned?: boolean;
+  preview?: boolean;
 }): React.ReactElement {
   const post =
     postView.record.$type === "app.bsky.feed.post"
@@ -45,20 +47,22 @@ export function PostCard({
   const richText = new RichText({ text: post.text, facets: post.facets });
 
   return (
-    <Card>
+    <Card bordered={preview}>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
-        <Link
-          to={link ?? ""}
-          aria-label="View post"
-          data-view-post-link
-          className="absolute inset-0 block"
-        ></Link>
+        {!preview && (
+          <Link
+            to={link ?? ""}
+            aria-label="View post"
+            data-view-post-link
+            className="absolute inset-0 block"
+          ></Link>
+        )}
 
         {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
 
         <div className="flex gap-2">
           <Link
-            to={`/profile/${postView.author.handle}`}
+            to={preview ? {} : `/profile/${postView.author.handle}`}
             className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
             {postView.author.avatar != null && (
@@ -69,7 +73,7 @@ export function PostCard({
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={`/profile/${postView.author.handle}`}
+                to={preview ? {} : `/profile/${postView.author.handle}`}
                 className="relative font-bold wrap-anywhere text-inherit hover:underline"
               >
                 {displayName}
@@ -102,7 +106,7 @@ export function PostCard({
               </div>
             )}
 
-            <PostActionBar postView={postView} />
+            {!preview && <PostActionBar postView={postView} />}
 
             {import.meta.env.DEV && import.meta.env.DEBUG != null && (
               <Collapsible.Root className="flex flex-col items-start">
