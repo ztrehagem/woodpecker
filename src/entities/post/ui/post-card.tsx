@@ -10,6 +10,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
+import { isPostRecord } from "../lib/is-post-record";
 import { buildPostHref } from "./build-post-href";
 import { EmbedUI } from "./embeds/embed-ui";
 import { PostActionBar } from "./post-action/post-action-bar";
@@ -20,21 +21,20 @@ export function PostCard({
   postView,
   reason,
   pinned = false,
+  preview = false,
 }: {
   postView: app.bsky.feed.defs.PostView;
   reason?: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned?: boolean;
+  preview?: boolean;
 }): React.ReactElement {
-  const post =
-    postView.record.$type === "app.bsky.feed.post"
-      ? (postView.record as app.bsky.feed.post.Main)
-      : null;
+  const record = postView.record;
 
-  if (!post) {
+  if (!isPostRecord(record)) {
     return <></>;
   }
 
-  const datetimeString = asDatetimeString(post.createdAt);
+  const datetimeString = asDatetimeString(record.createdAt);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
@@ -42,32 +42,36 @@ export function PostCard({
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
-  const richText = new RichText({ text: post.text, facets: post.facets });
+  const richText = new RichText({ text: record.text, facets: record.facets });
 
   return (
-    <Card>
+    <Card bordered={preview}>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
-        <Link
-          to={link ?? ""}
-          aria-label="View post"
-          data-view-post-link
-          className="absolute inset-0 block"
-        ></Link>
+        {!preview && (
+          <Link
+            to={link ?? ""}
+            aria-label="View post"
+            data-view-post-link
+            className="absolute inset-0 block"
+          ></Link>
+        )}
 
         {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
 
         <div className="flex gap-2">
           <Link
-            to={`/profile/${postView.author.handle}`}
+            to={preview ? {} : `/profile/${postView.author.handle}`}
             className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
-            <img src={postView.author.avatar} alt="" className="size-full" />
+            {postView.author.avatar != null && (
+              <img src={postView.author.avatar} alt="" className="size-full" />
+            )}
           </Link>
 
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={`/profile/${postView.author.handle}`}
+                to={preview ? {} : `/profile/${postView.author.handle}`}
                 className="relative font-bold wrap-anywhere text-inherit hover:underline"
               >
                 {displayName}
@@ -86,7 +90,7 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            {post.text.length > 0 && (
+            {record.text.length > 0 && (
               <p className="whitespace-pre-line">
                 {Array.from(richText.segments()).map((segment, index) => (
                   <RichTextSegmentUI key={index} segment={segment} />
@@ -100,7 +104,7 @@ export function PostCard({
               </div>
             )}
 
-            <PostActionBar postView={postView} />
+            {!preview && <PostActionBar postView={postView} />}
 
             {import.meta.env.DEV && import.meta.env.DEBUG != null && (
               <Collapsible.Root className="flex flex-col items-start">
