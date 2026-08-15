@@ -1,7 +1,6 @@
 import { AlertDialog as Lib } from "@base-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useCloseWatcherEffect } from "../lib/close-watcher";
 import Card from "./card";
 import { NakedButton } from "./naked-button";
 
@@ -26,7 +25,21 @@ export function AlertDialog({
 }): React.ReactElement {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useCloseWatcherEffect(open, onOpenChange);
+  useEffect(() => {
+    if (!open || typeof CloseWatcher === "undefined") {
+      return;
+    }
+
+    const closeWatcher = new CloseWatcher();
+
+    closeWatcher.addEventListener("close", () => {
+      onOpenChange(false);
+    });
+
+    return () => {
+      closeWatcher.destroy();
+    };
+  }, [open, onOpenChange]);
 
   const onClickConfirm = () => {
     const maybePromise = onConfirm();
