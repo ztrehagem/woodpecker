@@ -13,7 +13,8 @@ import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 import { createPost } from "../../api/create-post";
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { useInvalidateTimelineQuery } from "../../api/timeline-query";
-import { PostCard } from "../post-card";
+import { isPostRecord } from "../../lib/is-post-record";
+import { PostPreviewCard } from "../post-preview-card";
 import { ExternalEmbedPreview as ExternalEmbedPreviewComponent } from "./external-embed-preview";
 import { GraphemesCounter } from "./graphemes-counter";
 import { NewPostDialogContext } from "./new-post-dialog-context";
@@ -161,7 +162,7 @@ function NewPostDialogCard({
           <ProfileView />
         </div>
 
-        {payload?.replyPostView && <PostCard postView={payload.replyPostView} preview />}
+        {payload?.replyPostView && <PostPreviewCard postView={payload.replyPostView} />}
 
         <div className="flex flex-col gap-1">
           <Textarea text={text} onChange={onChangeTextarea} onSubmitIntent={submit} />
@@ -197,12 +198,9 @@ function NewPostDialogCard({
 }
 
 function buildReplyRefAssert(postView: app.bsky.feed.defs.PostView): app.bsky.feed.post.ReplyRef {
-  const record =
-    postView.record.$type === "app.bsky.feed.post"
-      ? (postView.record as app.bsky.feed.post.Main)
-      : null;
+  const record = postView.record;
 
-  if (!record) {
+  if (!isPostRecord(record)) {
     throw new Error("record is not a post");
   }
 

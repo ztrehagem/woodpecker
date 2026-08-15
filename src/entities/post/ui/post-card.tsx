@@ -10,6 +10,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
+import { isPostRecord } from "../lib/is-post-record";
 import { buildPostHref } from "./build-post-href";
 import { EmbedUI } from "./embeds/embed-ui";
 import { PostActionBar } from "./post-action/post-action-bar";
@@ -27,16 +28,13 @@ export function PostCard({
   pinned?: boolean;
   preview?: boolean;
 }): React.ReactElement {
-  const post =
-    postView.record.$type === "app.bsky.feed.post"
-      ? (postView.record as app.bsky.feed.post.Main)
-      : null;
+  const record = postView.record;
 
-  if (!post) {
+  if (!isPostRecord(record)) {
     return <></>;
   }
 
-  const datetimeString = asDatetimeString(post.createdAt);
+  const datetimeString = asDatetimeString(record.createdAt);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
@@ -44,7 +42,7 @@ export function PostCard({
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
-  const richText = new RichText({ text: post.text, facets: post.facets });
+  const richText = new RichText({ text: record.text, facets: record.facets });
 
   return (
     <Card bordered={preview}>
@@ -92,7 +90,7 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            {post.text.length > 0 && (
+            {record.text.length > 0 && (
               <p className="whitespace-pre-line">
                 {Array.from(richText.segments()).map((segment, index) => (
                   <RichTextSegmentUI key={index} segment={segment} />
