@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
+import type { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
