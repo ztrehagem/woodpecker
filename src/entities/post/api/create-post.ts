@@ -1,5 +1,5 @@
 import { RichText, type AppBskyEmbedExternal, type BlobRef } from "@atproto/api";
-import { toDatetimeString } from "@atproto/lex";
+import { toDatetimeString, type AtUriString } from "@atproto/lex";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
@@ -11,10 +11,12 @@ export async function createPost(
   {
     text,
     reply,
+    quote,
     externalEmbed,
   }: {
     text: string;
     reply?: app.bsky.feed.post.ReplyRef;
+    quote?: { uri: AtUriString; cid: string };
     externalEmbed?: ExternalEmbedPreview;
   },
 ): Promise<{
@@ -24,7 +26,7 @@ export async function createPost(
   const rt = new RichText({ text });
   await rt.detectFacets(session.agent);
 
-  const embed = externalEmbed ? await buildExternalEmbed(session, externalEmbed) : void 0;
+  const embed = await buildEmbed(session, quote, externalEmbed);
 
   return await session.agent.post({
     text: rt.text,
@@ -33,6 +35,32 @@ export async function createPost(
     embed,
     createdAt: toDatetimeString(new Date()),
   });
+}
+
+async function buildEmbed(
+  session: Session,
+  quote: { uri: AtUriString; cid: string } | undefined,
+  externalEmbed: ExternalEmbedPreview | undefined,
+) {
+  if (quote) {
+    return buildRecordEmbed(quote);
+  }
+
+  if (externalEmbed) {
+    return await buildExternalEmbed(session, externalEmbed);
+  }
+
+  return void 0;
+}
+
+function buildRecordEmbed(quote: { uri: AtUriString; cid: string }): {
+  $type: "app.bsky.embed.record";
+  record: { uri: string; cid: string };
+} {
+  return {
+    $type: "app.bsky.embed.record",
+    record: { uri: quote.uri, cid: quote.cid },
+  };
 }
 
 async function buildExternalEmbed(

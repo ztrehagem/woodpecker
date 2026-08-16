@@ -131,7 +131,12 @@ function NewPostDialogCard({
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
   const graphemesCount = useGraphemesCount(text);
-  const externalEmbedPreviewProps = useExternalEmbedPreview(text);
+  const replyPostView =
+    payload != null && "replyPostView" in payload ? payload.replyPostView : void 0;
+  const quotePostView =
+    payload != null && "quotePostView" in payload ? payload.quotePostView : void 0;
+  // A quote post already occupies the embed slot, so link previews are not offered.
+  const externalEmbedPreviewProps = useExternalEmbedPreview(quotePostView ? "" : text);
 
   const {
     mutate: submitPost,
@@ -145,8 +150,9 @@ function NewPostDialogCard({
       text: string;
       externalEmbed: ExternalEmbedPreview | undefined;
     }) => {
-      const reply = payload?.replyPostView ? buildReplyRefAssert(payload.replyPostView) : void 0;
-      return createPost(session, { text, reply, externalEmbed });
+      const reply = replyPostView ? buildReplyRefAssert(replyPostView) : void 0;
+      const quote = quotePostView ? { uri: quotePostView.uri, cid: quotePostView.cid } : void 0;
+      return createPost(session, { text, reply, quote, externalEmbed });
     },
     onSuccess: () => {
       setIsDialogOpen(false);
@@ -177,13 +183,13 @@ function NewPostDialogCard({
       <div className="flex flex-col gap-4 px-5 py-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <Dialog.Title className="font-bold">
-            {payload?.replyPostView ? "Replying to post" : "New post"}
+            {buildTitle(replyPostView, quotePostView)}
           </Dialog.Title>
 
           <ProfileView />
         </div>
 
-        {payload?.replyPostView && <PostPreviewCard postView={payload.replyPostView} />}
+        {replyPostView && <PostPreviewCard postView={replyPostView} />}
 
         <div className="flex flex-col gap-1">
           <Textarea text={text} onChange={onChangeTextarea} onSubmitIntent={submit} />
@@ -194,6 +200,8 @@ function NewPostDialogCard({
         </div>
 
         <ExternalEmbedPreviewComponent {...externalEmbedPreviewProps} />
+
+        {quotePostView && <PostPreviewCard postView={quotePostView} />}
 
         {error && <p className="text-fg-danger">{error.message}</p>}
 
@@ -216,6 +224,21 @@ function NewPostDialogCard({
       </div>
     </Card>
   );
+}
+
+function buildTitle(
+  replyPostView: app.bsky.feed.defs.PostView | undefined,
+  quotePostView: app.bsky.feed.defs.PostView | undefined,
+): string {
+  if (replyPostView) {
+    return "Replying to post";
+  }
+
+  if (quotePostView) {
+    return "Quoting post";
+  }
+
+  return "New post";
 }
 
 function buildReplyRefAssert(postView: app.bsky.feed.defs.PostView): app.bsky.feed.post.ReplyRef {

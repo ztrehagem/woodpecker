@@ -1,3 +1,4 @@
+import { Toast } from "@base-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -65,15 +66,17 @@ function renderPage(session: Session) {
 
   return render(
     <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider session={session}>
-        <MemoryRouter initialEntries={["/profile/alice.test/post/1"]}>
-          <Suspense>
-            <Routes>
-              <Route path="/profile/:handle/post/:postId" element={<Page />} />
-            </Routes>
-          </Suspense>
-        </MemoryRouter>
-      </AtProtoMockProvider>
+      <Toast.Provider>
+        <AtProtoMockProvider session={session}>
+          <MemoryRouter initialEntries={["/profile/alice.test/post/1"]}>
+            <Suspense>
+              <Routes>
+                <Route path="/profile/:handle/post/:postId" element={<Page />} />
+              </Routes>
+            </Suspense>
+          </MemoryRouter>
+        </AtProtoMockProvider>
+      </Toast.Provider>
     </QueryClientProvider>,
   );
 }
