@@ -13,6 +13,8 @@ export default defineConfig({
     setupFiles: ["src/test/setup.ts"],
 
     coverage: {
+      enabled: true,
+      reporter: ["text"],
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       exclude: ["src/test/**/*", "src/shared/api/lexicons/**/*"],
