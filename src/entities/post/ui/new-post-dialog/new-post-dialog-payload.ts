@@ -5,4 +5,6 @@ export type NewPostDialogPayload =
   | undefined
   | null
   // reply post
-  | { replyPostView: app.bsky.feed.defs.PostView };
+  | { replyPostView: app.bsky.feed.defs.PostView }
+  // quote post
+  | { quotePostView: app.bsky.feed.defs.PostView };

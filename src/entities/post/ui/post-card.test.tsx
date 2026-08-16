@@ -1,13 +1,13 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { MemoryRouter } from "react-router";
 import { expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { PostCard } from "./post-card";
+
+function renderView(postView: app.bsky.feed.defs.PostView) {
+  return renderWithProviders(<PostCard postView={postView} />, { initialEntries: ["/"] });
+}
 
 test("renders external embeds", async () => {
   const postView: app.bsky.feed.defs.PostView = {
@@ -39,18 +39,7 @@ test("renders external embeds", async () => {
     likeCount: 0,
     bookmarkCount: 0,
   };
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const view = await render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider>
-        <MemoryRouter>
-          <Suspense>
-            <PostCard postView={postView} />
-          </Suspense>
-        </MemoryRouter>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
-  );
+  const view = await renderView(postView);
 
   await expect.element(view.getByText("Example", { exact: true })).toBeInTheDocument();
 });
@@ -101,18 +90,7 @@ test("renders embedded record post content", async () => {
     likeCount: 0,
     bookmarkCount: 0,
   };
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const view = await render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider>
-        <MemoryRouter>
-          <Suspense>
-            <PostCard postView={postView} />
-          </Suspense>
-        </MemoryRouter>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
-  );
+  const view = await renderView(postView);
 
   await expect.element(view.getByRole("link", { name: "Bob" })).toBeInTheDocument();
   await expect.element(view.getByText("Embedded post", { exact: true })).toBeInTheDocument();
@@ -183,18 +161,7 @@ test("renders nested embeds inside embedded record posts", async () => {
     likeCount: 0,
     bookmarkCount: 0,
   };
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const view = await render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider>
-        <MemoryRouter>
-          <Suspense>
-            <PostCard postView={postView} />
-          </Suspense>
-        </MemoryRouter>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
-  );
+  const view = await renderView(postView);
 
   await expect.element(view.getByText("Embedded Link", { exact: true })).toBeInTheDocument();
 });

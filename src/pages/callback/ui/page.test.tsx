@@ -1,11 +1,8 @@
-import { Suspense } from "react";
-import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 
 import type { Session } from "#src/shared/auth/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import Page from "./page";
 
@@ -20,15 +17,7 @@ vi.mock("react-router", async () => {
 });
 
 function renderPage(session: Session | null) {
-  return render(
-    <MemoryRouter>
-      <AtProtoMockProvider session={session}>
-        <Suspense>
-          <Page />
-        </Suspense>
-      </AtProtoMockProvider>
-    </MemoryRouter>,
-  );
+  return renderWithProviders(<Page />, { session, initialEntries: ["/"] });
 }
 
 afterEach(() => {

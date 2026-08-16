@@ -2,16 +2,12 @@ import { clsx } from "clsx";
 import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import {
-  FavoriteFillIcon,
-  FavoriteIcon,
-  RepeatIcon,
-  ReplyIcon,
-} from "#src/shared/ui/icon/index.ts";
+import { FavoriteFillIcon, FavoriteIcon, ReplyIcon } from "#src/shared/ui/icon/index.ts";
 
 import { formatCompactCount } from "../../lib/format-compact-count";
 import { NewPostDialog } from "../new-post-dialog/new-post-dialog";
 import { MoreActions } from "./more-actions";
+import { RepostActions } from "./repost-actions";
 import { useLikeState } from "./use-like-state";
 
 export function PostActionBar({
@@ -35,7 +31,7 @@ function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): R
       </li>
 
       <li className="flex items-center gap-x-1">
-        <RepostButton postView={postView} />
+        <RepostActions postView={postView} />
       </li>
 
       <li className="flex items-center gap-x-1">
@@ -54,18 +50,6 @@ function ReplyButton({ postView }: { postView: app.bsky.feed.defs.PostView }): R
       <ReplyIcon aria-label="Replies" className="size-5" />
       {formatCompactCount(postView.replyCount ?? 0)}
     </NewPostDialog.Trigger>
-  );
-}
-
-function RepostButton({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
-  return (
-    <button
-      type="button"
-      className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
-    >
-      <RepeatIcon aria-label="Reposts" className="size-5" />
-      {formatCompactCount((postView.repostCount ?? 0) + (postView.quoteCount ?? 0))}
-    </button>
   );
 }
 

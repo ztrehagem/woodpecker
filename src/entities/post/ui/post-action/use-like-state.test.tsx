@@ -1,13 +1,10 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { useLikeState } from "./use-like-state";
 
@@ -48,17 +45,7 @@ function renderView(
   postView: app.bsky.feed.defs.PostView = defaultPostView,
   session = createMockSession(),
 ) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider session={session}>
-        <Suspense>
-          <LikeStateTestWrapper postView={postView} />
-        </Suspense>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
-  );
+  return renderWithProviders(<LikeStateTestWrapper postView={postView} />, { session });
 }
 
 test("likeしていないとき、toggleLikeを呼ぶと、likedになる", async () => {

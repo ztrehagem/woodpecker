@@ -1,13 +1,10 @@
-import { Toast } from "@base-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
+import type { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 import { Viewport } from "#src/test/viewport.ts";
 
 import { MoreActions } from "./more-actions";
@@ -41,19 +38,10 @@ function renderView({
   postView?: app.bsky.feed.defs.PostView;
   session?: Awaited<ReturnType<typeof createMockSession>>;
 } = {}) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider session={session}>
-        <Toast.Provider>
-          <Suspense>
-            <MoreActions postView={postView} />,
-          </Suspense>
-        </Toast.Provider>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
-  );
+  return renderWithProviders(<MoreActions postView={postView} />, {
+    session,
+    initialEntries: ["/"],
+  });
 }
 
 function openMenu(view: Awaited<ReturnType<typeof render>>) {
