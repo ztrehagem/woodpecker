@@ -14,7 +14,7 @@ import { useAssertSession } from "#src/shared/auth/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
-export default function Page(): React.ReactElement {
+export function Page(): React.ReactElement {
   const { handle } = useParams();
   const actor = handle as AtIdentifierString;
 
