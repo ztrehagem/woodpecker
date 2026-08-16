@@ -1,14 +1,11 @@
-import { Toast } from "@base-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
 import { ToastRenderer } from "#src/shared/ui/toast.tsx";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 import { Viewport } from "#src/test/viewport.ts";
 
 import { NewPostDialog } from "../new-post-dialog/new-post-dialog";
@@ -35,20 +32,13 @@ function renderView({
 }: {
   session?: ReturnType<typeof createMockSession>;
 } = {}) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <Toast.Provider>
-        <AtProtoMockProvider session={session}>
-          <Suspense>
-            <RepostActions postView={defaultPostView} />
-            <NewPostDialog />
-            <ToastRenderer />
-          </Suspense>
-        </AtProtoMockProvider>
-      </Toast.Provider>
-    </QueryClientProvider>,
+  return renderWithProviders(
+    <>
+      <RepostActions postView={defaultPostView} />
+      <NewPostDialog />
+      <ToastRenderer />
+    </>,
+    { session },
   );
 }
 

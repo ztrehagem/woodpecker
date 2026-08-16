@@ -1,14 +1,9 @@
-import { Toast } from "@base-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { MemoryRouter } from "react-router";
 import { expect, test, vi, type Mock } from "vitest";
-import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { Page } from "./page.tsx";
 
@@ -44,21 +39,7 @@ function mockLexCall(session: Session): Mock<() => Promise<GetActorLikesOutput>>
 }
 
 function renderPage(session: Session) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <Toast.Provider>
-        <AtProtoMockProvider session={session}>
-          <MemoryRouter>
-            <Suspense>
-              <Page />
-            </Suspense>
-          </MemoryRouter>
-        </AtProtoMockProvider>
-      </Toast.Provider>
-    </QueryClientProvider>,
-  );
+  return renderWithProviders(<Page />, { session, initialEntries: ["/"] });
 }
 
 test("いいねが 0 件のときに No likes. を表示する", async () => {

@@ -1,12 +1,10 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { afterEach, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
+import type { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { NewPostDialog } from "./new-post-dialog";
 import { createNewPostDialogContext, NewPostDialogContext } from "./new-post-dialog-context";
@@ -35,21 +33,14 @@ afterEach(() => {
 });
 
 function renderDialog(session = createMockSession()) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <AtProtoMockProvider session={session}>
-        <NewPostDialogContext value={createNewPostDialogContext()}>
-          <Suspense>
-            <NewPostDialog.Trigger render={(props) => <button type="button" {...props} />}>
-              Open dialog
-            </NewPostDialog.Trigger>
-            <NewPostDialog />
-          </Suspense>
-        </NewPostDialogContext>
-      </AtProtoMockProvider>
-    </QueryClientProvider>,
+  return renderWithProviders(
+    <NewPostDialogContext value={createNewPostDialogContext()}>
+      <NewPostDialog.Trigger render={(props) => <button type="button" {...props} />}>
+        Open dialog
+      </NewPostDialog.Trigger>
+      <NewPostDialog />
+    </NewPostDialogContext>,
+    { session },
   );
 }
 

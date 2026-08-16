@@ -1,31 +1,12 @@
-import { Toast } from "@base-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { MemoryRouter } from "react-router";
 import { expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
+import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { PostCard } from "./post-card";
 
 function renderView(postView: app.bsky.feed.defs.PostView) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <Toast.Provider>
-        <AtProtoMockProvider>
-          <MemoryRouter>
-            <Suspense>
-              <PostCard postView={postView} />
-            </Suspense>
-          </MemoryRouter>
-        </AtProtoMockProvider>
-      </Toast.Provider>
-    </QueryClientProvider>,
-  );
+  return renderWithProviders(<PostCard postView={postView} />, { initialEntries: ["/"] });
 }
 
 test("renders external embeds", async () => {
