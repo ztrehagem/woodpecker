@@ -74,12 +74,17 @@ jobs:
       - get-playwright-version
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/setup@v1
         with:
           cache: true
       - run: pnpm run vitest
+      - uses: davelosert/vitest-coverage-report-action@v2
+        if: always()
 
   playwright:
     runs-on: ubuntu-latest

@@ -14,7 +14,8 @@ export default defineConfig({
 
     coverage: {
       enabled: true,
-      reporter: ["text"],
+      reporter: ["text", "json-summary", "json"],
+      reportOnFailure: true,
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       exclude: ["src/test/**/*", "src/shared/api/lexicons/**/*"],
