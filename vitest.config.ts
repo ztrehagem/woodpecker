@@ -13,6 +13,9 @@ export default defineConfig({
     setupFiles: ["src/test/setup.ts"],
 
     coverage: {
+      enabled: true,
+      reporter: ["text", "json-summary", "json"],
+      reportOnFailure: true,
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       exclude: ["src/test/**/*", "src/shared/api/lexicons/**/*"],
@@ -22,7 +25,12 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }],
+      instances: [
+        {
+          browser: "chromium",
+          viewport: { width: 375, height: 667 },
+        },
+      ],
     },
   },
 });

@@ -1,7 +1,6 @@
 import { AlertDialog as Lib } from "@base-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useCloseWatcherEffect } from "../lib/close-watcher";
 import Card from "./card";
 import { NakedButton } from "./naked-button";
 
@@ -26,7 +25,21 @@ export function AlertDialog({
 }): React.ReactElement {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useCloseWatcherEffect(open, onOpenChange);
+  useEffect(() => {
+    if (!open || typeof CloseWatcher === "undefined") {
+      return;
+    }
+
+    const closeWatcher = new CloseWatcher();
+
+    closeWatcher.addEventListener("close", () => {
+      onOpenChange(false);
+    });
+
+    return () => {
+      closeWatcher.destroy();
+    };
+  }, [open, onOpenChange]);
 
   const onClickConfirm = () => {
     const maybePromise = onConfirm();
@@ -48,38 +61,40 @@ export function AlertDialog({
     <Lib.Root open={open} onOpenChange={onOpenChange}>
       <Lib.Portal className="relative z-50">
         <Lib.Backdrop className="fixed inset-0 bg-backdrop/75" />
-        <Lib.Popup className="fixed top-[calc(50%+1.25rem*var(--nested-dialogs))] left-1/2 -mt-8 flex w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 scale-[calc(1-0.1*var(--nested-dialogs))] flex-col gap-4">
-          <Card>
-            <div className="flex flex-col gap-4 px-5 py-4">
-              <div className="flex flex-col gap-1">
-                <Lib.Title className="text-base font-bold">{title}</Lib.Title>
-                {description != null && (
-                  <Lib.Description className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {description}
-                  </Lib.Description>
-                )}
+        <Lib.Viewport className="fixed inset-0">
+          <Lib.Popup className="relative top-[calc(50%+1.25rem*var(--nested-dialogs))] left-1/2 -mt-8 flex w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 scale-[calc(1-0.1*var(--nested-dialogs))] flex-col gap-4">
+            <Card>
+              <div className="flex flex-col gap-4 px-5 py-4">
+                <div className="flex flex-col gap-1">
+                  <Lib.Title className="text-base font-bold">{title}</Lib.Title>
+                  {description != null && (
+                    <Lib.Description className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {description}
+                    </Lib.Description>
+                  )}
+                </div>
+                <div className="flex justify-end gap-3">
+                  <Lib.Close
+                    disabled={isProcessing}
+                    className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-fg-link select-none active:text-fg-link-active"
+                    render={(props) => <NakedButton {...props} />}
+                  >
+                    {cancel}
+                  </Lib.Close>
+                  <NakedButton
+                    severity={destructive ? "destructive" : "primary"}
+                    emphasize
+                    processing={isProcessing}
+                    disabled={isProcessing}
+                    onClick={onClickConfirm}
+                  >
+                    {confirm}
+                  </NakedButton>
+                </div>
               </div>
-              <div className="flex justify-end gap-3">
-                <Lib.Close
-                  disabled={isProcessing}
-                  className="flex h-8 cursor-pointer items-center justify-center gap-2 px-3 text-sm leading-none font-normal whitespace-nowrap text-fg-link select-none active:text-fg-link-active"
-                  render={(props) => <NakedButton {...props} />}
-                >
-                  {cancel}
-                </Lib.Close>
-                <NakedButton
-                  severity={destructive ? "destructive" : "primary"}
-                  emphasize
-                  processing={isProcessing}
-                  disabled={isProcessing}
-                  onClick={onClickConfirm}
-                >
-                  {confirm}
-                </NakedButton>
-              </div>
-            </div>
-          </Card>
-        </Lib.Popup>
+            </Card>
+          </Lib.Popup>
+        </Lib.Viewport>
       </Lib.Portal>
     </Lib.Root>
   );

@@ -13,7 +13,7 @@ export function AtProtoMockProvider({
 }: React.PropsWithChildren<{
   oauthClient?: BrowserOAuthClient;
   oauthResult?: OAuthResult;
-  session?: Session;
+  session?: Session | null;
 }>): React.ReactElement {
   return (
     <AtProtoProvider

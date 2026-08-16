@@ -1,10 +1,9 @@
 import { Dialog } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import { useCloseWatcherEffect } from "#src/shared/lib/close-watcher.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
 import Card from "#src/shared/ui/card.tsx";
 import { SendIcon } from "#src/shared/ui/icon/index.ts";
@@ -31,12 +30,28 @@ export function NewPostDialog(): React.ReactElement {
   const [text, setText] = useState("");
   const isPreventClose = text.length > 0;
 
-  useCloseWatcherEffect(isDialogOpen, setIsDialogOpen, {
-    preventClose: isPreventClose,
-    onPreventClose: () => {
-      setIsConfirmationOpen(true);
-    },
-  });
+  useEffect(() => {
+    if (!isDialogOpen || typeof CloseWatcher === "undefined") {
+      return;
+    }
+
+    const closeWatcher = new CloseWatcher();
+
+    closeWatcher.addEventListener("cancel", (e) => {
+      if (isPreventClose) {
+        e.preventDefault();
+        setIsConfirmationOpen(true);
+      }
+    });
+
+    closeWatcher.addEventListener("close", () => {
+      setIsDialogOpen(false);
+    });
+
+    return () => {
+      closeWatcher.destroy();
+    };
+  }, [isDialogOpen, isPreventClose]);
 
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && isPreventClose) {

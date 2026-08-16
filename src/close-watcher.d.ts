@@ -7,7 +7,9 @@ interface CloseWatcher extends EventTarget {
   onclose: ((this: CloseWatcher, ev: Event) => unknown) | null;
 }
 
-declare const CloseWatcher: {
-  prototype: CloseWatcher;
-  new (options?: { signal?: AbortSignal }): CloseWatcher;
-};
+declare const CloseWatcher:
+  | {
+      prototype: CloseWatcher;
+      new (options?: { signal?: AbortSignal }): CloseWatcher;
+    }
+  | undefined;
