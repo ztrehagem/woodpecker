@@ -12,7 +12,7 @@ export function LoadingBoxesIcon(): React.ReactElement {
       width="36"
       height="36"
       viewBox="0 0 36 36"
-      enable-background="new 0 0 96 96"
+      enableBackground="new 0 0 96 96"
     >
       <g>
         <rect className={css.box5532} x="13" y="1" rx="1" width="10" height="10" />
