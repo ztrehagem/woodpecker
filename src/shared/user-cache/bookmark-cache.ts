@@ -1,8 +1,9 @@
 import type { AtUriString } from "@atproto/lex";
 
 import type { app } from "../api/lexicons";
+import { ReactExternalStore } from "../lib/react-external-store";
 
-export class BookmarkCache {
+export class BookmarkCache extends ReactExternalStore {
   readonly #cache = new Map<AtUriString, boolean>();
 
   get size(): number {
@@ -15,5 +16,6 @@ export class BookmarkCache {
 
   set(view: app.bsky.feed.defs.PostView, isBookmarked: boolean): void {
     this.#cache.set(view.uri, isBookmarked);
+    this.notifyChange();
   }
 }
