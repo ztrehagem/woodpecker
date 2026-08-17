@@ -16,7 +16,7 @@ export function useRepostState(
   const repostUri = useSyncExternalStore(session.repostCache.subscribe, () =>
     session.repostCache.get(postView),
   );
-  const [isRepostedOptimistic, setIsRepostedOptimistic] = useOptimistic<boolean | null>(null);
+  const [isRepostedOptimistic, setIsRepostedOptimistic] = useOptimistic<boolean>(repostUri != null);
 
   const repost = (): void => {
     if (repostUri != null) {
@@ -42,8 +42,7 @@ export function useRepostState(
     });
   };
 
-  const isReposted = isRepostedOptimistic ?? repostUri != null;
-  const toggleRepost = isReposted ? unrepost : repost;
+  const toggleRepost = isRepostedOptimistic ? unrepost : repost;
 
-  return [isReposted, toggleRepost];
+  return [isRepostedOptimistic, toggleRepost];
 }

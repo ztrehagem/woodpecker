@@ -18,7 +18,7 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
   const isSavedCache = useSyncExternalStore(session.bookmarkCache.subscribe, () =>
     session.bookmarkCache.get(postView),
   );
-  const [isSavedOptimistic, setIsSavedOptimistic] = useOptimistic<boolean | null>(null);
+  const [isSavedOptimistic, setIsSavedOptimistic] = useOptimistic(isSavedCache);
 
   const save = (): void => {
     if (isSavedCache) {
@@ -48,7 +48,5 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
     });
   };
 
-  const isSaved = isSavedOptimistic ?? isSavedCache;
-
-  return { isSaved, save, unsave };
+  return { isSaved: isSavedOptimistic, save, unsave };
 }

@@ -15,7 +15,7 @@ export function useLikeState(
   const likeUri = useSyncExternalStore(session.likeCache.subscribe, () =>
     session.likeCache.get(postView),
   );
-  const [isLikedOptimistic, setIsLikedOptimistic] = useOptimistic<boolean | null>(null);
+  const [isLikedOptimistic, setIsLikedOptimistic] = useOptimistic<boolean>(likeUri != null);
 
   const like = (): void => {
     if (likeUri != null) {
@@ -39,8 +39,7 @@ export function useLikeState(
     });
   };
 
-  const isLiked = isLikedOptimistic ?? likeUri != null;
-  const toggleLike = isLiked ? unlike : like;
+  const toggleLike = isLikedOptimistic ? unlike : like;
 
-  return [isLiked, toggleLike];
+  return [isLikedOptimistic, toggleLike];
 }
