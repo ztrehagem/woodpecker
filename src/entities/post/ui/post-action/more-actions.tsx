@@ -33,7 +33,7 @@ export function MoreActions({
     <>
       <ActionMenu
         trigger={
-          <ActionMenu.Trigger>
+          <ActionMenu.Trigger className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted">
             <MoreHorizIcon aria-label="More" className="size-5" />
           </ActionMenu.Trigger>
         }

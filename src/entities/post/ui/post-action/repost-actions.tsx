@@ -1,5 +1,6 @@
 import { Toast } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
 import React, { use, useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
@@ -32,6 +33,8 @@ export function RepostActions({
     },
   });
 
+  const isReposted = postView.viewer?.repost != null;
+
   const onConfirmRepost = async () => {
     await repost();
     setIsConfirmationOpen(false);
@@ -45,7 +48,12 @@ export function RepostActions({
     <>
       <ActionMenu
         trigger={
-          <ActionMenu.Trigger>
+          <ActionMenu.Trigger
+            className={clsx(
+              "relative -m-2 flex cursor-pointer items-center gap-x-1 p-2",
+              isReposted && "text-fg-repost",
+            )}
+          >
             <RepeatIcon aria-label="Reposts" className="size-5" />
             {formatCompactCount((postView.repostCount ?? 0) + (postView.quoteCount ?? 0))}
           </ActionMenu.Trigger>
