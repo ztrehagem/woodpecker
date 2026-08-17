@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
-import { DetailedPostCard, PostCard } from "#src/entities/post/index.ts";
+import { PostDetailCard, PostCard } from "#src/entities/post/index.ts";
 import { usePostQuery } from "#src/entities/post/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -39,7 +39,7 @@ function Content({
         <div>
           <ParentCardList parent={parent} />
           <ScrollIntoViewOnMount>
-            <DetailedPostCard postView={post} />
+            <PostDetailCard postView={post} />
           </ScrollIntoViewOnMount>
           <ReplyCardList replies={replies} />
         </div>
