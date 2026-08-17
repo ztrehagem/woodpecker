@@ -50,10 +50,7 @@ export function AlertDialog({
         .catch(() => {})
         .finally(() => {
           setIsProcessing(false);
-          onOpenChange(false);
         });
-    } else {
-      onOpenChange(false);
     }
   };
 

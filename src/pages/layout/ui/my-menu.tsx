@@ -15,6 +15,10 @@ export function MyMenu({
 }): React.ReactElement {
   const [isShowingSignOutConfirmation, setIsShowingSignOutConfirmation] = useState(false);
   const signOut = useSignOut();
+  const onConfirmSignOut = async () => {
+    await signOut();
+    setIsShowingSignOutConfirmation(false);
+  };
 
   const itemClassName = clsx(
     "flex cursor-pointer items-center gap-2 px-5 py-3 text-sm text-inherit hover:bg-highlight",
@@ -62,7 +66,7 @@ export function MyMenu({
         <AlertDialog
           open={isShowingSignOutConfirmation}
           onOpenChange={setIsShowingSignOutConfirmation}
-          onConfirm={signOut}
+          onConfirm={onConfirmSignOut}
           title="Are you sure you want to log out?"
           cancel="Cancel"
           confirm="Logout"

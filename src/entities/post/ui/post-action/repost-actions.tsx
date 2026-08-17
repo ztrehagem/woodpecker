@@ -34,6 +34,7 @@ export function RepostActions({
 
   const onConfirmRepost = async () => {
     await repost();
+    setIsConfirmationOpen(false);
   };
 
   const onClickQuote = () => {

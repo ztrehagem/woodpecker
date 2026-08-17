@@ -18,7 +18,7 @@ export function useDelete(postView: app.bsky.feed.defs.PostView): {
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: async ({ uri }: { uri: AtUriString }): Promise<void> => {
       await deletePost(session, uri);
     },
@@ -31,8 +31,8 @@ export function useDelete(postView: app.bsky.feed.defs.PostView): {
     setIsDialogOpen(true);
   };
 
-  const onConfirm = () => {
-    mutate({ uri: postView.uri });
+  const onConfirm = async () => {
+    await mutateAsync({ uri: postView.uri });
     setIsDialogOpen(false);
   };
 
