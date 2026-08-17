@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { startTransition, useOptimistic, useSyncExternalStore } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -11,37 +11,35 @@ export function useLikeState(
 ): readonly [isLiked: boolean, toggleLike: () => void] {
   const session = useAssertSession();
 
-  const [isLiked, setIsLiked] = useState(session.likeCache.get(postView) != null);
+  // const [isLiked, setIsLiked] = useState(session.likeCache.get(postView) != null);
+  const likeUri = useSyncExternalStore(session.likeCache.subscribe, () =>
+    session.likeCache.get(postView),
+  );
+  const [isLikedOptimistic, setIsLikedOptimistic] = useOptimistic<boolean | null>(null);
 
   const like = (): void => {
-    if (session.likeCache.get(postView) != null) {
+    if (likeUri != null) {
       return;
     }
-    setIsLiked(true);
-    likePost(session, postView)
-      .then(({ uri: likeUri }) => {
-        session.likeCache.set(postView, likeUri);
-      })
-      .catch(() => {
-        setIsLiked(false);
-      });
+    startTransition(async () => {
+      setIsLikedOptimistic(true);
+      const { uri } = await likePost(session, postView);
+      session.likeCache.set(postView, uri);
+    });
   };
 
   const unlike = (): void => {
-    const likeUri = session.likeCache.get(postView);
     if (likeUri == null) {
       return;
     }
-    setIsLiked(false);
-    unlikePost(session, likeUri)
-      .then(() => {
-        session.likeCache.set(postView, null);
-      })
-      .catch(() => {
-        setIsLiked(true);
-      });
+    startTransition(async () => {
+      setIsLikedOptimistic(false);
+      await unlikePost(session, likeUri);
+      session.likeCache.set(postView, null);
+    });
   };
 
+  const isLiked = isLikedOptimistic ?? likeUri != null;
   const toggleLike = isLiked ? unlike : like;
 
   return [isLiked, toggleLike];

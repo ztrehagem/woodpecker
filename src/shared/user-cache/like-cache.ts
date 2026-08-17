@@ -1,12 +1,13 @@
 import type { AtUriString } from "@atproto/lex";
 
 import type { app } from "../api/lexicons";
+import { ReactExternalStore } from "../lib/react-external-store";
 
 // oxlint-disable-next-line sonarjs/redundant-type-aliases
 type PostCid = string;
 type LikeUri = AtUriString;
 
-export class LikeCache {
+export class LikeCache extends ReactExternalStore {
   readonly #map = new Map<PostCid, LikeUri | null>();
 
   get size(): number {
@@ -19,5 +20,6 @@ export class LikeCache {
 
   set(view: app.bsky.feed.defs.PostView, likeUri: LikeUri | null): void {
     this.#map.set(view.cid, likeUri);
+    this.notifyChange();
   }
 }
