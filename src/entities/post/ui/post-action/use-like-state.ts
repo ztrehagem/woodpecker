@@ -11,7 +11,6 @@ export function useLikeState(
 ): readonly [isLiked: boolean, toggleLike: () => void] {
   const session = useAssertSession();
 
-  // const [isLiked, setIsLiked] = useState(session.likeCache.get(postView) != null);
   const likeUri = useSyncExternalStore(session.likeCache.subscribe, () =>
     session.likeCache.get(postView),
   );
