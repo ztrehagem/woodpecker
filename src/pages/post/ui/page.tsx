@@ -5,13 +5,15 @@ import { PostDetailCard, PostCard } from "#src/entities/post/index.ts";
 import { usePostQuery } from "#src/entities/post/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 export function Page(): React.ReactElement {
   const { handle, postId } = useParams<{ handle: string; postId: string }>();
   const uri = `at://${handle}/app.bsky.feed.post/${postId}` as const;
   const session = useAssertSession();
-  const { data, error, isPending } = usePostQuery(session, uri);
+  const { data, error, isPending, isFetching } = usePostQuery(session, uri);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   let content = null;
 

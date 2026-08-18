@@ -2,13 +2,16 @@ import React from "react";
 
 import { TimelineUI, useTimelineQuery } from "#src/entities/post/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 export default function SignedInUI(): React.ReactElement {
   const session = useAssertSession();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTimelineQuery(session);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useTimelineQuery(session);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   const feed = data?.pages.flatMap((page) => page.feed);
 

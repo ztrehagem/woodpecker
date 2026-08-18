@@ -11,6 +11,7 @@ import {
 } from "#src/entities/profile/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
@@ -28,7 +29,8 @@ export function Page(): React.ReactElement {
 
 function ProfileBlock({ actor }: { actor: AtIdentifierString }): React.ReactElement {
   const session = useAssertSession();
-  const { data: profile, error } = useProfileQuery(session, actor);
+  const { data: profile, error, isFetching } = useProfileQuery(session, actor);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   if (profile) {
     return (
@@ -46,7 +48,8 @@ function ProfileBlock({ actor }: { actor: AtIdentifierString }): React.ReactElem
 
 function PinnedCard({ uri }: { uri: AtUriString }): React.ReactElement {
   const session = useAssertSession();
-  const { data, error } = usePostQuery(session, uri, { depth: 0, parentHeight: 0 });
+  const { data, error, isFetching } = usePostQuery(session, uri, { depth: 0, parentHeight: 0 });
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   if (data) {
     const thread = data.thread;
@@ -64,10 +67,9 @@ function PinnedCard({ uri }: { uri: AtUriString }): React.ReactElement {
 
 function FeedBlock({ actor }: { actor: AtIdentifierString }): React.ReactElement {
   const session = useAssertSession();
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useAuthorFeedQuery(
-    session,
-    actor,
-  );
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useAuthorFeedQuery(session, actor);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   const feed = data?.pages.flatMap((page) => page.feed);
 

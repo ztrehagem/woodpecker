@@ -3,6 +3,7 @@ import type React from "react";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Card from "#src/shared/ui/card.tsx";
+import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
@@ -10,10 +11,9 @@ import { useNotificationsQuery } from "../api/notifications-query.ts";
 
 export function Page(): React.ReactElement {
   const session = useAssertSession();
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotificationsQuery(
-    session,
-    session.did,
-  );
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
+    useNotificationsQuery(session, session.did);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   const notifications = data?.pages.flatMap((page) => page.notifications);
 

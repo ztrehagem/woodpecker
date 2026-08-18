@@ -6,6 +6,10 @@ import { MemoryRouter } from "react-router";
 import { render } from "vitest-browser-react";
 
 import type { Session } from "#src/shared/auth/index.ts";
+import {
+  GlobalLoadingContext,
+  GlobalLoadingStore,
+} from "#src/shared/ui/global-loading-indicator/global-loading-context.ts";
 import { AtProtoMockProvider } from "#src/test/atproto-mock-provider.tsx";
 import { createMockSession } from "#src/test/atproto-mock.ts";
 
@@ -30,7 +34,9 @@ export function renderWithProviders(
   return render(
     <QueryClientProvider client={queryClient}>
       <Toast.Provider>
-        <AtProtoMockProvider session={session}>{routedContent}</AtProtoMockProvider>
+        <GlobalLoadingContext value={new GlobalLoadingStore()}>
+          <AtProtoMockProvider session={session}>{routedContent}</AtProtoMockProvider>
+        </GlobalLoadingContext>
       </Toast.Provider>
     </QueryClientProvider>,
   );
