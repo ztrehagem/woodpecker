@@ -24,9 +24,13 @@ export function useRepostState(
     }
     startTransition(async () => {
       setIsRepostedOptimistic(true);
-      const { uri } = await repostPost(session, postView);
-      await invalidateTimelineQuery();
-      session.repostCache.set(postView, uri);
+      try {
+        const { uri } = await repostPost(session, postView);
+        await invalidateTimelineQuery();
+        session.repostCache.set(postView, uri);
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 
@@ -36,9 +40,13 @@ export function useRepostState(
     }
     startTransition(async () => {
       setIsRepostedOptimistic(false);
-      await unrepostPost(session, repostUri);
-      await invalidateTimelineQuery();
-      session.repostCache.set(postView, null);
+      try {
+        await unrepostPost(session, repostUri);
+        await invalidateTimelineQuery();
+        session.repostCache.set(postView, null);
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 

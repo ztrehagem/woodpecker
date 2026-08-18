@@ -26,11 +26,15 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
     }
     startTransition(async () => {
       setIsSavedOptimistic(true);
-      await savePost(session, postView);
-      session.bookmarkCache.set(postView, true);
-      toastManager.add({
-        title: "Post saved",
-      });
+      try {
+        await savePost(session, postView);
+        session.bookmarkCache.set(postView, true);
+        toastManager.add({
+          title: "Post saved",
+        });
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 
@@ -40,11 +44,15 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
     }
     startTransition(async () => {
       setIsSavedOptimistic(false);
-      await unsavePost(session, postView);
-      session.bookmarkCache.set(postView, false);
-      toastManager.add({
-        title: "Removed from saved posts",
-      });
+      try {
+        await unsavePost(session, postView);
+        session.bookmarkCache.set(postView, false);
+        toastManager.add({
+          title: "Removed from saved posts",
+        });
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 

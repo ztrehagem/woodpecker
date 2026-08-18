@@ -23,8 +23,12 @@ export function useLikeState(
     }
     startTransition(async () => {
       setIsLikedOptimistic(true);
-      const { uri } = await likePost(session, postView);
-      session.likeCache.set(postView, uri);
+      try {
+        const { uri } = await likePost(session, postView);
+        session.likeCache.set(postView, uri);
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 
@@ -34,8 +38,12 @@ export function useLikeState(
     }
     startTransition(async () => {
       setIsLikedOptimistic(false);
-      await unlikePost(session, likeUri);
-      session.likeCache.set(postView, null);
+      try {
+        await unlikePost(session, likeUri);
+        session.likeCache.set(postView, null);
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 
