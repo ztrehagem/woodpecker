@@ -3,6 +3,7 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import { Link, useMatch } from "react-router";
 
+import { useInvalidateTimelineQuery } from "#src/entities/post/index.ts";
 import {
   HomeIcon,
   SearchIcon,
@@ -34,6 +35,11 @@ export function NavigationDrawer({ trigger }: { trigger: React.ReactNode }): Rea
 NavigationDrawer.Trigger = Drawer.Trigger;
 
 function Content({ onClickLink }: { onClickLink?: () => void }): React.ReactElement {
+  const invalidateTimelineQuery = useInvalidateTimelineQuery();
+  const onExactClickHome = () => {
+    void invalidateTimelineQuery({ stale: true });
+  };
+
   return (
     <Drawer.Content>
       <div className="flex h-height-header items-center justify-start gap-2 px-6">
@@ -45,7 +51,13 @@ function Content({ onClickLink }: { onClickLink?: () => void }): React.ReactElem
 
       <nav aria-label="Main navigation" className="mt-2 tablet:mt-4">
         <ul className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-items-stretch gap-2">
-          <Item to="/" name="Home" icon={HomeIcon} onClick={onClickLink} />
+          <Item
+            to="/"
+            name="Home"
+            icon={HomeIcon}
+            onClick={onClickLink}
+            onExactClick={onExactClickHome}
+          />
           <Item to="/search" name="Search" icon={SearchIcon} onClick={onClickLink} />
           <Item
             to="/notifications"
@@ -66,11 +78,13 @@ function Item({
   name,
   icon: Icon,
   onClick: onClickProp,
+  onExactClick,
 }: {
   to: string;
   name: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   onClick?: () => void;
+  onExactClick?: () => void;
 }): React.ReactElement {
   const isCurrent = useMatch({ path: to });
   const isExact = useMatch({ path: to, end: true }) != null;
@@ -79,6 +93,7 @@ function Item({
     if (isExact) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      onExactClick?.();
     }
 
     onClickProp?.();

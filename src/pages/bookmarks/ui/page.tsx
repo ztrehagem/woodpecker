@@ -3,6 +3,7 @@ import type React from "react";
 import { PostCard } from "#src/entities/post/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
@@ -10,8 +11,9 @@ import { useBookmarksQuery } from "../api/bookmarks-query.ts";
 
 export function Page(): React.ReactElement {
   const session = useAssertSession();
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useBookmarksQuery(session);
+  useGlobalLoadingIndicatorEffect(isFetching);
 
   const posts = data?.pages.flatMap((page) =>
     page.bookmarks.flatMap((bookmark) =>

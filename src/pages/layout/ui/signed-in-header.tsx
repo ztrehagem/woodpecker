@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { NewPostDialog } from "#src/entities/post/index.ts";
 import { useProfileQuery } from "#src/entities/profile/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
+import { GlobalLoadingIndicator } from "#src/shared/ui/global-loading-indicator/index.ts";
 import { EditSquareIcon, MenuIcon } from "#src/shared/ui/icon/index.ts";
 
 import { MyMenu } from "./my-menu";
@@ -29,6 +30,7 @@ export function SignedInHeader(): React.ReactElement {
         </div>
 
         <div className="flex items-center justify-end gap-4 max-mobile:gap-2">
+          <GlobalLoadingIndicator />
           <NewPostButton />
           <MySelfButton />
         </div>

@@ -3,6 +3,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
   type InfiniteData,
+  type InvalidateQueryFilters,
   type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
 
@@ -52,10 +53,12 @@ export function useTimelineQuery(
   return useInfiniteQuery(timelineQuery(session, limit));
 }
 
-export function useInvalidateTimelineQuery(): () => Promise<void> {
+export function useInvalidateTimelineQuery(): (
+  filter?: Pick<InvalidateQueryFilters, "stale">,
+) => Promise<void> {
   const queryClient = useQueryClient();
 
-  return async () => {
-    await queryClient.invalidateQueries({ queryKey: timelineQueryKeys.all });
+  return async (filter) => {
+    await queryClient.invalidateQueries({ ...filter, queryKey: timelineQueryKeys.all });
   };
 }

@@ -27,3 +27,7 @@ export { NotificationsIcon } from "./notifications.tsx";
 export { MenuIcon } from "./menu.tsx";
 export { CloseIcon } from "./close.tsx";
 export { DeleteIcon } from "./delete.tsx";
+export { SyncIcon } from "./sync.tsx";
+export { CachedIcon } from "./cached.tsx";
+export { ProgressActivityIcon } from "./progress-activity.tsx";
+export { CircleIcon } from "./circle.tsx";
