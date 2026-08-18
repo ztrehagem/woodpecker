@@ -6,22 +6,32 @@ import { ActionMenuContext } from "./action-menu-context";
 
 export function Item({
   destructive = false,
+  disabled = false,
   onClick,
   children,
-}: React.PropsWithChildren<{ destructive?: boolean; onClick?: () => void }>): React.ReactElement {
+}: React.PropsWithChildren<{
+  destructive?: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
+}>): React.ReactElement {
   const context = useContext(ActionMenuContext);
 
   switch (context.type) {
     case "drawer":
       return (
-        <DrawerItem destructive={destructive} onClick={onClick} setIsOpen={context.setIsOpen}>
+        <DrawerItem
+          destructive={destructive}
+          disabled={disabled}
+          onClick={onClick}
+          setIsOpen={context.setIsOpen}
+        >
           {children}
         </DrawerItem>
       );
 
     case "menu":
       return (
-        <MenuItem destructive={destructive} onClick={onClick}>
+        <MenuItem destructive={destructive} disabled={disabled} onClick={onClick}>
           {children}
         </MenuItem>
       );
@@ -30,11 +40,13 @@ export function Item({
 
 function DrawerItem({
   destructive = false,
+  disabled = false,
   onClick: propOnClick,
   children,
   setIsOpen,
 }: React.PropsWithChildren<{
   destructive?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }>): React.ReactElement {
@@ -46,6 +58,7 @@ function DrawerItem({
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={onClick}
       className={clsx(
         "flex w-full cursor-pointer items-center gap-2 rounded px-5 py-3 text-sm",
@@ -59,11 +72,17 @@ function DrawerItem({
 
 function MenuItem({
   destructive = false,
+  disabled = false,
   onClick,
   children,
-}: React.PropsWithChildren<{ destructive?: boolean; onClick?: () => void }>): React.ReactElement {
+}: React.PropsWithChildren<{
+  destructive?: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
+}>): React.ReactElement {
   return (
     <Menu.Item
+      disabled={disabled}
       onClick={onClick}
       className={clsx(
         "flex cursor-pointer items-center gap-2 px-5 py-2 text-sm",

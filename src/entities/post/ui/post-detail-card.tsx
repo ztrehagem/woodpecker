@@ -14,7 +14,7 @@ import { PostActionBar } from "./post-action/post-action-bar";
 import { RichTextSegmentUI } from "./rich-text-segment-ui";
 import { timeAgo } from "./time-ago";
 
-export function DetailedPostCard({
+export function PostDetailCard({
   postView,
 }: {
   postView: app.bsky.feed.defs.PostView;

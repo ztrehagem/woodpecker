@@ -27,14 +27,23 @@ const defaultPostView: app.bsky.feed.defs.PostView = {
   },
 };
 
+const repostedPostView: app.bsky.feed.defs.PostView = {
+  ...defaultPostView,
+  viewer: {
+    repost: "at://did:plc:alice/app.bsky.feed.repost/repostrkey",
+  },
+};
+
 function renderView({
   session = createMockSession(),
+  postView = defaultPostView,
 }: {
   session?: ReturnType<typeof createMockSession>;
+  postView?: app.bsky.feed.defs.PostView;
 } = {}) {
   return renderWithProviders(
     <>
-      <RepostActions postView={defaultPostView} />
+      <RepostActions postView={postView} />
       <NewPostDialog />
       <ToastRenderer />
     </>,
@@ -54,47 +63,30 @@ describe.each([
     await page.viewport(viewport[0], viewport[1]);
   });
 
-  test("トリガーを押すと Repost と Quote が表示される", async () => {
-    const view = await renderView();
+  test.each([
+    { case: "未リポスト", postView: defaultPostView, repostLabel: "Repost" },
+    { case: "リポスト済み", postView: repostedPostView, repostLabel: "Undo repost" },
+  ])("トリガーを押すと選択肢が表示される ($case)", async ({ postView, repostLabel }) => {
+    const view = await renderView({ postView });
 
     await openMenu(view);
 
-    await expect.element(view.getByRole(itemRole, { name: "Repost" })).toBeInTheDocument();
-    await expect.element(view.getByRole(itemRole, { name: "Quote" })).toBeInTheDocument();
+    await expect
+      .element(view.getByRole(itemRole, { name: repostLabel, exact: true }))
+      .toBeInTheDocument();
+    await expect
+      .element(view.getByRole(itemRole, { name: "Quote post", exact: true }))
+      .toBeInTheDocument();
   });
 
-  test("Repost を選ぶと確認ダイアログが表示される", async () => {
-    const view = await renderView();
-
-    await openMenu(view);
-    await view.getByRole(itemRole, { name: "Repost" }).click();
-
-    await expect.element(view.getByRole("heading", { name: "Repost" })).toBeInTheDocument();
-  });
-
-  test("確認ダイアログでキャンセルするとリポストされない", async () => {
+  test("Repost を選ぶと、リポストレコードが作成される", async () => {
     const session = createMockSession();
     const spy = vi.spyOn(session.client, "create").mockResolvedValue({} as never);
     const view = await renderView({ session });
 
     await openMenu(view);
-    await view.getByRole(itemRole, { name: "Repost" }).click();
-    await view.getByRole("button", { name: "Cancel" }).click();
+    await view.getByRole(itemRole, { name: "Repost", exact: true }).click();
 
-    await expect.element(view.getByRole("heading", { name: "Repost" })).not.toBeInTheDocument();
-    expect(spy).not.toHaveBeenCalled();
-  });
-
-  test("確認ダイアログで Confirm するとリポストレコードが作成されトーストが表示される", async () => {
-    const session = createMockSession();
-    const spy = vi.spyOn(session.client, "create").mockResolvedValue({} as never);
-    const view = await renderView({ session });
-
-    await openMenu(view);
-    await view.getByRole(itemRole, { name: "Repost" }).click();
-    await view.getByRole("button", { name: "Repost" }).click();
-
-    await expect.element(view.getByText("Reposted")).toBeInTheDocument();
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy.mock.lastCall?.[0]).toBe(app.bsky.feed.repost);
     expect(spy.mock.lastCall?.[1]).toMatchObject({
@@ -102,13 +94,28 @@ describe.each([
     });
   });
 
+  test("Undo repost を選ぶと、リポストレコードが削除される", async () => {
+    const session = createMockSession();
+    const spy = vi.spyOn(session.client, "delete").mockResolvedValue({} as never);
+    const view = await renderView({ session, postView: repostedPostView });
+
+    await openMenu(view);
+    await view.getByRole(itemRole, { name: "Undo repost", exact: true }).click();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.lastCall?.[0]).toBe(app.bsky.feed.repost);
+    expect(spy.mock.lastCall?.[1]).toMatchObject({ rkey: "repostrkey" });
+  });
+
   test("Quote を選ぶと引用対象をプレビューした投稿ダイアログが開く", async () => {
     const view = await renderView();
 
     await openMenu(view);
-    await view.getByRole(itemRole, { name: "Quote" }).click();
+    await view.getByRole(itemRole, { name: "Quote post", exact: true }).click();
 
-    await expect.element(view.getByRole("heading", { name: "Quoting post" })).toBeInTheDocument();
+    await expect
+      .element(view.getByRole("heading", { name: "Quoting post", exact: true }))
+      .toBeInTheDocument();
     await expect.element(view.getByText("hello", { exact: true })).toBeInTheDocument();
 
     // The dialog handle is a module-level singleton, so leave it closed for the next test.

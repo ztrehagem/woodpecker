@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { startTransition, useOptimistic, useSyncExternalStore } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -11,38 +11,42 @@ export function useLikeState(
 ): readonly [isLiked: boolean, toggleLike: () => void] {
   const session = useAssertSession();
 
-  const [isLiked, setIsLiked] = useState(session.likeCache.get(postView) != null);
+  const likeUri = useSyncExternalStore(session.likeCache.subscribe, () =>
+    session.likeCache.get(postView),
+  );
+  const [isLikedOptimistic, setIsLikedOptimistic] = useOptimistic<boolean>(likeUri != null);
 
   const like = (): void => {
-    if (session.likeCache.get(postView) != null) {
+    if (likeUri != null) {
       return;
     }
-    setIsLiked(true);
-    likePost(session, postView)
-      .then(({ uri: likeUri }) => {
-        session.likeCache.set(postView, likeUri);
-      })
-      .catch(() => {
-        setIsLiked(false);
-      });
+    startTransition(async () => {
+      setIsLikedOptimistic(true);
+      try {
+        const { uri } = await likePost(session, postView);
+        session.likeCache.set(postView, uri);
+      } catch (error) {
+        console.error(error);
+      }
+    });
   };
 
   const unlike = (): void => {
-    const likeUri = session.likeCache.get(postView);
     if (likeUri == null) {
       return;
     }
-    setIsLiked(false);
-    unlikePost(session, likeUri)
-      .then(() => {
+    startTransition(async () => {
+      setIsLikedOptimistic(false);
+      try {
+        await unlikePost(session, likeUri);
         session.likeCache.set(postView, null);
-      })
-      .catch(() => {
-        setIsLiked(true);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    });
   };
 
-  const toggleLike = isLiked ? unlike : like;
+  const toggleLike = isLikedOptimistic ? unlike : like;
 
-  return [isLiked, toggleLike];
+  return [isLikedOptimistic, toggleLike];
 }

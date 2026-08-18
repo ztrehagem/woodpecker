@@ -44,7 +44,7 @@ function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): R
 function ReplyButton({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
   return (
     <NewPostDialog.Trigger
-      className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2 text-fg-muted"
+      className="relative -m-2 flex cursor-pointer items-center gap-x-1 p-2"
       payload={{ replyPostView: postView }}
     >
       <ReplyIcon aria-label="Replies" className="size-5" />
@@ -63,7 +63,7 @@ function LikeButton({ postView }: { postView: app.bsky.feed.defs.PostView }): Re
       aria-pressed={isLiked}
       className={clsx(
         "relative -m-2 flex cursor-pointer items-center gap-x-1 p-2",
-        isLiked ? "text-fg-like" : "text-fg-muted",
+        isLiked && "text-fg-like",
       )}
     >
       {isLiked ? (

@@ -1,5 +1,5 @@
 import { Toast } from "@base-ui/react";
-import { useState } from "react";
+import { startTransition, useOptimistic, useSyncExternalStore } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
@@ -15,41 +15,46 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
   const session = useAssertSession();
   const toastManager = Toast.useToastManager();
 
-  const [isSaved, setIsSaved] = useState(session.bookmarkCache.get(postView));
+  const isSavedCache = useSyncExternalStore(session.bookmarkCache.subscribe, () =>
+    session.bookmarkCache.get(postView),
+  );
+  const [isSavedOptimistic, setIsSavedOptimistic] = useOptimistic(isSavedCache);
 
   const save = (): void => {
-    if (session.bookmarkCache.get(postView)) {
+    if (isSavedCache) {
       return;
     }
-    setIsSaved(true);
-    savePost(session, postView)
-      .then(() => {
+    startTransition(async () => {
+      setIsSavedOptimistic(true);
+      try {
+        await savePost(session, postView);
         session.bookmarkCache.set(postView, true);
         toastManager.add({
           title: "Post saved",
         });
-      })
-      .catch(() => {
-        setIsSaved(false);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    });
   };
 
   const unsave = (): void => {
-    if (!session.bookmarkCache.get(postView)) {
+    if (!isSavedCache) {
       return;
     }
-    setIsSaved(false);
-    unsavePost(session, postView)
-      .then(() => {
+    startTransition(async () => {
+      setIsSavedOptimistic(false);
+      try {
+        await unsavePost(session, postView);
         session.bookmarkCache.set(postView, false);
         toastManager.add({
           title: "Removed from saved posts",
         });
-      })
-      .catch(() => {
-        setIsSaved(true);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    });
   };
 
-  return { isSaved, save, unsave };
+  return { isSaved: isSavedOptimistic, save, unsave };
 }
