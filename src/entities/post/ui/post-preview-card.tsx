@@ -34,47 +34,43 @@ export function PostPreviewCard({
   return (
     <Card bordered>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
-        <div className="flex gap-2">
-          <span className="relative h-10 w-10 shrink-0 overflow-clip rounded-full">
+        <div className="flex flex-wrap items-center justify-start gap-x-2">
+          <span className="relative h-4 w-4 shrink-0 overflow-clip rounded-full">
             {postView.author.avatar != null && (
               <img src={postView.author.avatar} alt="" className="size-full" />
             )}
           </span>
 
-          <div className="grow">
-            <div className="flex flex-wrap items-center justify-start gap-x-2">
-              <span className="relative font-bold wrap-anywhere text-inherit hover:underline">
-                {displayName}
-              </span>
+          <span className="relative font-bold wrap-anywhere text-inherit hover:underline">
+            {displayName}
+          </span>
 
-              <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
+          <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
-              <Tooltip
-                side="top"
-                className="tablet:relative"
-                tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
-              >
-                <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
-                  {timeAgo(date)}
-                </time>
-              </Tooltip>
-            </div>
-
-            {record.text.length > 0 && (
-              <p className="whitespace-pre-line">
-                {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentView key={index} segment={segment} />
-                ))}
-              </p>
-            )}
-
-            {postView.embed && (
-              <div className="not-empty:my-3">
-                <EmbedView embed={postView.embed} skipRecordEmbed />
-              </div>
-            )}
-          </div>
+          <Tooltip
+            side="top"
+            className="tablet:relative"
+            tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
+          >
+            <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
+              {timeAgo(date)}
+            </time>
+          </Tooltip>
         </div>
+
+        {record.text.length > 0 && (
+          <p className="mt-1 whitespace-pre-line">
+            {Array.from(richText.segments()).map((segment, index) => (
+              <RichTextSegmentView key={index} segment={segment} />
+            ))}
+          </p>
+        )}
+
+        {postView.embed && (
+          <div className="not-empty:my-3">
+            <EmbedView embed={postView.embed} skipRecordEmbed />
+          </div>
+        )}
       </article>
     </Card>
   );
