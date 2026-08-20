@@ -1,4 +1,4 @@
-import type { AtUriString } from "@atproto/lex";
+import { Toast } from "@base-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -12,18 +12,27 @@ export function useDelete(postView: app.bsky.feed.defs.PostView): {
   isDialogOpen: boolean;
   setIsDialogOpen: (isOpen: boolean) => void;
   onClick: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
 } {
+  const toastManager = Toast.useToastManager();
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { mutateAsync } = useMutation({
-    mutationFn: async ({ uri }: { uri: AtUriString }): Promise<void> => {
-      await deletePost(session, uri);
+    mutationFn: async () => {
+      await deletePost(session, postView.uri);
     },
     onSuccess: () => {
+      setIsDialogOpen(false);
       void invalidateTimelineQuery();
+    },
+    onError: (error) => {
+      toastManager.add({
+        title: "Failed to delete post",
+        description: error instanceof Error ? error.message : "An unknown error occurred.",
+        type: "error",
+      });
     },
   });
 
@@ -31,15 +40,10 @@ export function useDelete(postView: app.bsky.feed.defs.PostView): {
     setIsDialogOpen(true);
   };
 
-  const onConfirm = async () => {
-    await mutateAsync({ uri: postView.uri });
-    setIsDialogOpen(false);
-  };
-
   return {
     isDialogOpen,
     setIsDialogOpen,
     onClick,
-    onConfirm,
+    onConfirm: mutateAsync,
   };
 }

@@ -33,7 +33,11 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
           title: "Post saved",
         });
       } catch (error) {
-        console.error(error);
+        toastManager.add({
+          title: "Failed to save post",
+          description: error instanceof Error ? error.message : null,
+          type: "error",
+        });
       }
     });
   };
@@ -51,7 +55,11 @@ export function useBookmark(postView: app.bsky.feed.defs.PostView): {
           title: "Removed from saved posts",
         });
       } catch (error) {
-        console.error(error);
+        toastManager.add({
+          title: "Failed to remove from saved posts",
+          description: error instanceof Error ? error.message : null,
+          type: "error",
+        });
       }
     });
   };
