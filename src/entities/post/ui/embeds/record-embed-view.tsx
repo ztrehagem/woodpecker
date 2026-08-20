@@ -8,10 +8,10 @@ import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "../build-post-href";
-import { RichTextSegmentUI } from "../rich-text-segment-ui";
+import { RichTextSegmentView } from "../rich-text-segment-view";
 import { timeAgo } from "../time-ago";
 
-export function RecordEmbedUI({
+export function RecordEmbedView({
   embed,
   renderEmbed,
 }: {
@@ -109,7 +109,7 @@ function RecordEmbedPostView({
           {post.text.length > 0 && (
             <p className="mt-1 text-sm whitespace-pre-line">
               {Array.from(richText.segments()).map((segment, index) => (
-                <RichTextSegmentUI key={index} segment={segment} />
+                <RichTextSegmentView key={index} segment={segment} />
               ))}
             </p>
           )}

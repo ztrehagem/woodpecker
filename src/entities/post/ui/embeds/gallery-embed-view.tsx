@@ -2,7 +2,7 @@ import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 
-export function GalleryEmbedUI({
+export function GalleryEmbedView({
   embed,
 }: {
   embed: app.bsky.embed.gallery.View;

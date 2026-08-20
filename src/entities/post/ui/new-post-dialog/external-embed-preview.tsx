@@ -4,7 +4,7 @@ import type { app } from "#src/shared/api/lexicons/index.ts";
 import { LoadingDotsIcon } from "#src/shared/ui/icon/index.ts";
 
 import { type ExternalEmbedPreview } from "../../api/external-embed-query";
-import { ExternalEmbedUI } from "../embeds/external-embed-ui";
+import { ExternalEmbedView } from "../embeds/external-embed-view";
 
 export function ExternalEmbedPreview({
   firstEmbedLink,
@@ -23,7 +23,7 @@ export function ExternalEmbedPreview({
             <LoadingDotsIcon className="size-6 text-fg-muted" />
           </div>
         ) : (
-          preview && <ExternalEmbedUI embed={toEmbedExternalView(preview)} />
+          preview && <ExternalEmbedView embed={toEmbedExternalView(preview)} />
         ))}
     </>
   );

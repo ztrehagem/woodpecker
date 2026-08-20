@@ -8,8 +8,8 @@ import Card from "#src/shared/ui/card.tsx";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
-import { EmbedUI } from "./embeds/embed-ui";
-import { RichTextSegmentUI } from "./rich-text-segment-ui";
+import { EmbedView } from "./embeds/embed-view";
+import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
 export function PostPreviewCard({
@@ -63,14 +63,14 @@ export function PostPreviewCard({
             {record.text.length > 0 && (
               <p className="whitespace-pre-line">
                 {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentUI key={index} segment={segment} />
+                  <RichTextSegmentView key={index} segment={segment} />
                 ))}
               </p>
             )}
 
             {postView.embed && (
               <div className="not-empty:my-3">
-                <EmbedUI embed={postView.embed} skipRecordEmbed />
+                <EmbedView embed={postView.embed} skipRecordEmbed />
               </div>
             )}
           </div>
