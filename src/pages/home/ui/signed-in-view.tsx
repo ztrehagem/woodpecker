@@ -6,7 +6,7 @@ import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-i
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
-export default function SignedInUI(): React.ReactElement {
+export default function SignedInView(): React.ReactElement {
   const session = useAssertSession();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =

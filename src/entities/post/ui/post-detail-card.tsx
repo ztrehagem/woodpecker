@@ -9,9 +9,9 @@ import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
-import { EmbedUI } from "./embeds/embed-ui";
+import { EmbedView } from "./embeds/embed-view";
 import { PostActionBar } from "./post-action/post-action-bar";
-import { RichTextSegmentUI } from "./rich-text-segment-ui";
+import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
 export function PostDetailCard({
@@ -56,11 +56,11 @@ export function PostDetailCard({
         <div className="mt-1 flex flex-col gap-1">
           <p className="whitespace-pre-line">
             {Array.from(richText.segments()).map((segment, index) => (
-              <RichTextSegmentUI key={index} segment={segment} />
+              <RichTextSegmentView key={index} segment={segment} />
             ))}
           </p>
 
-          {postView.embed && <EmbedUI embed={postView.embed} />}
+          {postView.embed && <EmbedView embed={postView.embed} />}
 
           <time
             dateTime={datetimeString}

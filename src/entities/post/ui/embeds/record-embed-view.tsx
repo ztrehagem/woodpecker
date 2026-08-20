@@ -8,10 +8,10 @@ import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { buildPostHref } from "../build-post-href";
-import { RichTextSegmentUI } from "../rich-text-segment-ui";
+import { RichTextSegmentView } from "../rich-text-segment-view";
 import { timeAgo } from "../time-ago";
 
-export function RecordEmbedUI({
+export function RecordEmbedView({
   embed,
   renderEmbed,
 }: {
@@ -74,52 +74,50 @@ function RecordEmbedPostView({
         className="absolute inset-0 block"
       ></Link>
 
-      <div className="flex items-start gap-2">
-        <Link
-          to={`/profile/${record.author.handle}`}
-          className="relative h-8 w-8 shrink-0 overflow-clip rounded-full"
-        >
-          <img src={record.author.avatar} alt="" className="size-full" />
-        </Link>
+      <div>
+        <div className="flex flex-wrap items-center gap-x-2">
+          <Link
+            to={`/profile/${record.author.handle}`}
+            className="relative h-4 w-4 shrink-0 overflow-clip rounded-full"
+          >
+            <img src={record.author.avatar} alt="" className="size-full" />
+          </Link>
 
-        <div className="min-w-0 grow">
-          <div className="flex flex-wrap items-center gap-x-2">
-            <Link
-              to={`/profile/${record.author.handle}`}
-              className="relative text-sm font-semibold wrap-anywhere text-inherit hover:underline"
+          <Link
+            to={`/profile/${record.author.handle}`}
+            className="relative text-sm font-semibold wrap-anywhere text-inherit hover:underline"
+          >
+            {displayName}
+          </Link>
+
+          <div className="text-xs wrap-anywhere text-fg-muted">@{record.author.handle}</div>
+
+          {date != null && datetimeString != null && datetimeLocaleString != null && (
+            <Tooltip
+              side="top"
+              className="relative"
+              tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
             >
-              {displayName}
-            </Link>
-
-            <div className="text-xs wrap-anywhere text-fg-muted">@{record.author.handle}</div>
-
-            {date != null && datetimeString != null && datetimeLocaleString != null && (
-              <Tooltip
-                side="top"
-                className="relative"
-                tooltip={<span className="text-xs">{datetimeLocaleString}</span>}
-              >
-                <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
-                  {timeAgo(date)}
-                </time>
-              </Tooltip>
-            )}
-          </div>
-
-          {post.text.length > 0 && (
-            <p className="mt-1 text-sm whitespace-pre-line">
-              {Array.from(richText.segments()).map((segment, index) => (
-                <RichTextSegmentUI key={index} segment={segment} />
-              ))}
-            </p>
+              <time dateTime={datetimeString} className="flex items-center text-xs text-fg-muted">
+                {timeAgo(date)}
+              </time>
+            </Tooltip>
           )}
-
-          {record.embeds?.map((recordEmbed, index) => (
-            <div className="mt-3" key={index}>
-              {renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>)}
-            </div>
-          ))}
         </div>
+
+        {post.text.length > 0 && (
+          <p className="mt-1 text-sm whitespace-pre-line">
+            {Array.from(richText.segments()).map((segment, index) => (
+              <RichTextSegmentView key={index} segment={segment} />
+            ))}
+          </p>
+        )}
+
+        {record.embeds?.map((recordEmbed, index) => (
+          <div className="not-empty:mt-3" key={index}>
+            {renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>)}
+          </div>
+        ))}
       </div>
     </article>
   );

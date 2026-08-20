@@ -7,7 +7,7 @@ import { MoreVertIcon } from "#src/shared/ui/icon/index.ts";
 import { buildPostHref } from "./build-post-href";
 import { PostCard } from "./post-card";
 
-export function TimelineUI({
+export function TimelineView({
   feed,
 }: {
   feed: readonly app.bsky.feed.defs.FeedViewPost[];

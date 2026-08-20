@@ -12,9 +12,9 @@ import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
 import { buildPostHref } from "./build-post-href";
-import { EmbedUI } from "./embeds/embed-ui";
+import { EmbedView } from "./embeds/embed-view";
 import { PostActionBar } from "./post-action/post-action-bar";
-import { RichTextSegmentUI } from "./rich-text-segment-ui";
+import { RichTextSegmentView } from "./rich-text-segment-view";
 import { timeAgo } from "./time-ago";
 
 export function PostCard({
@@ -93,20 +93,20 @@ export function PostCard({
             {record.text.length > 0 && (
               <p className="whitespace-pre-line">
                 {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentUI key={index} segment={segment} />
+                  <RichTextSegmentView key={index} segment={segment} />
                 ))}
               </p>
             )}
 
             {postView.embed && (
               <div className="my-3">
-                <EmbedUI embed={postView.embed} />
+                <EmbedView embed={postView.embed} />
               </div>
             )}
 
             {!preview && <PostActionBar postView={postView} />}
 
-            {import.meta.env.DEV && import.meta.env.DEBUG != null && (
+            {import.meta.env.DEV && (
               <Collapsible.Root className="flex flex-col items-start">
                 <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                   Show raw data
