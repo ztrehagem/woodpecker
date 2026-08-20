@@ -115,7 +115,7 @@ function RecordEmbedPostView({
           )}
 
           {record.embeds?.map((recordEmbed, index) => (
-            <div className="mt-3" key={index}>
+            <div className="not-empty:mt-3" key={index}>
               {renderEmbed(recordEmbed as NonNullable<app.bsky.feed.defs.PostView["embed"]>)}
             </div>
           ))}

@@ -11,15 +11,11 @@ import { VideoEmbedUI } from "./video-embed-ui";
 
 export function EmbedUI({
   embed,
+  skipRecordEmbed = false,
 }: {
   embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>;
+  skipRecordEmbed?: boolean;
 }): React.ReactElement {
-  return renderEmbedView(embed);
-}
-
-function renderEmbedView(
-  embed: NonNullable<app.bsky.feed.defs.PostView["embed"]>,
-): React.ReactElement {
   switch (embed.$type) {
     case "app.bsky.embed.external#view":
       return <ExternalEmbedUI embed={embed as app.bsky.embed.external.View} />;
@@ -28,8 +24,18 @@ function renderEmbedView(
     case "app.bsky.embed.images#view":
       return <ImagesEmbedUI embed={embed as app.bsky.embed.images.View} />;
     case "app.bsky.embed.record#view":
-      return (
-        <RecordEmbedUI embed={embed as app.bsky.embed.record.View} renderEmbed={renderEmbedView} />
+      return skipRecordEmbed ? (
+        <></>
+      ) : (
+        <RecordEmbedUI
+          embed={embed as app.bsky.embed.record.View}
+          renderEmbed={(embed) => (
+            <EmbedUI
+              embed={embed as NonNullable<app.bsky.feed.defs.PostView["embed"]>}
+              skipRecordEmbed
+            />
+          )}
+        />
       );
     case "app.bsky.embed.recordWithMedia#view":
       return <RecordWithMediaEmbedUI embed={embed as app.bsky.embed.recordWithMedia.View} />;

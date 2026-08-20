@@ -69,8 +69,8 @@ export function PostPreviewCard({
             )}
 
             {postView.embed && (
-              <div className="my-3">
-                <EmbedUI embed={postView.embed} />
+              <div className="not-empty:my-3">
+                <EmbedUI embed={postView.embed} skipRecordEmbed />
               </div>
             )}
           </div>
