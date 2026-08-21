@@ -9,6 +9,8 @@ import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
+import { FollowProfileButton } from "./follow-profile-button";
+
 export function ProfileCard({
   profile,
 }: Readonly<{
@@ -31,7 +33,7 @@ export function ProfileCard({
         </div>
 
         <div className="relative px-5 pt-0 pb-6 tablet:px-8">
-          <div className="-mt-14 flex flex-wrap items-end gap-4 tablet:-mt-16">
+          <div className="-mt-14 flex flex-col flex-wrap gap-4 mobile:flex-row mobile:items-end tablet:-mt-16">
             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-filling bg-slate-300 tablet:h-28 tablet:w-28">
               {hasAvatar ? (
                 <img src={profile.avatar} alt="avatar" className="h-full w-full object-cover" />
@@ -49,13 +51,6 @@ export function ProfileCard({
                   </Tooltip>
                 </p>
               </div>
-
-              {/* <button
-                    type="button"
-                    className="cursor-pointer rounded-full border bg-backdrop px-4 py-2 text-sm font-medium"
-                  >
-                    Follow
-                  </button> */}
             </div>
           </div>
 
@@ -98,6 +93,10 @@ export function ProfileCard({
                 <span>&ensp;Followers</span>
               </Link>
             </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-2">
+            <FollowProfileButton profile={profile} />
           </div>
         </div>
       </section>
