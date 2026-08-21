@@ -2,9 +2,9 @@ import { clsx } from "clsx";
 import React from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import { FavoriteFillIcon, FavoriteIcon, ReplyIcon } from "#src/shared/ui/icon/index.ts";
 
-import { formatCompactCount } from "../../lib/format-compact-count";
 import { NewPostDialog } from "../new-post-dialog/new-post-dialog";
 import { MoreActions } from "./more-actions";
 import { RepostActions } from "./repost-actions";

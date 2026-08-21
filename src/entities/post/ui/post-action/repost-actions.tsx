@@ -2,10 +2,10 @@ import clsx from "clsx";
 import React, { use } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import { ActionMenu } from "#src/shared/ui/action-menu/index.ts";
 import { QuoteIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 
-import { formatCompactCount } from "../../lib/format-compact-count";
 import { NewPostDialogContext } from "../new-post-dialog/new-post-dialog-context";
 import { useRepostState } from "./use-repost-state";
 
