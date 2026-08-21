@@ -11,12 +11,14 @@ export function ProfileListItem({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileView;
 }>): React.ReactElement {
+  const displayName = fallbackDisplayName(profile.displayName, profile.handle);
+
   return (
     <Card>
       <div className="relative p-3 text-sm has-[[data-view-profile-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
         <Link
           to={`/profile/${profile.handle}`}
-          aria-label="View profile"
+          aria-label={`View profile: ${displayName}`}
           data-view-profile-link
           className="absolute inset-0 block"
         ></Link>
@@ -31,9 +33,7 @@ export function ProfileListItem({
           </div>
 
           <div className="grid grid-cols-1">
-            <div className="truncate font-bold">
-              {fallbackDisplayName(profile.displayName, profile.handle)}
-            </div>
+            <div className="truncate font-bold">{displayName}</div>
 
             <div className="truncate text-sm text-fg-muted">@{profile.handle}</div>
           </div>
