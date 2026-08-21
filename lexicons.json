@@ -12,6 +12,8 @@
     "app.bsky.feed.like",
     "app.bsky.feed.post",
     "app.bsky.feed.repost",
+    "app.bsky.graph.getFollowers",
+    "app.bsky.graph.getFollows",
     "app.bsky.notification.getUnreadCount",
     "app.bsky.notification.listNotifications",
     "app.bsky.notification.updateSeen"
@@ -116,6 +118,14 @@
     "app.bsky.graph.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.defs",
       "cid": "bafyreifcipomli7yggtl46xufgxlnrw7se6xmsdxmzgfcz2tiu76ljatxm"
+    },
+    "app.bsky.graph.getFollowers": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.getFollowers",
+      "cid": "bafyreiaboxa4aux2y5jxut5kw4iqlnctlswklofvgkhxl2wn7rkbjjrzru"
+    },
+    "app.bsky.graph.getFollows": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.getFollows",
+      "cid": "bafyreicun6mwmjgrdmrtmnfqv3ws37g5okcmo3uiaf2qwopk3bhtj5rqae"
     },
     "app.bsky.labeler.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.labeler.defs",

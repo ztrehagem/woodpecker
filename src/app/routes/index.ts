@@ -23,6 +23,16 @@ export const router = createBrowserRouter([
         handle: { title: "Profile" } satisfies RouteHandle,
       },
       {
+        path: "/profile/:handle/follows",
+        Component: lazy(() => import("#src/pages/follows/index.ts")),
+        handle: { title: "Following" } satisfies RouteHandle,
+      },
+      {
+        path: "/profile/:handle/followers",
+        Component: lazy(() => import("#src/pages/followers/index.ts")),
+        handle: { title: "Followers" } satisfies RouteHandle,
+      },
+      {
         path: "/profile/:handle/post/:postId",
         Component: lazy(() => import("#src/pages/post/index.ts")),
         handle: { title: "Post" } satisfies RouteHandle,
