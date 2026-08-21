@@ -10,7 +10,6 @@ import { SendIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";
 
 import { createPost } from "../../api/create-post";
-import { type ExternalEmbedPreview } from "../../api/external-embed-query";
 import { useInvalidateTimelineQuery } from "../../api/timeline-query";
 import { isPostRecord } from "../../lib/is-post-record";
 import { PostPreviewCard } from "../post-preview-card";
@@ -143,15 +142,10 @@ function NewPostDialogCard({
     isPending,
     error,
   } = useMutation({
-    mutationFn: ({
-      text,
-      externalEmbed,
-    }: {
-      text: string;
-      externalEmbed: ExternalEmbedPreview | undefined;
-    }) => {
+    mutationFn: () => {
       const reply = replyPostView ? buildReplyRefAssert(replyPostView) : void 0;
       const quote = quotePostView ? { uri: quotePostView.uri, cid: quotePostView.cid } : void 0;
+      const externalEmbed = externalEmbedPreviewProps.preview;
       return createPost(session, { text, reply, quote, externalEmbed });
     },
     onSuccess: () => {
@@ -169,7 +163,7 @@ function NewPostDialogCard({
 
   const submit = () => {
     if (canSubmit) {
-      submitPost({ text, externalEmbed: externalEmbedPreviewProps.preview });
+      submitPost();
     }
   };
 
