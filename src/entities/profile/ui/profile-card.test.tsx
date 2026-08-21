@@ -142,3 +142,10 @@ test("フォロワー数が表示される", async () => {
   await expect.element(view.getByText("789")).toBeInTheDocument();
   await expect.element(view.getByText("Followers")).toBeInTheDocument();
 });
+
+test("フォローボタンが表示される", async () => {
+  const profile = createProfile();
+  const view = await renderProfile(profile);
+
+  await expect.element(view.getByRole("button", { name: "Follow" })).toBeInTheDocument();
+});
