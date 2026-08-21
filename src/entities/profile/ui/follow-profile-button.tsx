@@ -53,6 +53,8 @@ export function FollowProfileButton({
       type="button"
       onClick={toggleFollow}
       disabled={isPending}
+      aria-label={label}
+      aria-busy={isPending}
       className={clsx(
         "pointer-events-auto relative h-8 shrink-0 cursor-pointer rounded-full bg-backdrop px-4 text-sm font-medium",
         isFollowing ? "bg-highlight text-fg-muted" : "bg-link text-white",

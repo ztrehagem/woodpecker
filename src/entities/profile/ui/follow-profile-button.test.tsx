@@ -37,6 +37,13 @@ test("自分をフォローしている相手には Follow back が表示され�
     .toBeInTheDocument();
 });
 
+test("自分のプロフィールではフォローボタンが表示されない", async () => {
+  const session = createMockSession();
+  const view = await renderButton({ ...profile, did: session.did }, session);
+
+  await expect.element(view.getByRole("button")).not.toBeInTheDocument();
+});
+
 test("Follow を押すとフォローレコードが作成される", async () => {
   const session = createMockSession();
   const createSpy = vi.spyOn(session.client, "create").mockResolvedValue({
