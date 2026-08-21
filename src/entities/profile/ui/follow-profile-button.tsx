@@ -13,7 +13,7 @@ export function FollowProfileButton({
   profile: Pick<app.bsky.actor.defs.ProfileView, "did" | "viewer">;
 }>): ReactElement | null {
   const session = useAssertSession();
-  const [followingUri, setFollowingUri] = useState(profile.viewer?.following);
+  const [followingUri, setFollowingUri] = useState(profile.viewer?.following ?? null);
   const [isPending, startTransition] = useTransition();
 
   if (profile.did === session.did) {
@@ -37,7 +37,7 @@ export function FollowProfileButton({
       try {
         if (followingUri != null) {
           await unfollowProfile(session, followingUri);
-          setFollowingUri(void 0);
+          setFollowingUri(null);
         } else {
           const { uri } = await followProfile(session, profile.did);
           setFollowingUri(uri);
