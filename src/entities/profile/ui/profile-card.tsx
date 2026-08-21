@@ -4,6 +4,7 @@ import React from "react";
 import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
@@ -68,16 +69,34 @@ export function ProfileCard({
 
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-fg-muted">
             <div>
-              <span className="mr-1 font-semibold text-white">{profile.postsCount ?? 0}</span>
-              Posts
+              <span className="font-semibold text-white">
+                {formatCompactCount(profile.postsCount ?? 0)}
+              </span>
+              <span>&ensp;Posts</span>
             </div>
+
             <div>
-              <span className="mr-1 font-semibold text-white">{profile.followsCount ?? 0}</span>
-              Following
+              <Link
+                to={`/profile/${profile.handle}/follows`}
+                className="text-fg-muted hover:underline"
+              >
+                <span className="font-semibold text-white">
+                  {formatCompactCount(profile.followsCount ?? 0)}
+                </span>
+                <span>&ensp;Following</span>
+              </Link>
             </div>
+
             <div>
-              <span className="mr-1 font-semibold text-white">{profile.followersCount ?? 0}</span>
-              Followers
+              <Link
+                to={`/profile/${profile.handle}/followers`}
+                className="text-fg-muted hover:underline"
+              >
+                <span className="font-semibold text-white">
+                  {formatCompactCount(profile.followersCount ?? 0)}
+                </span>
+                <span>&ensp;Followers</span>
+              </Link>
             </div>
           </div>
         </div>
