@@ -2,12 +2,6 @@
 
 This file guides coding agents working in this repository.
 
-## Mission
-
-- Make minimal, safe changes.
-- Keep behavior consistent unless explicitly asked to change it.
-- Prefer small diffs over broad rewrites.
-
 ## Edit Boundaries
 
 - Preserve existing architecture and naming conventions.
