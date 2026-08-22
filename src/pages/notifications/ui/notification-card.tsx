@@ -14,13 +14,22 @@ export function NotificationCard({
 }): React.ReactElement {
   switch (notification.reason) {
     case "like":
+    case "like-via-repost":
     case "repost":
+    case "repost-via-repost":
     case "follow":
       return <NotificationActionCard notification={notification} />;
+
     case "mention":
     case "reply":
     case "quote":
       return <NotificationPostCard notification={notification} />;
+
+    case "contact-match":
+    case "starterpack-joined":
+    case "subscribed-post":
+    case "unverified":
+    case "verified":
     default: {
       return <NotificationPlaceholderCard notification={notification} />;
     }
@@ -41,7 +50,9 @@ function NotificationPlaceholderCard({
     <Card>
       <div className="p-3 tablet:px-4 tablet:py-5">
         <p>{`${actorName}: ${notification.reason}`}</p>
-        <pre className="text-2xs text-fg-muted">{JSON.stringify(notification, null, 2)}</pre>
+        {import.meta.env.DEV && (
+          <pre className="text-2xs text-fg-muted">{JSON.stringify(notification, null, 2)}</pre>
+        )}
       </div>
     </Card>
   );

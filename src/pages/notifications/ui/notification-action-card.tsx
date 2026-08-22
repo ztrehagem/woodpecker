@@ -1,8 +1,8 @@
-import { asDatetimeString } from "@atproto/lex";
+import { asDatetimeString, type LexMap } from "@atproto/lex";
 import React from "react";
 import { Link } from "react-router";
 
-import { timeAgo } from "#src/entities/post/index.ts";
+import { buildPostHref, timeAgo } from "#src/entities/post/index.ts";
 import { FollowProfileButton } from "#src/entities/profile/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
@@ -24,9 +24,20 @@ export function NotificationActionCard({
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
+  const link = getActionLink(notification);
+
   return (
     <Card>
-      <article className="p-3 text-sm tablet:px-5 tablet:py-4">
+      <article className="relative p-3 text-sm tablet:px-5 tablet:py-4">
+        {link != null && (
+          <Link
+            to={link}
+            aria-label="View post"
+            data-view-post-link
+            className="absolute inset-0 block"
+          ></Link>
+        )}
+
         <div className="flex gap-4">
           <div className="flex size-6 shrink-0 items-center justify-center">
             <ActionIcon reason={notification.reason} />
@@ -73,6 +84,10 @@ export function NotificationActionCard({
                 <FollowProfileButton profile={notification.author} />
               </div>
             )}
+
+            {/* <pre className="mt-2 text-2xs text-fg-muted">
+              {JSON.stringify(notification, null, 2)}
+            </pre> */}
           </div>
         </div>
       </article>
@@ -87,13 +102,37 @@ function ActionIcon({
 }): React.ReactElement {
   switch (reason) {
     case "like":
+    case "like-via-repost":
       return <FavoriteIcon className="text-fg-like" />;
     case "repost":
+    case "repost-via-repost":
       return <RepeatIcon className="text-fg-repost" />;
     case "follow":
       return <PersonAddIcon className="text-fg-link" />;
     default:
       return <></>;
+  }
+}
+
+function getActionLink(
+  notification: app.bsky.notification.listNotifications.Notification,
+): string | null {
+  switch (notification.reason) {
+    case "like":
+    case "repost":
+      return notification.reasonSubject != null
+        ? buildPostHref({ uri: notification.reasonSubject })
+        : null;
+    case "like-via-repost":
+      return isLikeRecord(notification.record)
+        ? buildPostHref({ uri: notification.record.subject.uri })
+        : null;
+    case "repost-via-repost":
+      return isRepostRecord(notification.record)
+        ? buildPostHref({ uri: notification.record.subject.uri })
+        : null;
+    default:
+      return null;
   }
 }
 
@@ -103,11 +142,23 @@ function getActionMessage(
   switch (reason) {
     case "like":
       return "liked your post";
+    case "like-via-repost":
+      return "liked your repost";
     case "repost":
       return "reposted your post";
+    case "repost-via-repost":
+      return "reposted your repost";
     case "follow":
       return "followed you";
     default:
       return reason;
   }
+}
+
+function isLikeRecord(record: LexMap): record is app.bsky.feed.like.Main {
+  return record.$type === "app.bsky.feed.like";
+}
+
+function isRepostRecord(record: LexMap): record is app.bsky.feed.repost.Main {
+  return record.$type === "app.bsky.feed.repost";
 }
