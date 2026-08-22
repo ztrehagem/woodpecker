@@ -1,4 +1,3 @@
-import { RichText } from "@atproto/api";
 import { asDatetimeString } from "@atproto/lex";
 import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
@@ -14,7 +13,8 @@ import { isPostRecord } from "../lib/is-post-record";
 import { buildPostHref } from "./build-post-href";
 import { EmbedView } from "./embeds/embed-view";
 import { PostActionBar } from "./post-action/post-action-bar";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { PostReasonRow } from "./post-reason-row";
+import { PostRichText } from "./post-rich-text";
 import { timeAgo } from "./time-ago";
 
 export function PostCard({
@@ -41,8 +41,6 @@ export function PostCard({
   const link = buildPostHref(postView);
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
-
-  const richText = new RichText({ text: record.text, facets: record.facets });
 
   return (
     <Card bordered={preview}>
@@ -90,13 +88,7 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            {record.text.length > 0 && (
-              <p className="whitespace-pre-line">
-                {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentView key={index} segment={segment} />
-                ))}
-              </p>
-            )}
+            <PostRichText text={record.text} facets={record.facets} />
 
             {postView.embed && (
               <div className="my-3">
@@ -148,12 +140,7 @@ function PostReasonBlock({
 }
 
 function PostReasonBlockPinned(): React.ReactElement {
-  return (
-    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
-      <KeepIcon className="size-4" />
-      <span>Pinned</span>
-    </div>
-  );
+  return <PostReasonRow icon={KeepIcon}>Pinned</PostReasonRow>;
 }
 function PostReasonBlockRepost({
   reason,
@@ -161,17 +148,11 @@ function PostReasonBlockRepost({
   reason: app.bsky.feed.defs.ReasonRepost;
 }): React.ReactElement {
   return (
-    <div className="mb-2 flex items-center gap-x-1 text-2xs text-fg-muted">
-      <RepeatIcon className="size-4" />
-      <span>
-        <span>Reposted by </span>
-        <Link
-          to={`/profile/${reason.by.handle}`}
-          className="relative text-fg-muted hover:underline"
-        >
-          {fallbackDisplayName(reason.by.displayName, reason.by.handle)}
-        </Link>
-      </span>
-    </div>
+    <PostReasonRow icon={RepeatIcon}>
+      Reposted by{" "}
+      <Link to={`/profile/${reason.by.handle}`} className="relative text-fg-muted hover:underline">
+        {fallbackDisplayName(reason.by.displayName, reason.by.handle)}
+      </Link>
+    </PostReasonRow>
   );
 }

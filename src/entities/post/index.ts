@@ -4,4 +4,8 @@ export { PostCard } from "./ui/post-card";
 export { PostDetailCard } from "./ui/post-detail-card";
 export { TimelineView as TimelineUI } from "./ui/timeline-view";
 export { buildPostHref } from "./ui/build-post-href";
+export { PostRichText } from "./ui/post-rich-text";
+export { PostReasonRow } from "./ui/post-reason-row";
+export { timeAgo } from "./ui/time-ago";
+export { isPostRecord } from "./lib/is-post-record";
 export { useTimelineQuery, useInvalidateTimelineQuery } from "./api/timeline-query";
