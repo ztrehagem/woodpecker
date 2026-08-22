@@ -13,6 +13,7 @@ This file guides coding agents working in this repository.
 - Treat `src/shared/api/lexicons` as generated output.
 - For project layout and layer decisions under `src`, consult `.agents/skills/feature-sliced-design/SKILL.md`.
 - Keep local callback compatibility with `127.0.0.1` behavior.
+- React components should generally not accept or forward `className` through props; keep styling within the component unless an established pattern or a clear reuse requirement justifies an exception.
 
 ## Testing Conventions
 
