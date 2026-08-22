@@ -1,4 +1,3 @@
-import type { AtUriString } from "@atproto/lex";
 import { startTransition, useOptimistic, useSyncExternalStore } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
@@ -56,26 +55,4 @@ export function useRepostState(
   const toggleRepost = isRepostedOptimistic ? unrepost : repost;
 
   return [isRepostedOptimistic, toggleRepost];
-}
-
-function createVia(
-  reason: app.bsky.feed.defs.FeedViewPost["reason"],
-): { uri: AtUriString; cid: string } | undefined {
-  if (!isReasonRepost(reason)) {
-    return;
-  }
-
-  const { uri, cid } = reason;
-
-  if (uri == null || cid == null) {
-    return;
-  }
-
-  return { uri, cid };
-}
-
-function isReasonRepost(
-  reason: app.bsky.feed.defs.FeedViewPost["reason"],
-): reason is app.bsky.feed.defs.ReasonRepost & { $type: "app.bsky.feed.defs#reasonRepost" } {
-  return reason?.$type === "app.bsky.feed.defs#reasonRepost";
 }
