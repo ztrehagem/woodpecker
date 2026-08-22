@@ -57,7 +57,7 @@ export function NotificationPostCard({
         <div className="flex gap-2">
           <Link
             to={`/profile/${notification.author.handle}`}
-            className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
+            className="relative size-10 shrink-0 overflow-clip rounded-full"
           >
             {notification.author.avatar != null && (
               <img src={notification.author.avatar} alt="" className="size-full" />
@@ -65,7 +65,7 @@ export function NotificationPostCard({
           </Link>
 
           <div className="grow">
-            <div className="flex flex-wrap items-center justify-start gap-x-2">
+            <div className="flex flex-wrap items-baseline justify-start gap-x-2">
               <Link
                 to={`/profile/${notification.author.handle}`}
                 className="relative font-bold wrap-anywhere text-inherit hover:underline"

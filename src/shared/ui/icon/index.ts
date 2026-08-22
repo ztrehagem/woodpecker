@@ -4,6 +4,7 @@ export { LoadingBoxesIcon } from "./loading-boxes.tsx";
 export { LoginIcon } from "./login.tsx";
 export { LogoutIcon } from "./logout.tsx";
 export { PersonIcon } from "./person.tsx";
+export { PersonAddIcon } from "./person-add.tsx";
 export { CaretRightIcon } from "./caret-right.tsx";
 export { AccountCircleIcon } from "./account-circle.tsx";
 export { SettingsIcon } from "./settings.tsx";

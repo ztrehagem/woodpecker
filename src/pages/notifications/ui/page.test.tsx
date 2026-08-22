@@ -53,9 +53,7 @@ test("通知が表示される", async () => {
 
   const view = await renderPage(session);
 
-  await expect
-    .element(view.getByText("Alice liked your post", { exact: true }))
-    .toBeInTheDocument();
+  await expect.element(view.getByText("liked your post", { exact: true })).toBeInTheDocument();
 });
 
 test("次のページがあるときに Load more ボタンを表示する", async () => {
