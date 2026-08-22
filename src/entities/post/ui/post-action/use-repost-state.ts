@@ -6,9 +6,11 @@ import { useAssertSession } from "#src/shared/auth/index.ts";
 import { repostPost } from "../../api/repost-post";
 import { useInvalidateTimelineQuery } from "../../api/timeline-query";
 import { unrepostPost } from "../../api/unrepost-post";
+import type { Via } from "../../model/via";
 
 export function useRepostState(
   postView: app.bsky.feed.defs.PostView,
+  via?: Via,
 ): readonly [isReposted: boolean, toggleRepost: () => void] {
   const session = useAssertSession();
   const invalidateTimelineQuery = useInvalidateTimelineQuery();
@@ -25,7 +27,7 @@ export function useRepostState(
     startTransition(async () => {
       setIsRepostedOptimistic(true);
       try {
-        const { uri } = await repostPost(session, postView);
+        const { uri } = await repostPost(session, postView, { via });
         await invalidateTimelineQuery();
         session.repostCache.set(postView, uri);
       } catch (error) {

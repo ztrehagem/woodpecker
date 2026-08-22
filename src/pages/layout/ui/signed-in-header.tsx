@@ -12,7 +12,7 @@ import { PageHeading } from "./page-heading";
 
 export function SignedInHeader(): React.ReactElement {
   return (
-    <header className="sticky top-0 left-0 z-10 bg-backdrop/50 backdrop-blur-sm">
+    <header className="sticky top-0 left-0 z-(--index-cover) bg-backdrop/50 backdrop-blur-sm">
       <div className="flex h-height-header items-stretch justify-between gap-4 max-mobile:gap-2">
         <div className="flex items-center gap-4">
           <NavigationDrawer

@@ -74,7 +74,7 @@ export function NewPostDialog(): React.ReactElement {
     >
       {({ payload }) => (
         <>
-          <Dialog.Portal className="relative z-50">
+          <Dialog.Portal className="relative z-(--index-overlay)">
             <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
             <Dialog.Viewport className="group/dialog fixed inset-0 overflow-y-auto overscroll-contain">
               <Dialog.Popup className="relative mx-5 my-4 data-nested-dialog-open:after:fixed data-nested-dialog-open:after:inset-0 data-nested-dialog-open:after:bg-backdrop/75">

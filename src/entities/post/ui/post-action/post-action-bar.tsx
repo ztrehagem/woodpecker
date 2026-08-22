@@ -5,6 +5,7 @@ import type { app } from "#src/shared/api/lexicons/index.ts";
 import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import { FavoriteFillIcon, FavoriteIcon, ReplyIcon } from "#src/shared/ui/icon/index.ts";
 
+import type { Via } from "../../model/via";
 import { NewPostDialog } from "../new-post-dialog/new-post-dialog";
 import { MoreActions } from "./more-actions";
 import { RepostActions } from "./repost-actions";
@@ -12,18 +13,28 @@ import { useLikeState } from "./use-like-state";
 
 export function PostActionBar({
   postView,
+  reason,
 }: {
   postView: app.bsky.feed.defs.PostView;
+  reason?: app.bsky.feed.defs.FeedViewPost["reason"];
 }): React.ReactElement {
   return (
     <div className="mt-2 flex items-center justify-between gap-4">
-      <MainActions postView={postView} />
+      <MainActions postView={postView} reason={reason} />
       <MoreActions postView={postView} />
     </div>
   );
 }
 
-function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
+function MainActions({
+  postView,
+  reason,
+}: {
+  postView: app.bsky.feed.defs.PostView;
+  reason?: app.bsky.feed.defs.FeedViewPost["reason"];
+}): React.ReactElement {
+  const via = createVia(reason);
+
   return (
     <ul className="grid grow grid-cols-3 gap-x-4 gap-y-1 text-sm font-light text-fg-muted">
       <li className="flex items-center gap-x-1">
@@ -31,11 +42,11 @@ function MainActions({ postView }: { postView: app.bsky.feed.defs.PostView }): R
       </li>
 
       <li className="flex items-center gap-x-1">
-        <RepostActions postView={postView} />
+        <RepostActions postView={postView} via={via} />
       </li>
 
       <li className="flex items-center gap-x-1">
-        <LikeButton postView={postView} />
+        <LikeButton postView={postView} via={via} />
       </li>
     </ul>
   );
@@ -53,8 +64,14 @@ function ReplyButton({ postView }: { postView: app.bsky.feed.defs.PostView }): R
   );
 }
 
-function LikeButton({ postView }: { postView: app.bsky.feed.defs.PostView }): React.ReactElement {
-  const [isLiked, toggleLike] = useLikeState(postView);
+function LikeButton({
+  postView,
+  via,
+}: {
+  postView: app.bsky.feed.defs.PostView;
+  via?: Via;
+}): React.ReactElement {
+  const [isLiked, toggleLike] = useLikeState(postView, via);
 
   return (
     <button
@@ -76,4 +93,24 @@ function LikeButton({ postView }: { postView: app.bsky.feed.defs.PostView }): Re
       )}
     </button>
   );
+}
+
+function createVia(reason: app.bsky.feed.defs.FeedViewPost["reason"]): Via | undefined {
+  if (!isReasonRepost(reason)) {
+    return;
+  }
+
+  const { uri, cid } = reason;
+
+  if (uri == null || cid == null) {
+    return;
+  }
+
+  return { uri, cid };
+}
+
+function isReasonRepost(
+  reason: app.bsky.feed.defs.FeedViewPost["reason"],
+): reason is app.bsky.feed.defs.ReasonRepost & { $type: "app.bsky.feed.defs#reasonRepost" } {
+  return reason?.$type === "app.bsky.feed.defs#reasonRepost";
 }

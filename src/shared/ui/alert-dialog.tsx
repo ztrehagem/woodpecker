@@ -56,7 +56,7 @@ export function AlertDialog({
 
   return (
     <Lib.Root open={open} onOpenChange={onOpenChange}>
-      <Lib.Portal className="relative z-50">
+      <Lib.Portal className="relative z-(--index-overlay)">
         <Lib.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Lib.Viewport className="fixed inset-0">
           <Lib.Popup className="relative top-[calc(50%+1.25rem*var(--nested-dialogs))] left-1/2 -mt-8 flex w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 scale-[calc(1-0.1*var(--nested-dialogs))] flex-col gap-4">

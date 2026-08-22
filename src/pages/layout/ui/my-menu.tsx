@@ -39,7 +39,7 @@ export function MyMenu({
             className="cursor-pointer"
           />
         </Menu.Trigger>
-        <Menu.Portal className="relative z-50">
+        <Menu.Portal className="relative z-(--index-overlay)">
           <Menu.Positioner align="end" sideOffset={8}>
             <Menu.Popup className="relative rounded-md border border-highlight bg-filling/75 py-2 backdrop-blur-sm">
               <Menu.Item

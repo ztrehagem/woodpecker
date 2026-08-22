@@ -1,4 +1,3 @@
-import { RichText } from "@atproto/api";
 import { asDatetimeString } from "@atproto/lex";
 import React from "react";
 
@@ -9,7 +8,7 @@ import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
 import { EmbedView } from "./embeds/embed-view";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { PostRichText } from "./post-rich-text";
 import { timeAgo } from "./time-ago";
 
 export function PostPreviewCard({
@@ -28,8 +27,6 @@ export function PostPreviewCard({
   const datetimeLocaleString = date.toLocaleString();
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
-
-  const richText = new RichText({ text: record.text, facets: record.facets });
 
   return (
     <Card bordered>
@@ -58,13 +55,9 @@ export function PostPreviewCard({
           </Tooltip>
         </div>
 
-        {record.text.length > 0 && (
-          <p className="mt-1 whitespace-pre-line">
-            {Array.from(richText.segments()).map((segment, index) => (
-              <RichTextSegmentView key={index} segment={segment} />
-            ))}
-          </p>
-        )}
+        <div className="mt-1">
+          <PostRichText text={record.text} facets={record.facets} />
+        </div>
 
         {postView.embed && (
           <div className="not-empty:my-3">

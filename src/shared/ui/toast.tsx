@@ -6,7 +6,7 @@ import css from "./toast.module.css";
 
 export function ToastRenderer(): React.ReactElement {
   return (
-    <Toast.Portal className="relative z-100">
+    <Toast.Portal className="relative z-(--index-top)">
       <Toast.Viewport className="fixed inset-x-0 top-0 mx-auto w-full max-w-column-main">
         <ToastList />
       </Toast.Viewport>
