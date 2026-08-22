@@ -96,7 +96,7 @@ export function PostCard({
               </div>
             )}
 
-            {!preview && <PostActionBar postView={postView} />}
+            {!preview && <PostActionBar postView={postView} reason={reason} />}
 
             {import.meta.env.DEV && (
               <Collapsible.Root className="flex flex-col items-start">

@@ -5,9 +5,11 @@ import { useAssertSession } from "#src/shared/auth/index.ts";
 
 import { likePost } from "../../api/like-post";
 import { unlikePost } from "../../api/unlike-post";
+import type { Via } from "../../model/via";
 
 export function useLikeState(
   postView: app.bsky.feed.defs.PostView,
+  via?: Via,
 ): readonly [isLiked: boolean, toggleLike: () => void] {
   const session = useAssertSession();
 
@@ -23,7 +25,7 @@ export function useLikeState(
     startTransition(async () => {
       setIsLikedOptimistic(true);
       try {
-        const { uri } = await likePost(session, postView);
+        const { uri } = await likePost(session, postView, { via });
         session.likeCache.set(postView, uri);
       } catch (error) {
         console.error(error);

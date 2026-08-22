@@ -6,16 +6,19 @@ import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import { ActionMenu } from "#src/shared/ui/action-menu/index.ts";
 import { QuoteIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 
+import type { Via } from "../../model/via";
 import { NewPostDialogContext } from "../new-post-dialog/new-post-dialog-context";
 import { useRepostState } from "./use-repost-state";
 
 export function RepostActions({
   postView,
+  via,
 }: {
   postView: app.bsky.feed.defs.PostView;
+  via?: Via;
 }): React.ReactElement {
   const newPostDialogHandle = use(NewPostDialogContext);
-  const [isReposted, toggleRepost] = useRepostState(postView);
+  const [isReposted, toggleRepost] = useRepostState(postView, via);
 
   const onClickQuote = () => {
     newPostDialogHandle.openWithPayload({ quotePostView: postView });
