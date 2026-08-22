@@ -37,6 +37,13 @@
 }
 
 @layer base {
+  :root {
+    --index-cover: 15;
+    --index-popover: 25;
+    --index-overlay: 35;
+    --index-top: 45;
+  }
+
   html {
     @apply scrollbar-gutter-stable font-sans;
   }

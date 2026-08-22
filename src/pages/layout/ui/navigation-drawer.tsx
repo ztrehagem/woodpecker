@@ -19,7 +19,7 @@ export function NavigationDrawer({ trigger }: { trigger: React.ReactNode }): Rea
     <Drawer.Root swipeDirection="left" open={isOpen} onOpenChange={setIsOpen}>
       {trigger}
 
-      <Drawer.Portal className="relative z-50">
+      <Drawer.Portal className="relative z-(--index-overlay)">
         <Drawer.Backdrop className="fixed inset-0 bg-backdrop/75 opacity-100 transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0" />
 
         <Drawer.Viewport className="fixed inset-0">

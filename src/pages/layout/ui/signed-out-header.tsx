@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 export function SignedOutHeader(): React.ReactElement {
   return (
-    <header className="pointer-events-none sticky top-0 left-0 z-10">
+    <header className="pointer-events-none sticky top-0 left-0 z-(--index-cover)">
       <div className="mx-auto flex h-height-header items-stretch justify-between">
         <h1 className="font-brand text-lg font-medium">
           <Link
