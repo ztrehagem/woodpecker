@@ -73,7 +73,7 @@ export function PostDetailCard({
 
           <PostActionBar postView={postView} />
 
-          {import.meta.env.DEV && import.meta.env.DEBUG != null && (
+          {import.meta.env.DEV && (
             <Collapsible.Root className="flex flex-col items-start">
               <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
                 Show raw data
