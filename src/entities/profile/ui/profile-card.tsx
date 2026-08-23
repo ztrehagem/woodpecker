@@ -9,6 +9,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
+import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button";
 
 export function ProfileCard({
@@ -44,7 +45,14 @@ export function ProfileCard({
 
             <div className="flex flex-1 flex-wrap items-start justify-between gap-3 pb-2">
               <div>
-                <h2 className="text-2xl font-semibold">{profile.displayName ?? profile.handle}</h2>
+                <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
+                  <h2 className="text-2xl font-semibold">
+                    {profile.displayName ?? profile.handle}
+                  </h2>
+
+                  <BotBadge labels={profile.labels} />
+                </div>
+
                 <p className="text-sm text-fg-muted">
                   <Tooltip tooltip={<span className="text-xs">{profile.did}</span>} side="right">
                     @{profile.handle}

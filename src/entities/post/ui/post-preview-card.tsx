@@ -1,9 +1,12 @@
 import { asDatetimeString } from "@atproto/lex";
 import React from "react";
 
+import { BotBadge } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
+import { getLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
+import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
@@ -20,6 +23,18 @@ export function PostPreviewCard({
 
   if (!isPostRecord(record)) {
     return <></>;
+  }
+
+  const labelPolicy = getLabelPolicy(postView.labels, postView.author.did);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card bordered>
+        <div className="p-3 text-sm tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
   }
 
   const datetimeString = asDatetimeString(record.createdAt);
@@ -42,6 +57,8 @@ export function PostPreviewCard({
             {displayName}
           </span>
 
+          <BotBadge labels={postView.author.labels} />
+
           <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
           <Tooltip
@@ -55,14 +72,36 @@ export function PostPreviewCard({
           </Tooltip>
         </div>
 
-        <div className="mt-1">
-          <PostRichText text={record.text} facets={record.facets} />
-        </div>
+        {labelPolicy.warned ? (
+          <CollapsibleWarning reason="This post has a content warning.">
+            <div className="mt-1">
+              <PostRichText text={record.text} facets={record.facets} />
+            </div>
 
-        {postView.embed && (
-          <div className="not-empty:my-3">
-            <EmbedView embed={postView.embed} skipRecordEmbed />
-          </div>
+            {postView.embed && (
+              <div className="not-empty:my-3">
+                <EmbedView embed={postView.embed} skipRecordEmbed />
+              </div>
+            )}
+          </CollapsibleWarning>
+        ) : (
+          <>
+            <div className="mt-1">
+              <PostRichText text={record.text} facets={record.facets} />
+            </div>
+
+            {postView.embed && (
+              <div className="not-empty:my-3">
+                {labelPolicy.mediaWarningReason != null ? (
+                  <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
+                    <EmbedView embed={postView.embed} skipRecordEmbed />
+                  </CollapsibleWarning>
+                ) : (
+                  <EmbedView embed={postView.embed} skipRecordEmbed />
+                )}
+              </div>
+            )}
+          </>
         )}
       </article>
     </Card>

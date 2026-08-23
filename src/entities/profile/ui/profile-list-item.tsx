@@ -6,6 +6,7 @@ import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
+import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button.tsx";
 
 export function ProfileListItem({
@@ -36,7 +37,10 @@ export function ProfileListItem({
             </div>
 
             <div className="grid grid-cols-1">
-              <div className="truncate font-bold">{displayName}</div>
+              <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
+                <span className="truncate font-bold">{displayName}</span>
+                <BotBadge labels={profile.labels} />
+              </div>
 
               <div className="truncate text-sm text-fg-muted">@{profile.handle}</div>
             </div>

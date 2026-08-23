@@ -4,9 +4,12 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
+import { BotBadge } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
+import { getLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
+import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import { EmbedView } from "./embeds/embed-view";
@@ -19,6 +22,18 @@ export function PostDetailCard({
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
+  const labelPolicy = getLabelPolicy(postView.labels, postView.author.did);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card>
+        <div className="p-3 tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
+  }
+
   const datetimeString = asDatetimeString(postView.record.createdAt as string);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
@@ -42,25 +57,50 @@ export function PostDetailCard({
           </Link>
 
           <div className="flex grow flex-col">
-            <Link
-              to={`/profile/${postView.author.handle}`}
-              className="relative font-bold wrap-anywhere text-inherit hover:underline"
-            >
-              {displayName}
-            </Link>
+            <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
+              <Link
+                to={`/profile/${postView.author.handle}`}
+                className="relative font-bold wrap-anywhere text-inherit hover:underline"
+              >
+                {displayName}
+              </Link>
+
+              <BotBadge labels={postView.author.labels} />
+            </div>
 
             <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
           </div>
         </div>
 
         <div className="mt-1 flex flex-col gap-1">
-          <p className="whitespace-pre-line">
-            {Array.from(richText.segments()).map((segment, index) => (
-              <RichTextSegmentView key={index} segment={segment} />
-            ))}
-          </p>
+          {labelPolicy.warned ? (
+            <CollapsibleWarning reason="This post has a content warning.">
+              <p className="whitespace-pre-line">
+                {Array.from(richText.segments()).map((segment, index) => (
+                  <RichTextSegmentView key={index} segment={segment} />
+                ))}
+              </p>
 
-          {postView.embed && <EmbedView embed={postView.embed} />}
+              {postView.embed && <EmbedView embed={postView.embed} />}
+            </CollapsibleWarning>
+          ) : (
+            <>
+              <p className="whitespace-pre-line">
+                {Array.from(richText.segments()).map((segment, index) => (
+                  <RichTextSegmentView key={index} segment={segment} />
+                ))}
+              </p>
+
+              {postView.embed &&
+                (labelPolicy.mediaWarningReason != null ? (
+                  <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
+                    <EmbedView embed={postView.embed} />
+                  </CollapsibleWarning>
+                ) : (
+                  <EmbedView embed={postView.embed} />
+                ))}
+            </>
+          )}
 
           <time
             dateTime={datetimeString}

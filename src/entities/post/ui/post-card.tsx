@@ -3,9 +3,12 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
+import { BotBadge } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
+import { getLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
+import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
@@ -32,6 +35,18 @@ export function PostCard({
 
   if (!isPostRecord(record)) {
     return <></>;
+  }
+
+  const labelPolicy = getLabelPolicy(postView.labels, postView.author.did);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card bordered={preview}>
+        <div className="p-3 tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
   }
 
   const datetimeString = asDatetimeString(record.createdAt);
@@ -75,6 +90,8 @@ export function PostCard({
                 {displayName}
               </Link>
 
+              <BotBadge labels={postView.author.labels} />
+
               <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
               <Tooltip
@@ -88,12 +105,32 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            <PostRichText text={record.text} facets={record.facets} />
+            {labelPolicy.warned ? (
+              <CollapsibleWarning reason="This post has a content warning.">
+                <PostRichText text={record.text} facets={record.facets} />
 
-            {postView.embed && (
-              <div className="my-3">
-                <EmbedView embed={postView.embed} />
-              </div>
+                {postView.embed && (
+                  <div className="my-3">
+                    <EmbedView embed={postView.embed} />
+                  </div>
+                )}
+              </CollapsibleWarning>
+            ) : (
+              <>
+                <PostRichText text={record.text} facets={record.facets} />
+
+                {postView.embed && (
+                  <div className="my-3">
+                    {labelPolicy.mediaWarningReason != null ? (
+                      <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
+                        <EmbedView embed={postView.embed} />
+                      </CollapsibleWarning>
+                    ) : (
+                      <EmbedView embed={postView.embed} />
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             {!preview && <PostActionBar postView={postView} reason={reason} />}
