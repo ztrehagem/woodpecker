@@ -39,7 +39,7 @@ export function ProfileListItem({
             <div className="grid grid-cols-1">
               <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
                 <span className="truncate font-bold">{displayName}</span>
-                <BotBadge labels={profile.labels} />
+                <BotBadge profile={profile} />
               </div>
 
               <div className="truncate text-sm text-fg-muted">@{profile.handle}</div>

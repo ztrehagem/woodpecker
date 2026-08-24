@@ -50,7 +50,7 @@ export function ProfileCard({
                     {profile.displayName ?? profile.handle}
                   </h2>
 
-                  <BotBadge labels={profile.labels} />
+                  <BotBadge profile={profile} />
                 </div>
 
                 <p className="text-sm text-fg-muted">

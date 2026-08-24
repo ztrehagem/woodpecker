@@ -90,7 +90,7 @@ export function PostCard({
                 {displayName}
               </Link>
 
-              <BotBadge labels={postView.author.labels} />
+              <BotBadge postView={postView} />
 
               <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
