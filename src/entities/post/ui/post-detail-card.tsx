@@ -1,4 +1,3 @@
-import { RichText, type RichTextProps } from "@atproto/api";
 import { asDatetimeString } from "@atproto/lex";
 import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
@@ -12,9 +11,10 @@ import Card from "#src/shared/ui/card.tsx";
 import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
+import { isPostRecord } from "../lib/is-post-record";
 import { EmbedView } from "./embeds/embed-view";
 import { PostActionBar } from "./post-action/post-action-bar";
-import { RichTextSegmentView } from "./rich-text-segment-view";
+import { PostRichText } from "./post-rich-text";
 import { timeAgo } from "./time-ago";
 
 export function PostDetailCard({
@@ -22,6 +22,12 @@ export function PostDetailCard({
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
+  const record = postView.record;
+
+  if (!isPostRecord(record)) {
+    return <></>;
+  }
+
   const labelPolicy = getLabelPolicy(postView.labels, postView.author.did);
 
   if (labelPolicy.hidden) {
@@ -40,10 +46,9 @@ export function PostDetailCard({
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
-  const text = "text" in postView.record ? (postView.record.text as string) : "";
-  const facets =
-    "facets" in postView.record ? (postView.record.facets as RichTextProps["facets"]) : void 0;
-  const richText = new RichText({ text, facets });
+  const richTextView = <PostRichText text={record.text} facets={record.facets} />;
+
+  const embedView = postView.embed && <EmbedView embed={postView.embed} />;
 
   return (
     <Card>
@@ -72,32 +77,24 @@ export function PostDetailCard({
           </div>
         </div>
 
-        <div className="mt-1 flex flex-col gap-1">
+        <div className="mt-2 flex flex-col gap-2">
           {labelPolicy.warned ? (
             <CollapsibleWarning reason="This post has a content warning.">
-              <p className="whitespace-pre-line">
-                {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentView key={index} segment={segment} />
-                ))}
-              </p>
+              {richTextView}
 
-              {postView.embed && <EmbedView embed={postView.embed} />}
+              {embedView}
             </CollapsibleWarning>
           ) : (
             <>
-              <p className="whitespace-pre-line">
-                {Array.from(richText.segments()).map((segment, index) => (
-                  <RichTextSegmentView key={index} segment={segment} />
-                ))}
-              </p>
+              {richTextView}
 
-              {postView.embed &&
+              {embedView &&
                 (labelPolicy.mediaWarningReason != null ? (
                   <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
-                    <EmbedView embed={postView.embed} />
+                    {embedView}
                   </CollapsibleWarning>
                 ) : (
-                  <EmbedView embed={postView.embed} />
+                  embedView
                 ))}
             </>
           )}

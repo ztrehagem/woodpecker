@@ -43,6 +43,10 @@ export function PostPreviewCard({
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
+  const richTextView = <PostRichText text={record.text} facets={record.facets} />;
+
+  const embedView = postView.embed && <EmbedView embed={postView.embed} skipRecordEmbed />;
+
   return (
     <Card bordered>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
@@ -72,37 +76,27 @@ export function PostPreviewCard({
           </Tooltip>
         </div>
 
-        {labelPolicy.warned ? (
-          <CollapsibleWarning reason="This post has a content warning.">
-            <div className="mt-1">
-              <PostRichText text={record.text} facets={record.facets} />
-            </div>
+        <div className="mt-1 flex flex-col gap-2">
+          {labelPolicy.warned ? (
+            <CollapsibleWarning reason="This post has a content warning.">
+              {richTextView}
+              {embedView}
+            </CollapsibleWarning>
+          ) : (
+            <>
+              {richTextView}
 
-            {postView.embed && (
-              <div className="not-empty:my-3">
-                <EmbedView embed={postView.embed} skipRecordEmbed />
-              </div>
-            )}
-          </CollapsibleWarning>
-        ) : (
-          <>
-            <div className="mt-1">
-              <PostRichText text={record.text} facets={record.facets} />
-            </div>
-
-            {postView.embed && (
-              <div className="not-empty:my-3">
-                {labelPolicy.mediaWarningReason != null ? (
+              {embedView &&
+                (labelPolicy.mediaWarningReason != null ? (
                   <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
-                    <EmbedView embed={postView.embed} skipRecordEmbed />
+                    {embedView}
                   </CollapsibleWarning>
                 ) : (
-                  <EmbedView embed={postView.embed} skipRecordEmbed />
-                )}
-              </div>
-            )}
-          </>
-        )}
+                  embedView
+                ))}
+            </>
+          )}
+        </div>
       </article>
     </Card>
   );

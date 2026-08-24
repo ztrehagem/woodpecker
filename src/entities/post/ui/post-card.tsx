@@ -24,12 +24,10 @@ export function PostCard({
   postView,
   reason,
   pinned = false,
-  preview = false,
 }: {
   postView: app.bsky.feed.defs.PostView;
   reason?: app.bsky.feed.defs.FeedViewPost["reason"];
   pinned?: boolean;
-  preview?: boolean;
 }): React.ReactElement {
   const record = postView.record;
 
@@ -41,7 +39,7 @@ export function PostCard({
 
   if (labelPolicy.hidden) {
     return (
-      <Card bordered={preview}>
+      <Card>
         <div className="p-3 tablet:px-5 tablet:py-4">
           <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
         </div>
@@ -57,23 +55,25 @@ export function PostCard({
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
 
+  const richTextView = <PostRichText text={record.text} facets={record.facets} />;
+
+  const embedView = postView.embed && <EmbedView embed={postView.embed} />;
+
   return (
-    <Card bordered={preview}>
+    <Card>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
-        {!preview && (
-          <Link
-            to={link ?? ""}
-            aria-label="View post"
-            data-view-post-link
-            className="absolute inset-0 block"
-          ></Link>
-        )}
+        <Link
+          to={link ?? ""}
+          aria-label="View post"
+          data-view-post-link
+          className="absolute inset-0 block"
+        ></Link>
 
         {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
 
         <div className="flex gap-2">
           <Link
-            to={preview ? {} : `/profile/${postView.author.handle}`}
+            to={`/profile/${postView.author.handle}`}
             className="relative h-10 w-10 shrink-0 overflow-clip rounded-full"
           >
             {postView.author.avatar != null && (
@@ -84,7 +84,7 @@ export function PostCard({
           <div className="grow">
             <div className="flex flex-wrap items-center justify-start gap-x-2">
               <Link
-                to={preview ? {} : `/profile/${postView.author.handle}`}
+                to={`/profile/${postView.author.handle}`}
                 className="relative font-bold wrap-anywhere text-inherit hover:underline"
               >
                 {displayName}
@@ -105,49 +105,43 @@ export function PostCard({
               </Tooltip>
             </div>
 
-            {labelPolicy.warned ? (
-              <CollapsibleWarning reason="This post has a content warning.">
-                <PostRichText text={record.text} facets={record.facets} />
+            <div className="flex flex-col gap-2">
+              {labelPolicy.warned ? (
+                <CollapsibleWarning reason="This post has a content warning.">
+                  {richTextView}
+                  {embedView}
+                </CollapsibleWarning>
+              ) : (
+                <>
+                  {richTextView}
 
-                {postView.embed && (
-                  <div className="my-3">
-                    <EmbedView embed={postView.embed} />
-                  </div>
-                )}
-              </CollapsibleWarning>
-            ) : (
-              <>
-                <PostRichText text={record.text} facets={record.facets} />
-
-                {postView.embed && (
-                  <div className="my-3">
-                    {labelPolicy.mediaWarningReason != null ? (
+                  {embedView &&
+                    (labelPolicy.mediaWarningReason != null ? (
                       <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
-                        <EmbedView embed={postView.embed} />
+                        {embedView}
                       </CollapsibleWarning>
                     ) : (
-                      <EmbedView embed={postView.embed} />
-                    )}
-                  </div>
-                )}
-              </>
-            )}
+                      embedView
+                    ))}
+                </>
+              )}
 
-            {!preview && <PostActionBar postView={postView} reason={reason} />}
+              <PostActionBar postView={postView} reason={reason} />
 
-            {import.meta.env.DEV && (
-              <Collapsible.Root className="flex flex-col items-start">
-                <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
-                  Show raw data
-                  <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
-                </Collapsible.Trigger>
-                <Collapsible.Panel>
-                  <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
-                    {JSON.stringify(postView, null, 2)}
-                  </pre>
-                </Collapsible.Panel>
-              </Collapsible.Root>
-            )}
+              {import.meta.env.DEV && (
+                <Collapsible.Root className="flex flex-col items-start">
+                  <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
+                    Show raw data
+                    <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
+                  </Collapsible.Trigger>
+                  <Collapsible.Panel>
+                    <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
+                      {JSON.stringify(postView, null, 2)}
+                    </pre>
+                  </Collapsible.Panel>
+                </Collapsible.Root>
+              )}
+            </div>
           </div>
         </div>
       </article>
