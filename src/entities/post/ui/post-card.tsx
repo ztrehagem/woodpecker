@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import { BotBadge } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
-import { getLabelPolicy } from "#src/shared/lib/label-policy.ts";
+import { getPostLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
@@ -35,9 +35,9 @@ export function PostCard({
     return <></>;
   }
 
-  const labelPolicy = getLabelPolicy(postView.labels, postView.author.did);
+  const labelPolicy = getPostLabelPolicy(postView);
 
-  if (labelPolicy.hidden) {
+  if (labelPolicy.policy === "hidden") {
     return (
       <Card>
         <div className="p-3 tablet:px-5 tablet:py-4">
@@ -106,8 +106,8 @@ export function PostCard({
             </div>
 
             <div className="flex flex-col gap-2">
-              {labelPolicy.warned ? (
-                <CollapsibleWarning reason="This post has a content warning.">
+              {labelPolicy.policy === "warned" ? (
+                <CollapsibleWarning reason={labelPolicy.reasonText}>
                   {richTextView}
                   {embedView}
                 </CollapsibleWarning>
@@ -116,8 +116,8 @@ export function PostCard({
                   {richTextView}
 
                   {embedView &&
-                    (labelPolicy.mediaWarningReason != null ? (
-                      <CollapsibleWarning reason={labelPolicy.mediaWarningReason}>
+                    (labelPolicy.policy === "media-warned" ? (
+                      <CollapsibleWarning reason={labelPolicy.reasonText}>
                         {embedView}
                       </CollapsibleWarning>
                     ) : (
