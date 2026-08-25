@@ -3,12 +3,16 @@ import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
-import { BotBadge } from "#src/entities/profile/@x/post.ts";
+import { ProfileBadges } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import { getPostLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
-import { CollapsibleWarning, HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
+import {
+  MediaWarning,
+  HiddenContentNotice,
+  ContentWarning,
+} from "#src/shared/ui/content-warning.tsx";
 import { CaretRightIcon, KeepIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
@@ -37,7 +41,7 @@ export function PostCard({
 
   const labelPolicy = getPostLabelPolicy(postView);
 
-  if (labelPolicy.policy === "hidden") {
+  if (labelPolicy.hidden) {
     return (
       <Card>
         <div className="p-3 tablet:px-5 tablet:py-4">
@@ -90,7 +94,7 @@ export function PostCard({
                 {displayName}
               </Link>
 
-              <BotBadge postView={postView} />
+              <ProfileBadges labels={labelPolicy.profileBadges} />
 
               <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
@@ -106,20 +110,20 @@ export function PostCard({
             </div>
 
             <div className="flex flex-col gap-2">
-              {labelPolicy.policy === "warned" ? (
-                <CollapsibleWarning reason={labelPolicy.reasonText}>
+              {labelPolicy.warned.length > 0 ? (
+                <ContentWarning labels={labelPolicy.warned} author={postView.author}>
                   {richTextView}
                   {embedView}
-                </CollapsibleWarning>
+                </ContentWarning>
               ) : (
                 <>
                   {richTextView}
 
                   {embedView &&
-                    (labelPolicy.policy === "media-warned" ? (
-                      <CollapsibleWarning reason={labelPolicy.reasonText}>
+                    (labelPolicy.mediaWarned.length > 0 ? (
+                      <MediaWarning labels={labelPolicy.mediaWarned} author={postView.author}>
                         {embedView}
-                      </CollapsibleWarning>
+                      </MediaWarning>
                     ) : (
                       embedView
                     ))}

@@ -39,3 +39,39 @@ test("botラベルが付与されている場合、Botバッジが表示され�
 
   await expect.element(view.getByText("Bot")).toBeInTheDocument();
 });
+
+test("!hideラベルが付与されている場合、非表示の通知が表示される", async () => {
+  const profile = {
+    did: "did:plc:alice",
+    handle: "alice.test",
+    displayName: "Alice",
+    labels: [label("!hide")],
+  } as app.bsky.actor.defs.ProfileView;
+  const view = await renderWithProviders(<ProfileListItem profile={profile} />, {
+    initialEntries: ["/"],
+  });
+
+  await expect
+    .element(view.getByText("This profile has been hidden due to a moderation label."))
+    .toBeInTheDocument();
+  await expect.element(view.getByText("Alice")).not.toBeInTheDocument();
+});
+
+test("!warnラベルが付与されている場合、警告付きで折りたたまれる", async () => {
+  const profile = {
+    did: "did:plc:alice",
+    handle: "alice.test",
+    displayName: "Alice",
+    labels: [label("!warn")],
+  } as app.bsky.actor.defs.ProfileView;
+  const view = await renderWithProviders(<ProfileListItem profile={profile} />, {
+    initialEntries: ["/"],
+  });
+
+  await expect.element(view.getByText("This content has a content warning.")).toBeInTheDocument();
+  await expect.element(view.getByText("Alice", { exact: true })).not.toBeInTheDocument();
+
+  await view.getByText("This content has a content warning.").click();
+
+  await expect.element(view.getByText("Alice", { exact: true })).toBeVisible();
+});

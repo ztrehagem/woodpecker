@@ -3,17 +3,31 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
+import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
+import { HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
-import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button.tsx";
+import { ProfileBadges } from "./profile-badges.tsx";
 
 export function ProfileListItem({
   profile,
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileView;
 }>): React.ReactElement {
+  const labelPolicy = getProfileLabelPolicy(profile);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card>
+        <div className="p-3 text-sm tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This profile has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
+  }
+
   const displayName = fallbackDisplayName(profile.displayName, profile.handle);
 
   return (
@@ -39,7 +53,7 @@ export function ProfileListItem({
             <div className="grid grid-cols-1">
               <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
                 <span className="truncate font-bold">{displayName}</span>
-                <BotBadge profile={profile} />
+                <ProfileBadges labels={labelPolicy.profileBadges} />
               </div>
 
               <div className="truncate text-sm text-fg-muted">@{profile.handle}</div>
