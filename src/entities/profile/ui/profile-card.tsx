@@ -117,7 +117,7 @@ function RichTextSegmentElement({ segment }: { segment: RichTextSegment }): Reac
     case segment.isLink():
       return (
         <a
-          href={segment.text}
+          href={segment.link?.uri}
           target="_blank"
           className="text-fg-link hover:underline active:text-fg-link-active"
         >
@@ -127,7 +127,7 @@ function RichTextSegmentElement({ segment }: { segment: RichTextSegment }): Reac
     case segment.isMention():
       return (
         <Link
-          to={`/profile/${segment.text.slice(1)}`}
+          to={`/profile/${segment.mention?.did}`}
           className="text-fg-link hover:underline active:text-fg-link-active"
         >
           {segment.text}
