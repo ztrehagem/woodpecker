@@ -68,10 +68,10 @@ test("!warnラベルが付与されている場合、警告付きで折りたた
     initialEntries: ["/"],
   });
 
-  await expect.element(view.getByText("This content has a content warning.")).toBeInTheDocument();
+  await expect.element(view.getByText("This account has a content warning.")).toBeInTheDocument();
   await expect.element(view.getByText("Alice", { exact: true })).not.toBeInTheDocument();
 
-  await view.getByText("This content has a content warning.").click();
+  await view.getByRole("button", { name: "Show", exact: true }).click();
 
   await expect.element(view.getByText("Alice", { exact: true })).toBeVisible();
 });

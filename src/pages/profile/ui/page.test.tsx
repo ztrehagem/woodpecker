@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import { expect, test, vi } from "vitest";
 
-import { app } from "#src/shared/api/lexicons/index.ts";
+import { app, type com } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 import { createMockSession } from "#src/test/atproto-mock.ts";
 import { renderWithProviders } from "#src/test/render-with-providers.tsx";
@@ -25,6 +25,15 @@ function createProfile(overrides: Partial<ProfileViewDetailed> = {}): ProfileVie
     followsCount: 34,
     followersCount: 56,
     ...overrides,
+  };
+}
+
+function createLabel(val: string): com.atproto.label.defs.Label {
+  return {
+    src: "did:plc:labeler",
+    uri: "at://did:plc:alice/app.bsky.actor.profile/self",
+    val,
+    cts: "2024-01-01T00:00:00.000Z",
   };
 }
 
@@ -129,6 +138,53 @@ test("プロフィールが取得できたときに ProfileCard が表示され�
 
   await expect.element(view.getByRole("heading", { name: "Alice" })).toBeInTheDocument();
   await expect.element(view.getByText("@alice.test")).toBeInTheDocument();
+});
+
+test("!warnラベルが付与されている場合、警告を解除するまでアカウントを表示しない", async () => {
+  const session = createMockSession();
+  const call = vi.spyOn(session.client, "call");
+
+  call.mockImplementation((lexicon) => {
+    if (lexicon === app.bsky.actor.getProfile) {
+      return Promise.resolve(createProfile({ labels: [createLabel("!warn")] }));
+    }
+    return Promise.resolve(createAuthorFeedPage([]));
+  });
+
+  const view = await renderPage(session);
+
+  await expect.element(view.getByText("This account has a content warning.")).toBeInTheDocument();
+  await expect.element(view.getByRole("heading", { name: "Alice" })).not.toBeInTheDocument();
+
+  await view.getByRole("button", { name: "Show", exact: true }).click();
+
+  await expect.element(view.getByRole("heading", { name: "Alice" })).toBeInTheDocument();
+  await expect.element(view.getByText("No posts.", { exact: true })).toBeInTheDocument();
+});
+
+test("!hideラベルが付与されている場合、アカウントを非表示にして解除操作を提供しない", async () => {
+  const session = createMockSession();
+  const call = vi.spyOn(session.client, "call");
+
+  call.mockImplementation((lexicon) => {
+    if (lexicon === app.bsky.actor.getProfile) {
+      return Promise.resolve(
+        createProfile({ labels: [createLabel("!warn"), createLabel("!hide")] }),
+      );
+    }
+    return Promise.resolve(createAuthorFeedPage([]));
+  });
+
+  const view = await renderPage(session);
+
+  await expect
+    .element(view.getByText("This account has been hidden due to a moderation label."))
+    .toBeInTheDocument();
+  await expect
+    .element(view.getByRole("button", { name: "Show", exact: true }))
+    .not.toBeInTheDocument();
+  await expect.element(view.getByRole("heading", { name: "Alice" })).not.toBeInTheDocument();
+  expect(call).toHaveBeenCalledTimes(1);
 });
 
 test("プロフィールに pinnedPost があるときに固定投稿カードが表示される", async () => {

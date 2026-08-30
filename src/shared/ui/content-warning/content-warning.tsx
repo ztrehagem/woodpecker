@@ -27,7 +27,7 @@ export function ContentWarning({
       <Collapsible.Trigger className="group relative flex w-full cursor-pointer items-center gap-1 rounded-sm bg-highlight px-2 py-3 text-xs text-fg-muted">
         <CaretRightIcon className="size-6 shrink-0 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
         <InfoIcon className="size-4 shrink-0 text-fg-muted" />
-        <span className="text-start">This content is warned.</span>
+        <span className="grow text-start">This content is warned.</span>
         <LabelListDialog labels={labels} author={author} />
       </Collapsible.Trigger>
       <Collapsible.Panel className="w-full">{children}</Collapsible.Panel>

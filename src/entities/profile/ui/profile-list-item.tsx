@@ -5,7 +5,7 @@ import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
-import { HiddenContentNotice } from "#src/shared/ui/content-warning/index.ts";
+import { HiddenContentNotice, ProfileWarning } from "#src/shared/ui/content-warning/index.ts";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
 import { FollowProfileButton } from "./follow-profile-button.tsx";
@@ -30,7 +30,7 @@ export function ProfileListItem({
 
   const displayName = fallbackDisplayName(profile.displayName, profile.handle);
 
-  return (
+  const content = (
     <Card>
       <div className="relative p-3 text-sm has-[[data-view-profile-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
         <Link
@@ -68,5 +68,13 @@ export function ProfileListItem({
         )}
       </div>
     </Card>
+  );
+
+  return labelPolicy.warned.length > 0 ? (
+    <ProfileWarning labels={labelPolicy.warned} author={profile}>
+      {content}
+    </ProfileWarning>
+  ) : (
+    content
   );
 }

@@ -7,6 +7,7 @@ import type { Label } from "#src/shared/lib/label-policy.ts";
 import { CloseIcon } from "#src/shared/ui/icon/index.ts";
 
 import Card from "../card";
+import { NakedButton } from "../naked-button";
 
 type ProfileView =
   | app.bsky.actor.defs.ProfileView
@@ -25,8 +26,7 @@ export function LabelListDialog({
       <Dialog.Trigger
         aria-label="View labels"
         onClick={stopPropagation}
-        className="-my-2 ml-auto flex shrink-0 cursor-pointer items-center p-2 hover:underline"
-        render={(props) => <span {...props} />}
+        render={(props) => <NakedButton severity="plain" {...props} />}
       >
         Labels
       </Dialog.Trigger>
