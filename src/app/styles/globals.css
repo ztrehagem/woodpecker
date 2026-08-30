@@ -38,9 +38,13 @@
 
 @layer base {
   :root {
+    /* stickyなど、通常のコンテンツよりも手前に表示されるもの */
     --index-cover: 15;
+    /* ポップアップメッセージなど、強調されて手前に表示されるもの */
     --index-popover: 25;
+    /* Tooltipなど、ユーザのアクションによって手前に表示されるもの */
     --index-overlay: 35;
+    /* Toastなど、常に最前面に表示されるもの */
     --index-top: 45;
   }
 

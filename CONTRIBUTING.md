@@ -35,6 +35,11 @@ These checks are also enforced in CI.
 - Respect the existing FSD-based structure under `src`. `pnpm run steiger --watch` is helpful.
 - Avoid unrelated refactors in the same PR.
 - If changing auth flow, verify both browser OAuth code and worker metadata endpoint.
+- Manage `z-index` values with the `--index-*` CSS variables. Use them for UI that appears
+  above other content.
+- For UI rendered in a portal, such as Base UI's `*.Portal` components, use
+  `--index-overlay`. Keeping portal layers at the same `z-index` allows later elements in
+  the DOM to appear on top.
 
 ## Generated Files
 
@@ -44,11 +49,3 @@ These checks are also enforced in CI.
   - /src/shared/api/lexicons/
 - Do not hand-edit generated outputs unless there is a clear reason.
 - Regenerate with: `pnpm run prepare`
-
-## Commit Message Guidance
-
-Use clear, imperative summaries, for example:
-
-- `feat: add callback error state`
-- `fix: handle oauth restore edge case`
-- `test: cover sign-in validation`

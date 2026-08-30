@@ -35,9 +35,12 @@ pnpm run vitest
 pnpm run playwright
 ```
 
-- When running tests, prefer the "runTests" tool over invoking `vitest` directly in the terminal whenever possible.
+- In VS Code Copilot, run package scripts with the `runTask` tool when a matching workspace task is available.
+- Run tests with the `runTests` tool whenever possible; it supports focused test files and test names without requiring a terminal command.
+- Do not ask the user to run a CLI command when `runTask` or `runTests` can execute the check directly. Report the tool result instead.
+- Fall back to a terminal command only when no matching task or test-tool operation can perform the required check.
 - Use the `vitest` CLI only when the VS Code Testing API cannot cover the required scenario or when a targeted terminal-based command is explicitly needed.
-- Prefer to run steiger, vitest, and playwright outside the sandbox. Ask the user if needed.
+- Prefer to run steiger, vitest, and playwright outside the sandbox through the available VS Code tools. Ask the user only when the environment provides no way to execute a required check.
 
 ## Output Expectations
 
