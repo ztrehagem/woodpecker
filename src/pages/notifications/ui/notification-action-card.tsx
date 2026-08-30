@@ -1,5 +1,5 @@
 import { asDatetimeString, type LexMap } from "@atproto/lex";
-import { Collapsible } from "@base-ui/react";
+import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 

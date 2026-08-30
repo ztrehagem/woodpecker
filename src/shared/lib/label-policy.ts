@@ -4,7 +4,7 @@ import type { app, com } from "../api/lexicons";
 
 export interface Label<Val extends string = string> {
   /**
-   * @example "!warn", "porn", "sexual", "nudity", "graphic-media", "bot"
+   * @example "!hide", "!warn", "porn", "sexual", "nudity", "graphic-media", "bot"
    */
   val: Val;
   /**
@@ -12,7 +12,7 @@ export interface Label<Val extends string = string> {
    */
   src: Did;
   /**
-   * is labelled to account
+   * Whether this label applies to the profile/account (vs a post).
    */
   isProfile: boolean;
 }

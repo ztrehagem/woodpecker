@@ -66,12 +66,14 @@ export function PostCard({
   return (
     <Card>
       <article className="relative p-3 text-sm has-[[data-view-post-link]:focus-visible]:bg-highlight tablet:px-5 tablet:py-4">
-        <Link
-          to={link ?? ""}
-          aria-label="View post"
-          data-view-post-link
-          className="absolute inset-0 block"
-        ></Link>
+        {link != null && (
+          <Link
+            to={link}
+            aria-label="View post"
+            data-view-post-link
+            className="absolute inset-0 block"
+          ></Link>
+        )}
 
         {(reason || pinned) && <PostReasonBlock reason={reason} pinned={pinned} />}
 

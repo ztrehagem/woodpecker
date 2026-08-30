@@ -137,6 +137,13 @@ test("re-applies a label if it is added again after being negated", () => {
   expect(getPostLabelPolicy(post([applied, negated, reapplied]))).toEqual(policy({ hidden: true }));
 });
 
+test("cancels a bot profile badge when a matching neg label follows", () => {
+  const applied = label("bot");
+  const negated = label("bot", true);
+
+  expect(getProfileLabelPolicy(profile([applied, negated]))).toEqual(policy());
+});
+
 test("ignores unknown label values", () => {
   expect(getPostLabelPolicy(post([label("some-custom-label")]))).toEqual(policy());
 });

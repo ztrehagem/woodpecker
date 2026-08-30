@@ -67,7 +67,11 @@ function LabelList({
   return (
     <ul className="flex flex-col items-start gap-1">
       {labels.map((label) => (
-        <LabelItem key={label.val} label={label} author={author} />
+        <LabelItem
+          key={`${label.src}:${label.val}:${label.isProfile ? "profile" : "content"}`}
+          label={label}
+          author={author}
+        />
       ))}
     </ul>
   );

@@ -44,7 +44,7 @@ export function PostDetailCard({
     );
   }
 
-  const datetimeString = asDatetimeString(postView.record.createdAt as string);
+  const datetimeString = asDatetimeString(record.createdAt);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 

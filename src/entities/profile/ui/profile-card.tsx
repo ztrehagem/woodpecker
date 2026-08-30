@@ -5,6 +5,7 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
+import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
@@ -19,6 +20,8 @@ export function ProfileCard({
 }>): React.ReactElement {
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
+  const labelPolicy = getProfileLabelPolicy(profile);
+  const isBot = labelPolicy.profileBadges.some((label) => label.val === "bot");
   const hasDescription = profile.description != null && profile.description.length > 0;
   const descriptionRichText = new RichText({ text: profile.description ?? "" });
   descriptionRichText.detectFacetsWithoutResolution();
@@ -50,7 +53,7 @@ export function ProfileCard({
                     {profile.displayName ?? profile.handle}
                   </h2>
 
-                  <BotBadge profile={profile} />
+                  {isBot && <BotBadge />}
                 </div>
 
                 <p className="text-sm text-fg-muted">
