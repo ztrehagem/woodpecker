@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useProfileModerationMenu } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import { ActionMenu } from "#src/shared/ui/action-menu/index.ts";
@@ -21,6 +22,7 @@ export function MoreActions({
 }): React.ReactElement {
   const session = useAssertSession();
   const isMine = postView.author.did === session.did;
+  const profileModerationMenu = useProfileModerationMenu(postView.author);
 
   const {
     isDialogOpen: isDeleteDialogOpen,
@@ -40,6 +42,8 @@ export function MoreActions({
       >
         <BookmarkItem postView={postView} />
 
+        {profileModerationMenu.menuItems}
+
         {isMine && (
           <ActionMenu.Item destructive onClick={onClickDelete}>
             <DeleteIcon className="size-5" />
@@ -47,6 +51,8 @@ export function MoreActions({
           </ActionMenu.Item>
         )}
       </ActionMenu>
+
+      {profileModerationMenu.dialogs}
 
       <AlertDialog
         open={isDeleteDialogOpen}

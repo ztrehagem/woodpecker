@@ -4,20 +4,25 @@ import React from "react";
 import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
+import { ActionMenu } from "#src/shared/ui/action-menu/index.ts";
 import Card from "#src/shared/ui/card.tsx";
-import { PersonIcon } from "#src/shared/ui/icon/index.ts";
+import { MoreHorizIcon, PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { useProfileModerationPolicy } from "../model/use-profile-moderation-policy";
 import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button";
+import { useProfileModerationMenu } from "./profile-moderation-menu-items.tsx";
 
 export function ProfileCard({
   profile,
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileViewDetailed;
 }>): React.ReactElement {
+  const session = useAssertSession();
+  const profileModerationMenu = useProfileModerationMenu(profile);
   const moderationPolicy = useProfileModerationPolicy(profile);
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
@@ -106,8 +111,21 @@ export function ProfileCard({
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-2">
+          <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">
             <FollowProfileButton profile={profile} />
+
+            {profile.did !== session.did && (
+              <ActionMenu
+                trigger={
+                  <ActionMenu.Trigger className="flex size-8 cursor-pointer items-center justify-center rounded-full bg-highlight text-fg-muted">
+                    <MoreHorizIcon aria-label="More" className="size-5" />
+                  </ActionMenu.Trigger>
+                }
+              >
+                {profileModerationMenu.menuItems}
+              </ActionMenu>
+            )}
+            {profileModerationMenu.dialogs}
           </div>
         </div>
       </section>

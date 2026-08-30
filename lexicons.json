@@ -20,6 +20,7 @@
     "app.bsky.graph.getFollowers",
     "app.bsky.graph.getFollows",
     "app.bsky.graph.getMutes",
+    "app.bsky.graph.muteActor",
     "app.bsky.graph.unmuteActor",
     "app.bsky.notification.getUnreadCount",
     "app.bsky.notification.listNotifications",
@@ -157,6 +158,10 @@
     "app.bsky.graph.getMutes": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.getMutes",
       "cid": "bafyreibnvq62dmchuulpzvvl6w2x6z4mofnqdrfbsvc5ynoo6cazr7wove"
+    },
+    "app.bsky.graph.muteActor": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.muteActor",
+      "cid": "bafyreiebgeqbzitzytuvuu23nxgiyxjdh3iawcxonsiu6t2aubqd6ugt6m"
     },
     "app.bsky.graph.unmuteActor": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.unmuteActor",

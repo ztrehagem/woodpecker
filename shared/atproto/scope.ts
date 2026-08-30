@@ -12,6 +12,7 @@ export const scopes = [
   "rpc:app.bsky.graph.getMutes?aud=*",
   "rpc:app.bsky.graph.getBlocks?aud=*",
   "rpc:app.bsky.graph.unmuteActor?aud=*",
+  "rpc:app.bsky.graph.muteActor?aud=*",
   "rpc:app.bsky.bookmark.getBookmarks?aud=*",
   "rpc:app.bsky.bookmark.createBookmark?aud=*",
   "rpc:app.bsky.bookmark.deleteBookmark?aud=*",
