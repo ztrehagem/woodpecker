@@ -216,7 +216,7 @@ test("collapses the post content when labeled !warn, revealing it on click", asy
   const postView = createPostView({ labels: [createLabel("!warn")] });
   const view = await renderView(postView);
 
-  const trigger = view.getByRole("button", { name: "This post has a content warning." });
+  const trigger = view.getByRole("button", { name: /^This content is warned\./ });
   await expect.element(trigger).toHaveAttribute("aria-expanded", "false");
 
   await trigger.click();
@@ -240,9 +240,7 @@ test("collapses only the embed when labeled with a media label", async () => {
 
   await expect.element(view.getByText("hello", { exact: true })).toBeInTheDocument();
 
-  const trigger = view.getByRole("button", {
-    name: "This media may contain pornography (labeled by a moderation service).",
-  });
+  const trigger = view.getByRole("button", { name: /^This media may contain pornography\./ });
   await expect.element(trigger).toHaveAttribute("aria-expanded", "false");
 
   await trigger.click();
@@ -264,11 +262,9 @@ test("marks the media warning as self-labeled when the author applied it themsel
   });
   const view = await renderView(postView);
 
-  await expect
-    .element(
-      view.getByRole("button", { name: "This media may contain pornography (self-labeled)." }),
-    )
-    .toBeInTheDocument();
+  await view.getByRole("button", { name: "View labels", exact: true }).click();
+
+  await expect.element(view.getByText("porn (self-labelled)", { exact: true })).toBeInTheDocument();
 });
 
 test("shows a bot badge when the author is labeled bot", async () => {
