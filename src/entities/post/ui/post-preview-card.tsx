@@ -1,9 +1,16 @@
 import { asDatetimeString } from "@atproto/lex";
 import React from "react";
 
+import { ProfileBadges } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
+import { getPostLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
+import {
+  MediaWarning,
+  HiddenContentNotice,
+  ContentWarning,
+} from "#src/shared/ui/content-warning/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
@@ -22,11 +29,27 @@ export function PostPreviewCard({
     return <></>;
   }
 
+  const labelPolicy = getPostLabelPolicy(postView);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card bordered>
+        <div className="p-3 text-sm tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
+  }
+
   const datetimeString = asDatetimeString(record.createdAt);
   const date = new Date(datetimeString);
   const datetimeLocaleString = date.toLocaleString();
 
   const displayName = fallbackDisplayName(postView.author.displayName, postView.author.handle);
+
+  const richTextView = <PostRichText text={record.text} facets={record.facets} />;
+
+  const embedView = postView.embed && <EmbedView embed={postView.embed} skipRecordEmbed />;
 
   return (
     <Card bordered>
@@ -42,6 +65,8 @@ export function PostPreviewCard({
             {displayName}
           </span>
 
+          <ProfileBadges labels={labelPolicy.profileBadges} />
+
           <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
 
           <Tooltip
@@ -55,15 +80,27 @@ export function PostPreviewCard({
           </Tooltip>
         </div>
 
-        <div className="mt-1">
-          <PostRichText text={record.text} facets={record.facets} />
-        </div>
+        <div className="mt-1 flex flex-col gap-2">
+          {labelPolicy.warned.length > 0 ? (
+            <ContentWarning labels={labelPolicy.warned} author={postView.author}>
+              {richTextView}
+              {embedView}
+            </ContentWarning>
+          ) : (
+            <>
+              {richTextView}
 
-        {postView.embed && (
-          <div className="not-empty:my-3">
-            <EmbedView embed={postView.embed} skipRecordEmbed />
-          </div>
-        )}
+              {embedView &&
+                (labelPolicy.mediaWarned.length > 0 ? (
+                  <MediaWarning labels={labelPolicy.mediaWarned} author={postView.author}>
+                    {embedView}
+                  </MediaWarning>
+                ) : (
+                  embedView
+                ))}
+            </>
+          )}
+        </div>
       </article>
     </Card>
   );

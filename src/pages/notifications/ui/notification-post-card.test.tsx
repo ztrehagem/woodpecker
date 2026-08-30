@@ -158,11 +158,12 @@ test("投稿日時にカーソルを合わせたときにロケール日時を�
   const notification = buildNotification({
     record: { $type: "app.bsky.feed.post", text: "hello world", createdAt },
   });
+  const timeAgoString = timeAgo(new Date(createdAt));
   const expected = new Date(createdAt).toLocaleString();
 
   const view = await renderNotification(notification);
 
-  view.getByRole("button").element().focus();
+  view.getByRole("button", { name: timeAgoString, exact: true }).element().focus();
 
   await expect.element(view.getByText(expected, { exact: true })).toBeInTheDocument();
 });

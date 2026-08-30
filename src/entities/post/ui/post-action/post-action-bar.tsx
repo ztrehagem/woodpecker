@@ -19,7 +19,7 @@ export function PostActionBar({
   reason?: app.bsky.feed.defs.FeedViewPost["reason"];
 }): React.ReactElement {
   return (
-    <div className="mt-2 flex items-center justify-between gap-4">
+    <div className="flex items-center justify-between gap-4">
       <MainActions postView={postView} reason={reason} />
       <MoreActions postView={postView} />
     </div>

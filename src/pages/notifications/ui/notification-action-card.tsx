@@ -1,4 +1,5 @@
 import { asDatetimeString, type LexMap } from "@atproto/lex";
+import { Collapsible } from "@base-ui/react/collapsible";
 import React from "react";
 import { Link } from "react-router";
 
@@ -7,7 +8,12 @@ import { FollowProfileButton } from "#src/entities/profile/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import Card from "#src/shared/ui/card.tsx";
-import { FavoriteIcon, PersonAddIcon, RepeatIcon } from "#src/shared/ui/icon/index.ts";
+import {
+  CaretRightIcon,
+  FavoriteIcon,
+  PersonAddIcon,
+  RepeatIcon,
+} from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 export function NotificationActionCard({
@@ -90,6 +96,20 @@ export function NotificationActionCard({
             </pre> */}
           </div>
         </div>
+
+        {import.meta.env.DEV && (
+          <Collapsible.Root className="mt-1 flex flex-col items-start">
+            <Collapsible.Trigger className="group relative inline-flex cursor-pointer items-center text-2xs text-fg-muted">
+              Show raw data
+              <CaretRightIcon className="size-5 transition-transform duration-100 ease-[ease-out] group-data-panel-open:rotate-90" />
+            </Collapsible.Trigger>
+            <Collapsible.Panel>
+              <pre className="rounded-e-md bg-filling text-2xs whitespace-pre text-fg-muted">
+                {JSON.stringify(notification, null, 2)}
+              </pre>
+            </Collapsible.Panel>
+          </Collapsible.Root>
+        )}
       </article>
     </Card>
   );

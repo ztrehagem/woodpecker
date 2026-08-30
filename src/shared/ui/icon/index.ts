@@ -32,3 +32,4 @@ export { SyncIcon } from "./sync.tsx";
 export { CachedIcon } from "./cached.tsx";
 export { ProgressActivityIcon } from "./progress-activity.tsx";
 export { CircleIcon } from "./circle.tsx";
+export { InfoIcon } from "./info.tsx";

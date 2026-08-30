@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import type { app } from "#src/shared/api/lexicons/index.ts";
+import type { app, com } from "#src/shared/api/lexicons/index.ts";
 import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { ProfileCard } from "./profile-card.tsx";
@@ -77,6 +77,22 @@ test("ハンドルが表示される", async () => {
   const view = await renderProfile(profile);
 
   await expect.element(view.getByText(`@${profile.handle}`)).toBeInTheDocument();
+});
+
+function label(val: string): com.atproto.label.defs.Label {
+  return {
+    src: "did:plc:labeler",
+    uri: "at://did:plc:alice/app.bsky.actor.profile/self",
+    val,
+    cts: "2024-01-01T00:00:00.000Z",
+  };
+}
+
+test("botラベルが付与されている場合、Botバッジが表示される", async () => {
+  const profile = createProfile({ labels: [label("bot")] });
+  const view = await renderProfile(profile);
+
+  await expect.element(view.getByText("Bot")).toBeInTheDocument();
 });
 
 test("ハンドルにオンマウスするとDIDのツールチップが表示される", async () => {

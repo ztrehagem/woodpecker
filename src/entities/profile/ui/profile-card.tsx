@@ -5,10 +5,12 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
+import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
+import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button";
 
 export function ProfileCard({
@@ -18,6 +20,8 @@ export function ProfileCard({
 }>): React.ReactElement {
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
+  const labelPolicy = getProfileLabelPolicy(profile);
+  const isBot = labelPolicy.profileBadges.some((label) => label.val === "bot");
   const hasDescription = profile.description != null && profile.description.length > 0;
   const descriptionRichText = new RichText({ text: profile.description ?? "" });
   descriptionRichText.detectFacetsWithoutResolution();
@@ -44,7 +48,14 @@ export function ProfileCard({
 
             <div className="flex flex-1 flex-wrap items-start justify-between gap-3 pb-2">
               <div>
-                <h2 className="text-2xl font-semibold">{profile.displayName ?? profile.handle}</h2>
+                <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
+                  <h2 className="text-2xl font-semibold">
+                    {profile.displayName ?? profile.handle}
+                  </h2>
+
+                  {isBot && <BotBadge />}
+                </div>
+
                 <p className="text-sm text-fg-muted">
                   <Tooltip tooltip={<span className="text-xs">{profile.did}</span>} side="right">
                     @{profile.handle}
@@ -109,7 +120,7 @@ function RichTextSegmentElement({ segment }: { segment: RichTextSegment }): Reac
     case segment.isLink():
       return (
         <a
-          href={segment.text}
+          href={segment.link?.uri}
           target="_blank"
           className="text-fg-link hover:underline active:text-fg-link-active"
         >
@@ -119,7 +130,7 @@ function RichTextSegmentElement({ segment }: { segment: RichTextSegment }): Reac
     case segment.isMention():
       return (
         <Link
-          to={`/profile/${segment.text.slice(1)}`}
+          to={`/profile/${segment.mention?.did}`}
           className="text-fg-link hover:underline active:text-fg-link-active"
         >
           {segment.text}
