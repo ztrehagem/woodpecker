@@ -7,7 +7,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { HiddenContentNotice, ProfileWarning } from "#src/shared/ui/content-warning/index.ts";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
-import { useProfileLabelPolicy } from "../model/use-profile-label-policy";
+import { useProfileModerationPolicy } from "../model/use-profile-moderation-policy";
 import { FollowProfileButton } from "./follow-profile-button.tsx";
 import { ProfileBadges } from "./profile-badges.tsx";
 
@@ -16,9 +16,9 @@ export function ProfileListItem({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileView;
 }>): React.ReactElement {
-  const labelPolicy = useProfileLabelPolicy(profile);
+  const moderationPolicy = useProfileModerationPolicy(profile);
 
-  if (labelPolicy.hidden) {
+  if (moderationPolicy.hidden) {
     return (
       <Card>
         <div className="p-3 text-sm tablet:px-5 tablet:py-4">
@@ -43,7 +43,7 @@ export function ProfileListItem({
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-300">
-              {labelPolicy.mediaWarned.length === 0 && profile.avatar != null ? (
+              {moderationPolicy.mediaWarned.length === 0 && profile.avatar != null ? (
                 <img src={profile.avatar} alt="" className="size-full object-cover" />
               ) : (
                 <PersonIcon width={32} height={32} />
@@ -53,7 +53,7 @@ export function ProfileListItem({
             <div className="grid grid-cols-1">
               <div className="grid auto-cols-auto grid-flow-col grid-cols-[auto] items-center justify-start gap-x-2">
                 <span className="truncate font-bold">{displayName}</span>
-                <ProfileBadges labels={labelPolicy.profileBadges} />
+                <ProfileBadges labels={moderationPolicy.profileBadges} />
               </div>
 
               <div className="truncate text-sm text-fg-muted">@{profile.handle}</div>
@@ -70,8 +70,8 @@ export function ProfileListItem({
     </Card>
   );
 
-  return labelPolicy.warned.length > 0 ? (
-    <ProfileWarning labels={labelPolicy.warned} author={profile}>
+  return moderationPolicy.warned.length > 0 ? (
+    <ProfileWarning labels={moderationPolicy.warned} author={profile}>
       {content}
     </ProfileWarning>
   ) : (

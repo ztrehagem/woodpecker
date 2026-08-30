@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import type { Label } from "#src/shared/lib/label-policy.ts";
+import type { Label } from "#src/shared/lib/moderation-policy.ts";
 import { CloseIcon } from "#src/shared/ui/icon/index.ts";
 
 import Card from "../card";

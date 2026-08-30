@@ -1,7 +1,5 @@
 import { hasMutedWord, type Did, type ModerationPrefs } from "@atproto/api";
 
-import { isPostRecord } from "#src/entities/post/index.ts";
-
 import type { app, com } from "../api/lexicons";
 
 export interface Label<Val extends string = string> {
@@ -19,7 +17,7 @@ export interface Label<Val extends string = string> {
   isProfile: boolean;
 }
 
-export interface LabelPolicy {
+export interface ModerationPolicy {
   hidden: boolean;
   muted: boolean;
   warned: Label<LabelValWarned>[];
@@ -34,11 +32,11 @@ export type LabelValProfileBadge = "bot";
 type ContentPreferences = Pick<ModerationPrefs, "adultContentEnabled" | "labels"> &
   Partial<Pick<ModerationPrefs, "mutedWords">>;
 
-export function getPostLabelPolicy(
+export function getPostModerationPolicy(
   post: app.bsky.feed.defs.PostView,
   preferences?: ContentPreferences,
   viewerDid?: Did,
-): LabelPolicy {
+): ModerationPolicy {
   const labels = [
     ...filterEffectiveLabels(post.author.labels ?? []).map(
       ({ val, src }): Label => ({ val, src, isProfile: true }),
@@ -47,7 +45,7 @@ export function getPostLabelPolicy(
       ({ val, src }): Label => ({ val, src, isProfile: false }),
     ),
   ];
-  const policy = resolveLabelPolicy(labels, preferences);
+  const policy = resolveLabelModerationPolicy(labels, preferences);
 
   if (
     preferences != null &&
@@ -68,21 +66,24 @@ export function getPostLabelPolicy(
   return policy;
 }
 
-export function getProfileLabelPolicy(
+export function getProfileModerationPolicy(
   profile:
     | app.bsky.actor.defs.ProfileView
     | app.bsky.actor.defs.ProfileViewBasic
     | app.bsky.actor.defs.ProfileViewDetailed,
   preferences?: ContentPreferences,
-): LabelPolicy {
+): ModerationPolicy {
   const labels = filterEffectiveLabels(profile.labels ?? []).map(
     ({ val, src }): Label => ({ val, src, isProfile: true }),
   );
-  return resolveLabelPolicy(labels, preferences);
+  return resolveLabelModerationPolicy(labels, preferences);
 }
 
 /** Determines UI treatment for known `com.atproto.label.defs#labelValue` values only. */
-function resolveLabelPolicy(labels: Label[], preferences?: ContentPreferences): LabelPolicy {
+function resolveLabelModerationPolicy(
+  labels: Label[],
+  preferences?: ContentPreferences,
+): ModerationPolicy {
   const mediaLabels = labels.filter((label): label is Label<LabelValMediaWarned> =>
     ["porn", "sexual", "nudity", "graphic-media"].includes(label.val),
   );
@@ -96,7 +97,7 @@ function resolveLabelPolicy(labels: Label[], preferences?: ContentPreferences): 
     return preferences.labels[label.val] ?? "warn";
   };
 
-  const policy: LabelPolicy = {
+  const policy: ModerationPolicy = {
     hidden:
       labels.some((label) => label.val === "!hide") ||
       mediaLabels.some((label) => getMediaPreference(label) === "hide"),
@@ -127,4 +128,8 @@ function filterEffectiveLabels(
   }
 
   return Array.from(bySrcAndVal.values());
+}
+
+function isPostRecord(record: object): record is app.bsky.feed.post.Main {
+  return "$type" in record && record.$type === "app.bsky.feed.post";
 }
