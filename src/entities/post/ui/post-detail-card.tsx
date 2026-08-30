@@ -12,7 +12,7 @@ import {
   MediaWarning,
   HiddenContentNotice,
   ContentWarning,
-} from "#src/shared/ui/content-warning.tsx";
+} from "#src/shared/ui/content-warning/index.ts";
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import { isPostRecord } from "../lib/is-post-record";

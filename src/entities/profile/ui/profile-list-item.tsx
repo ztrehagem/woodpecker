@@ -5,7 +5,7 @@ import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
-import { HiddenContentNotice } from "#src/shared/ui/content-warning.tsx";
+import { HiddenContentNotice } from "#src/shared/ui/content-warning/index.ts";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
 import { FollowProfileButton } from "./follow-profile-button.tsx";

@@ -10,7 +10,7 @@ import {
   MediaWarning,
   HiddenContentNotice,
   ContentWarning,
-} from "#src/shared/ui/content-warning.tsx";
+} from "#src/shared/ui/content-warning/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
