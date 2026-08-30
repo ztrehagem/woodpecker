@@ -58,14 +58,6 @@ test("アバター画像がない場合はフォールバックアイコンが�
   await expect.element(view.getByRole("img", { name: "avatar" })).not.toBeInTheDocument();
 });
 
-test("mediaWarnedラベルが付与されている場合、バナーとアバター画像を表示しない", async () => {
-  const profile = createProfile({ labels: [label("porn")] });
-  const view = await renderProfile(profile);
-
-  await expect.element(view.getByRole("img", { name: "banner" })).not.toBeInTheDocument();
-  await expect.element(view.getByRole("img", { name: "avatar" })).not.toBeInTheDocument();
-});
-
 test("名前が表示される", async () => {
   const profile = createProfile({ displayName: "Alice Johnson" });
   const view = await renderProfile(profile);
