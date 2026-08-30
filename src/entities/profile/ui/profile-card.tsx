@@ -18,9 +18,10 @@ export function ProfileCard({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileViewDetailed;
 }>): React.ReactElement {
-  const hasBanner = profile.banner != null;
-  const hasAvatar = profile.avatar != null;
   const labelPolicy = getProfileLabelPolicy(profile);
+  const canShowMedia = labelPolicy.mediaWarned.length === 0;
+  const hasBanner = canShowMedia && profile.banner != null;
+  const hasAvatar = canShowMedia && profile.avatar != null;
   const isBot = labelPolicy.profileBadges.some((label) => label.val === "bot");
   const hasDescription = profile.description != null && profile.description.length > 0;
   const descriptionRichText = new RichText({ text: profile.description ?? "" });

@@ -43,7 +43,7 @@ export function ProfileListItem({
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-300">
-              {profile.avatar != null ? (
+              {labelPolicy.mediaWarned.length === 0 && profile.avatar != null ? (
                 <img src={profile.avatar} alt="" className="size-full object-cover" />
               ) : (
                 <PersonIcon width={32} height={32} />

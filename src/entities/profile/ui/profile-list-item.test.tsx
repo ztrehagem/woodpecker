@@ -40,6 +40,20 @@ test("botラベルが付与されている場合、Botバッジが表示され�
   await expect.element(view.getByText("Bot")).toBeInTheDocument();
 });
 
+test("mediaWarnedラベルが付与されている場合、アバター画像を表示しない", async () => {
+  const profile = {
+    did: "did:plc:alice",
+    handle: "alice.test",
+    avatar: "https://example.com/avatar.png",
+    labels: [label("porn")],
+  } as app.bsky.actor.defs.ProfileView;
+  const view = await renderWithProviders(<ProfileListItem profile={profile} />, {
+    initialEntries: ["/"],
+  });
+
+  expect(view.container.querySelector("img")).toBeNull();
+});
+
 test("!hideラベルが付与されている場合、非表示の通知が表示される", async () => {
   const profile = {
     did: "did:plc:alice",
