@@ -2,7 +2,30 @@ import { expect, test } from "vitest";
 
 import type { app, com } from "#src/shared/api/lexicons/index.ts";
 
-import { getPostLabelPolicy, getProfileLabelPolicy } from "./label-policy";
+import {
+  getPostLabelPolicy,
+  getProfileLabelPolicy,
+  type Label,
+  type LabelPolicy,
+} from "./label-policy";
+
+function policy(overrides: Partial<LabelPolicy> = {}): LabelPolicy {
+  return {
+    hidden: false,
+    warned: [],
+    mediaWarned: [],
+    profileBadges: [],
+    ...overrides,
+  };
+}
+
+function resolvedLabel<Val extends string>(
+  val: Val,
+  src: Label["src"] = "did:plc:labeler",
+  isProfile = false,
+): Label<Val> {
+  return { val, src, isProfile };
+}
 
 function label(val: string, neg = false): com.atproto.label.defs.Label {
   return {
@@ -35,70 +58,67 @@ function profile(
   } as unknown as app.bsky.actor.defs.ProfileView;
 }
 
-test("returns none policy when there are no labels", () => {
-  expect(getPostLabelPolicy(post(void 0))).toEqual({ policy: "none" });
-  expect(getPostLabelPolicy(post([]))).toEqual({ policy: "none" });
-  expect(getProfileLabelPolicy(profile(void 0))).toEqual({ policy: "none" });
+test("returns an empty policy when there are no labels", () => {
+  expect(getPostLabelPolicy(post(void 0))).toEqual(policy());
+  expect(getPostLabelPolicy(post([]))).toEqual(policy());
+  expect(getProfileLabelPolicy(profile(void 0))).toEqual(policy());
 });
 
 test("detects !hide", () => {
-  expect(getPostLabelPolicy(post([label("!hide")]))).toEqual({ policy: "hidden" });
-  expect(getProfileLabelPolicy(profile([label("!hide")]))).toEqual({ policy: "hidden" });
+  expect(getPostLabelPolicy(post([label("!hide")]))).toEqual(policy({ hidden: true }));
+  expect(getProfileLabelPolicy(profile([label("!hide")]))).toEqual(policy({ hidden: true }));
 });
 
 test("detects !warn", () => {
-  expect(getPostLabelPolicy(post([label("!warn")]))).toEqual({
-    policy: "warned",
-    reasonText: "This content has a content warning.",
-  });
+  expect(getPostLabelPolicy(post([label("!warn")]))).toEqual(
+    policy({ warned: [resolvedLabel("!warn")] }),
+  );
 });
 
-test.each([
-  ["porn", "This media may contain pornography (labeled by a moderation service)."],
-  ["sexual", "This media may contain sexual content (labeled by a moderation service)."],
-  ["nudity", "This media may contain nudity (labeled by a moderation service)."],
-  ["graphic-media", "This media may contain graphic media (labeled by a moderation service)."],
-])("detects media label %s with a distinct reason", (val, expectedReason) => {
-  expect(getPostLabelPolicy(post([label(val)]))).toEqual({
-    policy: "media-warned",
-    reasonText: expectedReason,
-  });
-});
+test.each(["porn", "sexual", "nudity", "graphic-media"] as const)(
+  "detects media label %s",
+  (val) => {
+    expect(getPostLabelPolicy(post([label(val)]))).toEqual(
+      policy({ mediaWarned: [resolvedLabel(val)] }),
+    );
+  },
+);
 
-test("marks the reason as self-labeled when the label source matches the post author", () => {
+test("preserves the source when a post is self-labeled", () => {
   const selfLabel = label("porn");
   selfLabel.src = "did:plc:alice";
 
-  expect(getPostLabelPolicy(post([selfLabel]))).toEqual({
-    policy: "media-warned",
-    reasonText: "This media may contain pornography (self-labeled).",
-  });
+  expect(getPostLabelPolicy(post([selfLabel]))).toEqual(
+    policy({ mediaWarned: [resolvedLabel("porn", "did:plc:alice")] }),
+  );
 });
 
-test("prioritizes media label over generic warn", () => {
-  expect(getPostLabelPolicy(post([label("porn"), label("!warn")]))).toEqual({
-    policy: "media-warned",
-    reasonText: "This media may contain pornography (labeled by a moderation service).",
-  });
+test("collects media and generic warning labels separately", () => {
+  expect(getPostLabelPolicy(post([label("porn"), label("!warn")]))).toEqual(
+    policy({
+      warned: [resolvedLabel("!warn")],
+      mediaWarned: [resolvedLabel("porn")],
+    }),
+  );
 });
 
-test("combines multiple media labels into a single reason", () => {
-  expect(getPostLabelPolicy(post([label("porn"), label("graphic-media")]))).toEqual({
-    policy: "media-warned",
-    reasonText:
-      "This media may contain pornography (labeled by a moderation service), graphic media (labeled by a moderation service).",
-  });
+test("collects multiple media labels", () => {
+  expect(getPostLabelPolicy(post([label("porn"), label("graphic-media")]))).toEqual(
+    policy({
+      mediaWarned: [resolvedLabel("porn"), resolvedLabel("graphic-media")],
+    }),
+  );
 });
 
 test("ignores a label that is negated before it was ever applied", () => {
-  expect(getPostLabelPolicy(post([label("!hide", true)]))).toEqual({ policy: "none" });
+  expect(getPostLabelPolicy(post([label("!hide", true)]))).toEqual(policy());
 });
 
 test("cancels an earlier label when a matching neg label follows", () => {
   const applied = label("!hide");
   const negated = label("!hide", true);
 
-  expect(getPostLabelPolicy(post([applied, negated]))).toEqual({ policy: "none" });
+  expect(getPostLabelPolicy(post([applied, negated]))).toEqual(policy());
 });
 
 test("keeps a label active when the neg label from another source does not match", () => {
@@ -106,7 +126,7 @@ test("keeps a label active when the neg label from another source does not match
   const negated = label("!hide", true);
   negated.src = "did:plc:other-labeler";
 
-  expect(getPostLabelPolicy(post([applied, negated]))).toEqual({ policy: "hidden" });
+  expect(getPostLabelPolicy(post([applied, negated]))).toEqual(policy({ hidden: true }));
 });
 
 test("re-applies a label if it is added again after being negated", () => {
@@ -114,9 +134,9 @@ test("re-applies a label if it is added again after being negated", () => {
   const negated = label("!hide", true);
   const reapplied = label("!hide");
 
-  expect(getPostLabelPolicy(post([applied, negated, reapplied]))).toEqual({ policy: "hidden" });
+  expect(getPostLabelPolicy(post([applied, negated, reapplied]))).toEqual(policy({ hidden: true }));
 });
 
 test("ignores unknown label values", () => {
-  expect(getPostLabelPolicy(post([label("some-custom-label")]))).toEqual({ policy: "none" });
+  expect(getPostLabelPolicy(post([label("some-custom-label")]))).toEqual(policy());
 });
