@@ -3,7 +3,7 @@ import { Dialog } from "@base-ui/react/dialog";
 import React from "react";
 import { Link } from "react-router";
 
-import { CaretRightIcon, InfoIcon } from "#src/shared/ui/icon/index.ts";
+import { CaretRightIcon, CloseIcon, InfoIcon } from "#src/shared/ui/icon/index.ts";
 
 import type { app } from "../api/lexicons";
 import type { Label, LabelValMediaWarned, LabelValWarned } from "../lib/label-policy";
@@ -87,15 +87,20 @@ function LabelListDialog({
         className="-my-2 ml-auto flex shrink-0 cursor-pointer items-center p-2 hover:underline"
         render={(props) => <span {...props} />}
       >
-        Detail
+        Labels
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-(--index-overlay)">
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop/75" />
         <Dialog.Viewport className="fixed inset-0 flex items-center justify-center p-6">
-          <Dialog.Popup className="w-full max-w-sm">
+          <Dialog.Popup className="max-w-column-main">
             <Card>
               <div className="flex flex-col gap-4 px-5 py-4">
-                <Dialog.Title className="text-base font-bold">Labels</Dialog.Title>
+                <div className="flex justify-between">
+                  <Dialog.Title className="text-base font-bold">Labels</Dialog.Title>
+                  <Dialog.Close className="cursor-pointer text-fg-muted">
+                    <CloseIcon />
+                  </Dialog.Close>
+                </div>
                 <LabelList labels={labels} author={author} />
               </div>
             </Card>
@@ -119,7 +124,7 @@ function LabelList({
   author: ProfileView;
 }): React.ReactElement {
   return (
-    <ul className="flex flex-wrap items-center gap-1">
+    <ul className="flex flex-col items-start gap-1">
       {labels.map((label) => (
         <LabelItem key={label.val} label={label} author={author} />
       ))}
@@ -129,13 +134,13 @@ function LabelList({
 
 function LabelItem({ label, author }: { label: Label; author: ProfileView }): React.ReactElement {
   return (
-    <li className="rounded-sm bg-highlight px-2 py-1 text-xs text-fg-muted">
+    <li className="rounded-sm bg-highlight px-2 py-1 text-sm text-fg-muted">
       {label.val} {label.isProfile && "(Account) "}
       {label.src == author.did ? (
         "(self-labelled)"
       ) : (
         <>
-          (by <Link to={`/profile/${label.src}`}>{label.src}</Link>)
+          (labelled by <Link to={`/profile/${label.src}`}>{label.src}</Link>)
         </>
       )}
     </li>
