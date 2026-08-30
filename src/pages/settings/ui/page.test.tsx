@@ -6,9 +6,17 @@ import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { Page } from "./page.tsx";
 
-function preferences(adultContentEnabled: boolean): BskyPreferences {
+function preferences(
+  adultContentEnabled: boolean,
+  labels: Record<string, "hide" | "warn" | "ignore"> = {
+    porn: "hide",
+    sexual: "warn",
+    nudity: "ignore",
+    "graphic-media": "warn",
+  },
+): BskyPreferences {
   return {
-    moderationPrefs: { adultContentEnabled },
+    moderationPrefs: { adultContentEnabled, labels },
   } as BskyPreferences;
 }
 
@@ -34,4 +42,26 @@ test("成人向けコンテンツの設定を保存する", async () => {
   await toggle.click();
 
   expect(setAdultContentEnabled).toHaveBeenCalledWith(true);
+});
+
+test("ラベルごとの表示設定を保存する", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const setContentLabelPref = vi.spyOn(session.agent, "setContentLabelPref").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+  const pornography = view.getByLabelText("Pornography");
+
+  await expect.element(pornography).toHaveValue("hide");
+  await pornography.selectOptions("ignore");
+
+  expect(setContentLabelPref).toHaveBeenCalledWith("porn", "ignore");
+});
+
+test("成人向けコンテンツが無効なときはラベルごとの設定を変更できない", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(false));
+
+  const view = await renderWithProviders(<Page />, { session });
+
+  await expect.element(view.getByLabelText("Pornography")).toBeDisabled();
 });

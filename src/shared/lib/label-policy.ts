@@ -1,4 +1,4 @@
-import type { Did } from "@atproto/api";
+import type { Did, ModerationPrefs } from "@atproto/api";
 
 import type { app, com } from "../api/lexicons";
 
@@ -28,9 +28,11 @@ export type LabelValWarned = "!warn";
 export type LabelValMediaWarned = "porn" | "sexual" | "nudity" | "graphic-media";
 export type LabelValProfileBadge = "bot";
 
+type ContentPreferences = Pick<ModerationPrefs, "adultContentEnabled" | "labels">;
+
 export function getPostLabelPolicy(
   post: app.bsky.feed.defs.PostView,
-  adultContentEnabled = false,
+  preferences?: ContentPreferences,
 ): LabelPolicy {
   const labels = [
     ...filterEffectiveLabels(post.author.labels ?? []).map(
@@ -40,7 +42,7 @@ export function getPostLabelPolicy(
       ({ val, src }): Label => ({ val, src, isProfile: false }),
     ),
   ];
-  return resolveLabelPolicy(labels, adultContentEnabled);
+  return resolveLabelPolicy(labels, preferences);
 }
 
 export function getProfileLabelPolicy(
@@ -48,24 +50,35 @@ export function getProfileLabelPolicy(
     | app.bsky.actor.defs.ProfileView
     | app.bsky.actor.defs.ProfileViewBasic
     | app.bsky.actor.defs.ProfileViewDetailed,
-  adultContentEnabled = false,
+  preferences?: ContentPreferences,
 ): LabelPolicy {
   const labels = filterEffectiveLabels(profile.labels ?? []).map(
     ({ val, src }): Label => ({ val, src, isProfile: true }),
   );
-  return resolveLabelPolicy(labels, adultContentEnabled);
+  return resolveLabelPolicy(labels, preferences);
 }
 
 /** Determines UI treatment for known `com.atproto.label.defs#labelValue` values only. */
-function resolveLabelPolicy(labels: Label[], adultContentEnabled: boolean): LabelPolicy {
+function resolveLabelPolicy(labels: Label[], preferences?: ContentPreferences): LabelPolicy {
+  const mediaLabels = labels.filter((label): label is Label<LabelValMediaWarned> =>
+    ["porn", "sexual", "nudity", "graphic-media"].includes(label.val),
+  );
+  const getMediaPreference = (label: Label<LabelValMediaWarned>) => {
+    if (preferences == null) {
+      return "warn";
+    }
+    if (!preferences.adultContentEnabled) {
+      return "hide";
+    }
+    return preferences.labels[label.val] ?? "warn";
+  };
+
   const policy: LabelPolicy = {
-    hidden: labels.some((label) => label.val === "!hide"),
+    hidden:
+      labels.some((label) => label.val === "!hide") ||
+      mediaLabels.some((label) => getMediaPreference(label) === "hide"),
     warned: labels.filter((label): label is Label<LabelValWarned> => label.val === "!warn"),
-    mediaWarned: adultContentEnabled
-      ? []
-      : labels.filter((label): label is Label<LabelValMediaWarned> =>
-          ["porn", "sexual", "nudity", "graphic-media"].includes(label.val),
-        ),
+    mediaWarned: mediaLabels.filter((label) => getMediaPreference(label) === "warn"),
     profileBadges: labels.filter(
       (label): label is Label<LabelValProfileBadge> => label.val === "bot",
     ),

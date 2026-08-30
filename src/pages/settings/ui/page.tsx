@@ -1,3 +1,4 @@
+import type { LabelPreference } from "@atproto/api";
 import { Switch, Toast } from "@base-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useOptimistic, useTransition } from "react";
@@ -7,6 +8,37 @@ import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
+
+const ADULT_CONTENT_LABELS = [
+  ["porn", "Pornography"],
+  ["sexual", "Sexually suggestive"],
+  ["nudity", "Non-sexual nudity"],
+  ["graphic-media", "Graphic media"],
+] as const;
+
+const LABEL_PREFERENCES = [
+  ["hide", "Hide"],
+  ["warn", "Warn"],
+  ["ignore", "Show"],
+] as const satisfies [LabelPreference, string][];
+
+type AdultContentLabel = (typeof ADULT_CONTENT_LABELS)[number][0];
+
+function getLabelPreference(
+  labels: Record<string, LabelPreference>,
+  label: AdultContentLabel,
+): LabelPreference {
+  switch (label) {
+    case "porn":
+      return labels.porn ?? "warn";
+    case "sexual":
+      return labels.sexual ?? "warn";
+    case "nudity":
+      return labels.nudity ?? "warn";
+    case "graphic-media":
+      return labels["graphic-media"] ?? "warn";
+  }
+}
 
 export function Page(): React.ReactElement {
   const session = useAssertSession();
@@ -24,6 +56,22 @@ export function Page(): React.ReactElement {
 
       try {
         await session.agent.setAdultContentEnabled(enabled);
+        await queryClient.invalidateQueries({ queryKey: preferencesQueryKey });
+        toastManager.add({ title: "Content settings saved" });
+      } catch (updateError) {
+        toastManager.add({
+          title: "Failed to save content settings",
+          description: updateError instanceof Error ? updateError.message : null,
+          type: "error",
+        });
+      }
+    });
+  };
+
+  const updateLabelPreference = (label: string, preference: LabelPreference): void => {
+    startSavingTransition(async () => {
+      try {
+        await session.agent.setContentLabelPref(label, preference);
         await queryClient.invalidateQueries({ queryKey: preferencesQueryKey });
         toastManager.add({ title: "Content settings saved" });
       } catch (updateError) {
@@ -65,6 +113,31 @@ export function Page(): React.ReactElement {
             >
               <Switch.Thumb className="size-5 rounded-full bg-white transition-transform data-checked:translate-x-5" />
             </Switch.Root>
+          </div>
+
+          <div className="mt-5 divide-y divide-highlight border-t border-highlight">
+            {ADULT_CONTENT_LABELS.map(([label, name]) => (
+              <div key={label} className="flex items-center justify-between gap-6 py-4">
+                <label htmlFor={`content-label-${label}`} className="text-sm font-medium">
+                  {name}
+                </label>
+                <select
+                  id={`content-label-${label}`}
+                  value={getLabelPreference(preferences.moderationPrefs.labels, label)}
+                  disabled={!optimisticEnabled || isSaving}
+                  onChange={(event) =>
+                    updateLabelPreference(label, event.target.value as LabelPreference)
+                  }
+                  className="h-9 min-w-28 rounded-md border border-highlight bg-filling px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {LABEL_PREFERENCES.map(([value, name]) => (
+                    <option key={value} value={value}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
           </div>
         </section>
       </Card>

@@ -12,5 +12,5 @@ export function useProfileLabelPolicy(profile: ProfileView): LabelPolicy {
   const session = useAssertSession();
   const { data: preferences } = usePreferencesQuery(session);
 
-  return getProfileLabelPolicy(profile, preferences?.moderationPrefs.adultContentEnabled);
+  return getProfileLabelPolicy(profile, preferences?.moderationPrefs);
 }
