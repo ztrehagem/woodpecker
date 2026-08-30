@@ -1,6 +1,6 @@
 import { AtUri } from "@atproto/api";
 import { Toast } from "@base-ui/react";
-import React, { useState, useTransition } from "react";
+import React, { startTransition, useState } from "react";
 import { Link } from "react-router";
 
 import { app } from "#src/shared/api/lexicons/index.ts";
@@ -34,12 +34,12 @@ export function ModeratedAccountsSettings({
   const invalidateBlockedAccountsQuery = useInvalidateBlockedAccountsQuery();
   const toastManager = Toast.useToastManager();
   const [pendingDid, setPendingDid] = useState<string | null>(null);
-  const [isRemoving, startRemovingTransition] = useTransition();
+  const isRemoving = pendingDid != null;
   useGlobalLoadingIndicatorEffect(mutedQuery.isFetching || blockedQuery.isFetching);
 
   const removeMute = (profile: Profile): void => {
     setPendingDid(profile.did);
-    startRemovingTransition(async () => {
+    startTransition(async () => {
       try {
         await session.client.call(app.bsky.graph.unmuteActor, { actor: profile.did });
         await invalidateMutedAccountsQuery();
@@ -58,7 +58,7 @@ export function ModeratedAccountsSettings({
 
   const removeBlock = (profile: Profile): void => {
     setPendingDid(profile.did);
-    startRemovingTransition(async () => {
+    startTransition(async () => {
       try {
         if (profile.viewer?.blocking == null) {
           throw new Error("The block record could not be found.");

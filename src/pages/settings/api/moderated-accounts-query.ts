@@ -10,8 +10,10 @@ import { app } from "#src/shared/api/lexicons/index.ts";
 import type { Session } from "#src/shared/auth/index.ts";
 
 const moderatedAccountsQueryKeys = {
-  mutes: (limit: number) => ["settings", "muted-accounts", limit] as const,
-  blocks: (limit: number) => ["settings", "blocked-accounts", limit] as const,
+  mutesAll: ["settings", "muted-accounts"] as const,
+  mutes: (limit: number) => [...moderatedAccountsQueryKeys.mutesAll, limit] as const,
+  blocksAll: ["settings", "blocked-accounts"] as const,
+  blocks: (limit: number) => [...moderatedAccountsQueryKeys.blocksAll, limit] as const,
 };
 
 type PageParam = string | null;
@@ -60,7 +62,7 @@ export function useInvalidateMutedAccountsQuery(): () => Promise<void> {
   const queryClient = useQueryClient();
 
   return async () => {
-    await queryClient.invalidateQueries({ queryKey: moderatedAccountsQueryKeys.mutes(50) });
+    await queryClient.invalidateQueries({ queryKey: moderatedAccountsQueryKeys.mutesAll });
   };
 }
 
@@ -68,6 +70,6 @@ export function useInvalidateBlockedAccountsQuery(): () => Promise<void> {
   const queryClient = useQueryClient();
 
   return async () => {
-    await queryClient.invalidateQueries({ queryKey: moderatedAccountsQueryKeys.blocks(50) });
+    await queryClient.invalidateQueries({ queryKey: moderatedAccountsQueryKeys.blocksAll });
   };
 }
