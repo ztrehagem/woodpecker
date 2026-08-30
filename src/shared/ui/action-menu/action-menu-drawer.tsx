@@ -17,7 +17,7 @@ export function ActionMenuDrawer({
       <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
         {trigger}
 
-        <Drawer.Portal>
+        <Drawer.Portal className="relative z-(--index-overlay)">
           <Drawer.Backdrop className={clsx("fixed inset-0 bg-backdrop/75", css.backdrop)} />
 
           <Drawer.Viewport className="fixed inset-0 flex items-end justify-center">
