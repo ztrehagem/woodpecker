@@ -1,1 +1,1 @@
-export { preferencesQueryKey, usePreferencesQuery } from "./preferences-query.ts";
+export { useInvalidatePreferencesQuery, usePreferencesQuery } from "./preferences-query.ts";

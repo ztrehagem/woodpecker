@@ -1,9 +1,8 @@
 import type { LabelPreference } from "@atproto/api";
 import { Switch, Toast } from "@base-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useOptimistic, useTransition } from "react";
 
-import { preferencesQueryKey, usePreferencesQuery } from "#src/shared/api/index.ts";
+import { useInvalidatePreferencesQuery, usePreferencesQuery } from "#src/shared/api/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
@@ -42,7 +41,7 @@ function getLabelPreference(
 
 export function Page(): React.ReactElement {
   const session = useAssertSession();
-  const queryClient = useQueryClient();
+  const invalidatePreferencesQuery = useInvalidatePreferencesQuery();
   const toastManager = Toast.useToastManager();
   const { data: preferences, error, isFetching } = usePreferencesQuery(session);
   const adultContentEnabled = preferences?.moderationPrefs.adultContentEnabled ?? false;
@@ -56,7 +55,7 @@ export function Page(): React.ReactElement {
 
       try {
         await session.agent.setAdultContentEnabled(enabled);
-        await queryClient.invalidateQueries({ queryKey: preferencesQueryKey });
+        await invalidatePreferencesQuery();
         toastManager.add({ title: "Content settings saved" });
       } catch (updateError) {
         toastManager.add({
@@ -72,7 +71,7 @@ export function Page(): React.ReactElement {
     startSavingTransition(async () => {
       try {
         await session.agent.setContentLabelPref(label, preference);
-        await queryClient.invalidateQueries({ queryKey: preferencesQueryKey });
+        await invalidatePreferencesQuery();
         toastManager.add({ title: "Content settings saved" });
       } catch (updateError) {
         toastManager.add({
