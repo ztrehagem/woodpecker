@@ -8,6 +8,7 @@ import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-i
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 import { ContentVisibilitySettings } from "./content-visibility-settings.tsx";
+import { ModeratedAccountsSettings } from "./moderated-accounts-settings.tsx";
 import { MutedWordsSettings } from "./muted-words-settings.tsx";
 
 export function Page(): React.ReactElement {
@@ -122,5 +123,10 @@ export function Page(): React.ReactElement {
     content = <LoadingFallback />;
   }
 
-  return <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">{content}</div>;
+  return (
+    <div className="flex flex-col gap-2 py-2 tablet:gap-4 tablet:py-4">
+      {content}
+      <ModeratedAccountsSettings session={session} />
+    </div>
+  );
 }
