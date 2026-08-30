@@ -54,14 +54,19 @@ export function Page(): React.ReactElement {
     });
   };
 
-  const addMutedWord = (value: string, target: "content" | "tag"): void => {
+  const addMutedWord = (
+    value: string,
+    target: "content" | "tag",
+    actorTarget: "all" | "exclude-following",
+    expiresAt?: string,
+  ): void => {
     startSavingTransition(async () => {
       try {
         await session.agent.addMutedWord({
           value,
           targets: [target],
-          actorTarget: "all",
-          expiresAt: void 0,
+          actorTarget,
+          expiresAt,
         });
         await invalidatePreferencesQuery();
         toastManager.add({ title: "Muted word saved" });
