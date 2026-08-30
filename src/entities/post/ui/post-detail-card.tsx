@@ -15,7 +15,7 @@ import {
 import { CaretRightIcon } from "#src/shared/ui/icon/index.ts";
 
 import { isPostRecord } from "../lib/is-post-record";
-import { usePostLabelPolicy } from "../model/use-post-label-policy";
+import { usePostModerationPolicy } from "../model/use-post-moderation-policy";
 import { EmbedView } from "./embeds/embed-view";
 import { PostActionBar } from "./post-action/post-action-bar";
 import { PostRichText } from "./post-rich-text";
@@ -26,18 +26,24 @@ export function PostDetailCard({
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
-  const labelPolicy = usePostLabelPolicy(postView);
+  const moderationPolicy = usePostModerationPolicy(postView);
   const record = postView.record;
 
   if (!isPostRecord(record)) {
     return <></>;
   }
 
-  if (labelPolicy.hidden) {
+  if (moderationPolicy.hidden) {
     return (
       <Card>
         <div className="p-3 tablet:px-5 tablet:py-4">
-          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+          <HiddenContentNotice
+            reason={
+              moderationPolicy.muted
+                ? "This post has been hidden because it contains a muted word or hashtag."
+                : "This post has been hidden due to a moderation label."
+            }
+          />
         </div>
       </Card>
     );
@@ -73,7 +79,7 @@ export function PostDetailCard({
                 {displayName}
               </Link>
 
-              <ProfileBadges labels={labelPolicy.profileBadges} />
+              <ProfileBadges labels={moderationPolicy.profileBadges} />
             </div>
 
             <div className="text-xs wrap-anywhere text-fg-muted">@{postView.author.handle}</div>
@@ -81,8 +87,8 @@ export function PostDetailCard({
         </div>
 
         <div className="mt-2 flex flex-col gap-2">
-          {labelPolicy.warned.length > 0 ? (
-            <ContentWarning labels={labelPolicy.warned} author={postView.author}>
+          {moderationPolicy.warned.length > 0 ? (
+            <ContentWarning labels={moderationPolicy.warned} author={postView.author}>
               {richTextView}
 
               {embedView}
@@ -92,8 +98,8 @@ export function PostDetailCard({
               {richTextView}
 
               {embedView &&
-                (labelPolicy.mediaWarned.length > 0 ? (
-                  <MediaWarning labels={labelPolicy.mediaWarned} author={postView.author}>
+                (moderationPolicy.mediaWarned.length > 0 ? (
+                  <MediaWarning labels={moderationPolicy.mediaWarned} author={postView.author}>
                     {embedView}
                   </MediaWarning>
                 ) : (

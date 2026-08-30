@@ -9,7 +9,7 @@ import Card from "#src/shared/ui/card.tsx";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
-import { useProfileLabelPolicy } from "../model/use-profile-label-policy";
+import { useProfileModerationPolicy } from "../model/use-profile-moderation-policy";
 import { BotBadge } from "./bot-badge";
 import { FollowProfileButton } from "./follow-profile-button";
 
@@ -18,10 +18,10 @@ export function ProfileCard({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileViewDetailed;
 }>): React.ReactElement {
-  const labelPolicy = useProfileLabelPolicy(profile);
+  const moderationPolicy = useProfileModerationPolicy(profile);
   const hasBanner = profile.banner != null;
   const hasAvatar = profile.avatar != null;
-  const isBot = labelPolicy.profileBadges.some((label) => label.val === "bot");
+  const isBot = moderationPolicy.profileBadges.some((label) => label.val === "bot");
   const hasDescription = profile.description != null && profile.description.length > 0;
   const descriptionRichText = new RichText({ text: profile.description ?? "" });
   descriptionRichText.detectFacetsWithoutResolution();

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
-import type { Label, LabelValMediaWarned, LabelValWarned } from "#src/shared/lib/label-policy.ts";
+import type {
+  Label,
+  LabelValMediaWarned,
+  LabelValWarned,
+} from "#src/shared/lib/moderation-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { InfoIcon } from "#src/shared/ui/icon/index.ts";
 import { NakedButton } from "#src/shared/ui/naked-button.tsx";

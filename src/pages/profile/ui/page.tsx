@@ -7,7 +7,7 @@ import {
   ProfileCard,
   ProfileCardSkeleton,
   useAuthorFeedQuery,
-  useProfileLabelPolicy,
+  useProfileModerationPolicy,
   useProfileQuery,
 } from "#src/entities/profile/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
@@ -50,9 +50,9 @@ function ResolvedProfileBlock({
   profile: app.bsky.actor.defs.ProfileViewDetailed;
   actor: AtIdentifierString;
 }): React.ReactElement {
-  const labelPolicy = useProfileLabelPolicy(profile);
+  const moderationPolicy = useProfileModerationPolicy(profile);
 
-  if (labelPolicy.hidden) {
+  if (moderationPolicy.hidden) {
     return (
       <Card>
         <div className="p-3 tablet:px-5 tablet:py-4">
@@ -70,8 +70,8 @@ function ResolvedProfileBlock({
     </div>
   );
 
-  return labelPolicy.warned.length > 0 ? (
-    <ProfileWarning labels={labelPolicy.warned} author={profile}>
+  return moderationPolicy.warned.length > 0 ? (
+    <ProfileWarning labels={moderationPolicy.warned} author={profile}>
       {content}
     </ProfileWarning>
   ) : (

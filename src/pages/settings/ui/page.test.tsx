@@ -16,8 +16,8 @@ function preferences(
   },
 ): BskyPreferences {
   return {
-    moderationPrefs: { adultContentEnabled, labels },
-  } as BskyPreferences;
+    moderationPrefs: { adultContentEnabled, labels, mutedWords: [] },
+  } as unknown as BskyPreferences;
 }
 
 test("成人向けコンテンツの現在の設定を表示する", async () => {
@@ -65,4 +65,84 @@ test("成人向けコンテンツが無効なときはラベルごとの設定�
   const view = await renderWithProviders(<Page />, { session });
 
   await expect.element(view.getByLabelText("Pornography")).toBeDisabled();
+});
+
+test("ミュートワードを保存する", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const addMutedWord = vi.spyOn(session.agent, "addMutedWord").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+
+  await view.getByLabelText("Word to mute").fill("spoiler");
+  await view.getByRole("button", { name: "Add" }).click();
+
+  expect(addMutedWord).toHaveBeenCalledWith({
+    value: "spoiler",
+    targets: ["content"],
+    actorTarget: "all",
+    expiresAt: void 0,
+  });
+});
+
+test("ミュートするハッシュタグを保存する", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const addMutedWord = vi.spyOn(session.agent, "addMutedWord").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+
+  await view.getByRole("radio", { name: "Hashtag" }).click();
+  await view.getByLabelText("Hashtag to mute").fill("#news");
+  await view.getByRole("button", { name: "Add" }).click();
+
+  expect(addMutedWord).toHaveBeenCalledWith(
+    expect.objectContaining({ value: "news", targets: ["tag"] }),
+  );
+});
+
+test("フォローしていないユーザーを対象にミュートワードを保存する", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const addMutedWord = vi.spyOn(session.agent, "addMutedWord").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+
+  await view.getByRole("radio", { name: "People you don't follow" }).click();
+  await view.getByLabelText("Word to mute").fill("spoiler");
+  await view.getByRole("button", { name: "Add" }).click();
+
+  expect(addMutedWord).toHaveBeenCalledWith(
+    expect.objectContaining({ actorTarget: "exclude-following" }),
+  );
+});
+
+test("24時間の有効期限でミュートワードを保存する", async () => {
+  const session = createMockSession();
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const addMutedWord = vi.spyOn(session.agent, "addMutedWord").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+
+  await view.getByRole("radio", { name: "24 hours" }).click();
+  await view.getByLabelText("Word to mute").fill("spoiler");
+  const earliestExpiration = Date.now() + 24 * 60 * 60 * 1000;
+  await view.getByRole("button", { name: "Add" }).click();
+  const latestExpiration = Date.now() + 24 * 60 * 60 * 1000;
+
+  const expiresAt = addMutedWord.mock.calls[0]?.[0].expiresAt;
+  expect(expiresAt).toBeDefined();
+  expect(new Date(expiresAt ?? 0).getTime()).toBeGreaterThanOrEqual(earliestExpiration);
+  expect(new Date(expiresAt ?? 0).getTime()).toBeLessThanOrEqual(latestExpiration);
+});
+
+test("ミュートワードを削除する", async () => {
+  const session = createMockSession();
+  const currentPreferences = preferences(true);
+  currentPreferences.moderationPrefs.mutedWords = [
+    { id: "1", value: "spoiler", targets: ["content"], actorTarget: "all" },
+  ];
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(currentPreferences);
+  const removeMutedWords = vi.spyOn(session.agent, "removeMutedWords").mockResolvedValue();
+  const view = await renderWithProviders(<Page />, { session });
+
+  await view.getByRole("button", { name: "Remove spoiler" }).click();
+
+  expect(removeMutedWords).toHaveBeenCalledWith([currentPreferences.moderationPrefs.mutedWords[0]]);
 });

@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { Label, LabelValProfileBadge } from "#src/shared/lib/label-policy.ts";
+import type { Label, LabelValProfileBadge } from "#src/shared/lib/moderation-policy.ts";
 
 import { BotBadge } from "./bot-badge";
 
