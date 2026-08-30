@@ -127,7 +127,7 @@ function ContentLabelPreferenceSelect({
       </Select.Trigger>
 
       <Select.Portal className="relative z-(--index-overlay)">
-        <Select.Positioner className="z-(--index-popover) outline-none" sideOffset={4}>
+        <Select.Positioner className="outline-none" sideOffset={4}>
           <Select.Popup className="min-w-(--anchor-width) overflow-hidden rounded-md border border-highlight bg-filling py-1 shadow-lg transition-[transform,opacity] outline-none data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0">
             <Select.List>
               {LABEL_PREFERENCES.map(([value, name]) => (
