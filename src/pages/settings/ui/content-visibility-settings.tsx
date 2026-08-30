@@ -137,7 +137,7 @@ function ContentLabelPreferenceSelect({
                   className="grid cursor-pointer grid-cols-[1rem_1fr] items-center gap-2 px-3 py-2 text-sm outline-none select-none data-highlighted:bg-highlight"
                 >
                   <Select.ItemIndicator className="text-xs">
-                    <CheckIcon className="size-4" />
+                    <CheckIcon className="size-4" aria-hidden="true" />
                   </Select.ItemIndicator>
                   <Select.ItemText className="col-start-2">{name}</Select.ItemText>
                 </Select.Item>
