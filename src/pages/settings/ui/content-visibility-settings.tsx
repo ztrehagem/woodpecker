@@ -71,7 +71,7 @@ export function ContentVisibilitySettings({
             checked={adultContentEnabled}
             disabled={isSaving}
             onCheckedChange={onAdultContentEnabledChange}
-            className="flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full bg-highlight p-1 transition-colors disabled:cursor-wait disabled:opacity-60 data-checked:bg-sky-500"
+            className="flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full bg-highlight p-1 transition-colors disabled:cursor-wait disabled:opacity-60 data-checked:bg-link"
           >
             <Switch.Thumb className="size-5 rounded-full bg-white transition-transform data-checked:translate-x-5" />
           </Switch.Root>
