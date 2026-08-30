@@ -7,11 +7,11 @@ import {
   ProfileCard,
   ProfileCardSkeleton,
   useAuthorFeedQuery,
+  useProfileLabelPolicy,
   useProfileQuery,
 } from "#src/entities/profile/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useAssertSession } from "#src/shared/auth/index.ts";
-import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { HiddenContentNotice, ProfileWarning } from "#src/shared/ui/content-warning/index.ts";
 import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-indicator/index.ts";
@@ -35,38 +35,48 @@ function ProfileBlock({ actor }: { actor: AtIdentifierString }): React.ReactElem
   useGlobalLoadingIndicatorEffect(isFetching);
 
   if (profile) {
-    const labelPolicy = getProfileLabelPolicy(profile);
-
-    if (labelPolicy.hidden) {
-      return (
-        <Card>
-          <div className="p-3 tablet:px-5 tablet:py-4">
-            <HiddenContentNotice reason="This account has been hidden due to a moderation label." />
-          </div>
-        </Card>
-      );
-    }
-
-    const content = (
-      <div className="flex flex-col gap-2 tablet:gap-4">
-        <ProfileCard profile={profile} />
-        {profile.pinnedPost && <PinnedCard uri={profile.pinnedPost.uri} />}
-        <FeedBlock actor={actor} />
-      </div>
-    );
-
-    return labelPolicy.warned.length > 0 ? (
-      <ProfileWarning labels={labelPolicy.warned} author={profile}>
-        {content}
-      </ProfileWarning>
-    ) : (
-      content
-    );
-  } else if (error) {
+    return <ResolvedProfileBlock profile={profile} actor={actor} />;
+  }
+  if (error) {
     return <p className="text-fg-danger">{error.message}</p>;
   }
-
   return <ProfileCardSkeleton />;
+}
+
+function ResolvedProfileBlock({
+  profile,
+  actor,
+}: {
+  profile: app.bsky.actor.defs.ProfileViewDetailed;
+  actor: AtIdentifierString;
+}): React.ReactElement {
+  const labelPolicy = useProfileLabelPolicy(profile);
+
+  if (labelPolicy.hidden) {
+    return (
+      <Card>
+        <div className="p-3 tablet:px-5 tablet:py-4">
+          <HiddenContentNotice reason="This account has been hidden due to a moderation label." />
+        </div>
+      </Card>
+    );
+  }
+
+  const content = (
+    <div className="flex flex-col gap-2 tablet:gap-4">
+      <ProfileCard profile={profile} />
+      {profile.pinnedPost && <PinnedCard uri={profile.pinnedPost.uri} />}
+      <FeedBlock actor={actor} />
+    </div>
+  );
+
+  return labelPolicy.warned.length > 0 ? (
+    <ProfileWarning labels={labelPolicy.warned} author={profile}>
+      {content}
+    </ProfileWarning>
+  ) : (
+    content
+  );
 }
 
 function PinnedCard({ uri }: { uri: AtUriString }): React.ReactElement {

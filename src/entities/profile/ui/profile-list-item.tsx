@@ -3,11 +3,11 @@ import { Link } from "react-router";
 
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
-import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import { HiddenContentNotice, ProfileWarning } from "#src/shared/ui/content-warning/index.ts";
 import { PersonIcon } from "#src/shared/ui/icon/index.ts";
 
+import { useProfileLabelPolicy } from "../model/use-profile-label-policy";
 import { FollowProfileButton } from "./follow-profile-button.tsx";
 import { ProfileBadges } from "./profile-badges.tsx";
 
@@ -16,7 +16,7 @@ export function ProfileListItem({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileView;
 }>): React.ReactElement {
-  const labelPolicy = getProfileLabelPolicy(profile);
+  const labelPolicy = useProfileLabelPolicy(profile);
 
   if (labelPolicy.hidden) {
     return (
@@ -43,7 +43,7 @@ export function ProfileListItem({
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-300">
-              {profile.avatar != null ? (
+              {labelPolicy.mediaWarned.length === 0 && profile.avatar != null ? (
                 <img src={profile.avatar} alt="" className="size-full object-cover" />
               ) : (
                 <PersonIcon width={32} height={32} />

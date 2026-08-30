@@ -4,7 +4,6 @@ import React from "react";
 import { ProfileBadges } from "#src/entities/profile/@x/post.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
-import { getPostLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
 import {
   MediaWarning,
@@ -14,6 +13,7 @@ import {
 import Tooltip from "#src/shared/ui/tooltip.tsx";
 
 import { isPostRecord } from "../lib/is-post-record";
+import { usePostLabelPolicy } from "../model/use-post-label-policy";
 import { EmbedView } from "./embeds/embed-view";
 import { PostRichText } from "./post-rich-text";
 import { timeAgo } from "./time-ago";
@@ -23,13 +23,12 @@ export function PostPreviewCard({
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
+  const labelPolicy = usePostLabelPolicy(postView);
   const record = postView.record;
 
   if (!isPostRecord(record)) {
     return <></>;
   }
-
-  const labelPolicy = getPostLabelPolicy(postView);
 
   if (labelPolicy.hidden) {
     return (

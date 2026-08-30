@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import type { app } from "#src/shared/api/lexicons/index.ts";
 import { useSignOut } from "#src/shared/auth/index.ts";
 import { AlertDialog } from "#src/shared/ui/alert-dialog.tsx";
-import { AccountCircleIcon, LogoutIcon } from "#src/shared/ui/icon/index.ts";
+import { AccountCircleIcon, LogoutIcon, SettingsIcon } from "#src/shared/ui/icon/index.ts";
 
 export function MyMenu({
   profile,
@@ -48,6 +48,14 @@ export function MyMenu({
               >
                 <AccountCircleIcon />
                 Profile
+              </Menu.Item>
+
+              <Menu.Item
+                className={itemClassName}
+                render={(props) => <Link to="/settings" {...props} />}
+              >
+                <SettingsIcon />
+                Settings
               </Menu.Item>
 
               <Menu.Item
