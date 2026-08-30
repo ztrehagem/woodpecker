@@ -12,6 +12,7 @@ import {
 function policy(overrides: Partial<LabelPolicy> = {}): LabelPolicy {
   return {
     hidden: false,
+    muted: false,
     warned: [],
     mediaWarned: [],
     profileBadges: [],
@@ -42,7 +43,17 @@ function post(labels: com.atproto.label.defs.Label[] | undefined): app.bsky.feed
     uri: "at://did:plc:alice/app.bsky.feed.post/1",
     cid: "cid",
     author: { did: "did:plc:alice", handle: "alice.test" },
-    record: {},
+    record: {
+      $type: "app.bsky.feed.post",
+      text: "hello muted phrase #quiettag",
+      createdAt: "2024-01-01T00:00:00.000Z",
+      facets: [
+        {
+          index: { byteStart: 19, byteEnd: 28 },
+          features: [{ $type: "app.bsky.richtext.facet#tag", tag: "quiettag" }],
+        },
+      ],
+    },
     indexedAt: "2024-01-01T00:00:00.000Z",
     labels,
   } as unknown as app.bsky.feed.defs.PostView;
@@ -73,6 +84,43 @@ test("detects !warn", () => {
   expect(getPostLabelPolicy(post([label("!warn")]))).toEqual(
     policy({ warned: [resolvedLabel("!warn")] }),
   );
+});
+
+const contentPreferences = {
+  adultContentEnabled: true,
+  labels: {},
+  mutedWords: [],
+};
+
+test("hides a post containing a muted word", () => {
+  expect(
+    getPostLabelPolicy(post([]), {
+      ...contentPreferences,
+      mutedWords: [{ value: "muted phrase", targets: ["content"], actorTarget: "all" }],
+    }),
+  ).toEqual(policy({ hidden: true, muted: true }));
+});
+
+test("hides a post containing a muted hashtag", () => {
+  expect(
+    getPostLabelPolicy(post([]), {
+      ...contentPreferences,
+      mutedWords: [{ value: "quiettag", targets: ["tag"], actorTarget: "all" }],
+    }),
+  ).toEqual(policy({ hidden: true, muted: true }));
+});
+
+test("does not hide the viewer's own post", () => {
+  expect(
+    getPostLabelPolicy(
+      post([]),
+      {
+        ...contentPreferences,
+        mutedWords: [{ value: "muted phrase", targets: ["content"], actorTarget: "all" }],
+      },
+      "did:plc:alice",
+    ),
+  ).toEqual(policy());
 });
 
 test.each(["porn", "sexual", "nudity", "graphic-media"] as const)(

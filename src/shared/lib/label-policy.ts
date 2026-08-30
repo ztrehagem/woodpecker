@@ -1,4 +1,6 @@
-import type { Did, ModerationPrefs } from "@atproto/api";
+import { hasMutedWord, type Did, type ModerationPrefs } from "@atproto/api";
+
+import { isPostRecord } from "#src/entities/post/index.ts";
 
 import type { app, com } from "../api/lexicons";
 
@@ -19,6 +21,7 @@ export interface Label<Val extends string = string> {
 
 export interface LabelPolicy {
   hidden: boolean;
+  muted: boolean;
   warned: Label<LabelValWarned>[];
   mediaWarned: Label<LabelValMediaWarned>[];
   profileBadges: Label<LabelValProfileBadge>[];
@@ -28,11 +31,13 @@ export type LabelValWarned = "!warn";
 export type LabelValMediaWarned = "porn" | "sexual" | "nudity" | "graphic-media";
 export type LabelValProfileBadge = "bot";
 
-type ContentPreferences = Pick<ModerationPrefs, "adultContentEnabled" | "labels">;
+type ContentPreferences = Pick<ModerationPrefs, "adultContentEnabled" | "labels"> &
+  Partial<Pick<ModerationPrefs, "mutedWords">>;
 
 export function getPostLabelPolicy(
   post: app.bsky.feed.defs.PostView,
   preferences?: ContentPreferences,
+  viewerDid?: Did,
 ): LabelPolicy {
   const labels = [
     ...filterEffectiveLabels(post.author.labels ?? []).map(
@@ -42,7 +47,25 @@ export function getPostLabelPolicy(
       ({ val, src }): Label => ({ val, src, isProfile: false }),
     ),
   ];
-  return resolveLabelPolicy(labels, preferences);
+  const policy = resolveLabelPolicy(labels, preferences);
+
+  if (
+    preferences != null &&
+    isPostRecord(post.record) &&
+    post.author.did !== viewerDid &&
+    hasMutedWord({
+      mutedWords: preferences.mutedWords ?? [],
+      text: post.record.text,
+      facets: post.record.facets,
+      languages: post.record.langs,
+      actor: post.author,
+    })
+  ) {
+    policy.hidden = true;
+    policy.muted = true;
+  }
+
+  return policy;
 }
 
 export function getProfileLabelPolicy(
@@ -77,6 +100,7 @@ function resolveLabelPolicy(labels: Label[], preferences?: ContentPreferences): 
     hidden:
       labels.some((label) => label.val === "!hide") ||
       mediaLabels.some((label) => getMediaPreference(label) === "hide"),
+    muted: false,
     warned: labels.filter((label): label is Label<LabelValWarned> => label.val === "!warn"),
     mediaWarned: mediaLabels.filter((label) => getMediaPreference(label) === "warn"),
     profileBadges: labels.filter(

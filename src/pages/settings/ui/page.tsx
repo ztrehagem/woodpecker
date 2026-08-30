@@ -1,4 +1,4 @@
-import type { LabelPreference } from "@atproto/api";
+import type { AppBskyActorDefs, LabelPreference } from "@atproto/api";
 import { Toast } from "@base-ui/react";
 import React, { useOptimistic, useTransition } from "react";
 
@@ -8,6 +8,7 @@ import { useGlobalLoadingIndicatorEffect } from "#src/shared/ui/global-loading-i
 import LoadingFallback from "#src/shared/ui/loading-fallback.tsx";
 
 import { ContentVisibilitySettings } from "./content-visibility-settings.tsx";
+import { MutedWordsSettings } from "./muted-words-settings.tsx";
 
 export function Page(): React.ReactElement {
   const session = useAssertSession();
@@ -53,19 +54,64 @@ export function Page(): React.ReactElement {
     });
   };
 
+  const addMutedWord = (value: string, target: "content" | "tag"): void => {
+    startSavingTransition(async () => {
+      try {
+        await session.agent.addMutedWord({
+          value,
+          targets: [target],
+          actorTarget: "all",
+          expiresAt: void 0,
+        });
+        await invalidatePreferencesQuery();
+        toastManager.add({ title: "Muted word saved" });
+      } catch (updateError) {
+        toastManager.add({
+          title: "Failed to save muted word",
+          description: updateError instanceof Error ? updateError.message : null,
+          type: "error",
+        });
+      }
+    });
+  };
+
+  const removeMutedWord = (mutedWord: AppBskyActorDefs.MutedWord): void => {
+    startSavingTransition(async () => {
+      try {
+        await session.agent.removeMutedWords([mutedWord]);
+        await invalidatePreferencesQuery();
+        toastManager.add({ title: "Muted word removed" });
+      } catch (updateError) {
+        toastManager.add({
+          title: "Failed to remove muted word",
+          description: updateError instanceof Error ? updateError.message : null,
+          type: "error",
+        });
+      }
+    });
+  };
+
   let content: React.ReactNode;
 
   if (error) {
     content = <p className="text-fg-danger">{error.message}</p>;
   } else if (preferences) {
     content = (
-      <ContentVisibilitySettings
-        adultContentEnabled={optimisticEnabled}
-        labels={preferences.moderationPrefs.labels}
-        isSaving={isSaving}
-        onAdultContentEnabledChange={updateAdultContentEnabled}
-        onLabelPreferenceChange={updateLabelPreference}
-      />
+      <>
+        <ContentVisibilitySettings
+          adultContentEnabled={optimisticEnabled}
+          labels={preferences.moderationPrefs.labels}
+          isSaving={isSaving}
+          onAdultContentEnabledChange={updateAdultContentEnabled}
+          onLabelPreferenceChange={updateLabelPreference}
+        />
+        <MutedWordsSettings
+          mutedWords={preferences.moderationPrefs.mutedWords ?? []}
+          isSaving={isSaving}
+          onAdd={addMutedWord}
+          onRemove={removeMutedWord}
+        />
+      </>
     );
   } else {
     content = <LoadingFallback />;

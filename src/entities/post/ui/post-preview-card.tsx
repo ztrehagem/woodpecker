@@ -34,7 +34,13 @@ export function PostPreviewCard({
     return (
       <Card bordered>
         <div className="p-3 text-sm tablet:px-5 tablet:py-4">
-          <HiddenContentNotice reason="This post has been hidden due to a moderation label." />
+          <HiddenContentNotice
+            reason={
+              labelPolicy.muted
+                ? "This post has been hidden because it contains a muted word or hashtag."
+                : "This post has been hidden due to a moderation label."
+            }
+          />
         </div>
       </Card>
     );

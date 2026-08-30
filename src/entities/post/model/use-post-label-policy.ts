@@ -7,5 +7,5 @@ export function usePostLabelPolicy(post: app.bsky.feed.defs.PostView): LabelPoli
   const session = useAssertSession();
   const { data: preferences } = usePreferencesQuery(session);
 
-  return getPostLabelPolicy(post, preferences?.moderationPrefs);
+  return getPostLabelPolicy(post, preferences?.moderationPrefs, session.did);
 }
