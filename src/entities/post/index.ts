@@ -9,3 +9,4 @@ export { PostReasonRow } from "./ui/post-reason-row";
 export { timeAgo } from "./ui/time-ago";
 export { isPostRecord } from "./lib/is-post-record";
 export { useTimelineQuery, useInvalidateTimelineQuery } from "./api/timeline-query";
+export { usePostLabelPolicy } from "./model/use-post-label-policy";
