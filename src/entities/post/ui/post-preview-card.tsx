@@ -2,7 +2,9 @@ import { asDatetimeString } from "@atproto/lex";
 import React from "react";
 
 import { ProfileBadges } from "#src/entities/profile/@x/post.ts";
+import { usePreferencesQuery } from "#src/shared/api/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import { getPostLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -23,13 +25,18 @@ export function PostPreviewCard({
 }: {
   postView: app.bsky.feed.defs.PostView;
 }): React.ReactElement {
+  const session = useAssertSession();
+  const { data: preferences } = usePreferencesQuery(session);
   const record = postView.record;
 
   if (!isPostRecord(record)) {
     return <></>;
   }
 
-  const labelPolicy = getPostLabelPolicy(postView);
+  const labelPolicy = getPostLabelPolicy(
+    postView,
+    preferences?.moderationPrefs.adultContentEnabled,
+  );
 
   if (labelPolicy.hidden) {
     return (

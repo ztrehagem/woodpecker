@@ -3,7 +3,9 @@ import { RichText } from "@atproto/api";
 import React from "react";
 import { Link } from "react-router";
 
+import { usePreferencesQuery } from "#src/shared/api/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import { formatCompactCount } from "#src/shared/lib/format-compact-count.ts";
 import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -18,7 +20,12 @@ export function ProfileCard({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileViewDetailed;
 }>): React.ReactElement {
-  const labelPolicy = getProfileLabelPolicy(profile);
+  const session = useAssertSession();
+  const { data: preferences } = usePreferencesQuery(session);
+  const labelPolicy = getProfileLabelPolicy(
+    profile,
+    preferences?.moderationPrefs.adultContentEnabled,
+  );
   const canShowMedia = labelPolicy.mediaWarned.length === 0;
   const hasBanner = canShowMedia && profile.banner != null;
   const hasAvatar = canShowMedia && profile.avatar != null;

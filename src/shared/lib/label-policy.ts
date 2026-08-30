@@ -28,7 +28,10 @@ export type LabelValWarned = "!warn";
 export type LabelValMediaWarned = "porn" | "sexual" | "nudity" | "graphic-media";
 export type LabelValProfileBadge = "bot";
 
-export function getPostLabelPolicy(post: app.bsky.feed.defs.PostView): LabelPolicy {
+export function getPostLabelPolicy(
+  post: app.bsky.feed.defs.PostView,
+  adultContentEnabled = false,
+): LabelPolicy {
   const labels = [
     ...filterEffectiveLabels(post.author.labels ?? []).map(
       ({ val, src }): Label => ({ val, src, isProfile: true }),
@@ -37,7 +40,7 @@ export function getPostLabelPolicy(post: app.bsky.feed.defs.PostView): LabelPoli
       ({ val, src }): Label => ({ val, src, isProfile: false }),
     ),
   ];
-  return resolveLabelPolicy(labels);
+  return resolveLabelPolicy(labels, adultContentEnabled);
 }
 
 export function getProfileLabelPolicy(
@@ -45,21 +48,24 @@ export function getProfileLabelPolicy(
     | app.bsky.actor.defs.ProfileView
     | app.bsky.actor.defs.ProfileViewBasic
     | app.bsky.actor.defs.ProfileViewDetailed,
+  adultContentEnabled = false,
 ): LabelPolicy {
   const labels = filterEffectiveLabels(profile.labels ?? []).map(
     ({ val, src }): Label => ({ val, src, isProfile: true }),
   );
-  return resolveLabelPolicy(labels);
+  return resolveLabelPolicy(labels, adultContentEnabled);
 }
 
 /** Determines UI treatment for known `com.atproto.label.defs#labelValue` values only. */
-function resolveLabelPolicy(labels: Label[]): LabelPolicy {
+function resolveLabelPolicy(labels: Label[], adultContentEnabled: boolean): LabelPolicy {
   const policy: LabelPolicy = {
     hidden: labels.some((label) => label.val === "!hide"),
     warned: labels.filter((label): label is Label<LabelValWarned> => label.val === "!warn"),
-    mediaWarned: labels.filter((label): label is Label<LabelValMediaWarned> =>
-      ["porn", "sexual", "nudity", "graphic-media"].includes(label.val),
-    ),
+    mediaWarned: adultContentEnabled
+      ? []
+      : labels.filter((label): label is Label<LabelValMediaWarned> =>
+          ["porn", "sexual", "nudity", "graphic-media"].includes(label.val),
+        ),
     profileBadges: labels.filter(
       (label): label is Label<LabelValProfileBadge> => label.val === "bot",
     ),

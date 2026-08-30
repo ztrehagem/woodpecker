@@ -84,6 +84,10 @@ test.each(["porn", "sexual", "nudity", "graphic-media"] as const)(
   },
 );
 
+test("does not warn for adult media labels when adult content is enabled", () => {
+  expect(getPostLabelPolicy(post([label("porn")]), true)).toEqual(policy());
+});
+
 test("preserves the source when a post is self-labeled", () => {
   const selfLabel = label("porn");
   selfLabel.src = "did:plc:alice";

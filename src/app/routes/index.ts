@@ -58,6 +58,11 @@ export const router = createBrowserRouter([
         handle: { title: "Bookmarks" } satisfies RouteHandle,
       },
       {
+        path: "/settings",
+        Component: lazy(() => import("#src/pages/settings/index.ts")),
+        handle: { title: "Settings" } satisfies RouteHandle,
+      },
+      {
         path: "/*",
         Component: lazy(() => import("#src/pages/not-found/index.ts")),
       },

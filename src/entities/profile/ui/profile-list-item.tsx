@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 
+import { usePreferencesQuery } from "#src/shared/api/index.ts";
 import type { app } from "#src/shared/api/lexicons/index.ts";
+import { useAssertSession } from "#src/shared/auth/index.ts";
 import { fallbackDisplayName } from "#src/shared/lib/display-name.ts";
 import { getProfileLabelPolicy } from "#src/shared/lib/label-policy.ts";
 import Card from "#src/shared/ui/card.tsx";
@@ -16,7 +18,12 @@ export function ProfileListItem({
 }: Readonly<{
   profile: app.bsky.actor.defs.ProfileView;
 }>): React.ReactElement {
-  const labelPolicy = getProfileLabelPolicy(profile);
+  const session = useAssertSession();
+  const { data: preferences } = usePreferencesQuery(session);
+  const labelPolicy = getProfileLabelPolicy(
+    profile,
+    preferences?.moderationPrefs.adultContentEnabled,
+  );
 
   if (labelPolicy.hidden) {
     return (
