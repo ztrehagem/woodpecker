@@ -6,6 +6,7 @@ export { LogoutIcon } from "./logout.tsx";
 export { PersonIcon } from "./person.tsx";
 export { PersonAddIcon } from "./person-add.tsx";
 export { CaretRightIcon } from "./caret-right.tsx";
+export { CaretDownIcon } from "./caret-down.tsx";
 export { AccountCircleIcon } from "./account-circle.tsx";
 export { SettingsIcon } from "./settings.tsx";
 export { EditNoteIcon } from "./edit-note.tsx";

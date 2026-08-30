@@ -51,8 +51,9 @@ test("ラベルごとの表示設定を保存する", async () => {
   const view = await renderWithProviders(<Page />, { session });
   const pornography = view.getByLabelText("Pornography");
 
-  await expect.element(pornography).toHaveValue("hide");
-  await pornography.selectOptions("ignore");
+  await expect.element(pornography).toHaveTextContent("Hide");
+  await pornography.click();
+  await view.getByRole("option", { name: "Show" }).click();
 
   expect(setContentLabelPref).toHaveBeenCalledWith("porn", "ignore");
 });

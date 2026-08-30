@@ -1,6 +1,6 @@
 import React from "react";
 
-export function CaretRightIcon(props: React.SVGProps<SVGSVGElement>): React.ReactElement {
+export function CaretDownIcon(props: React.SVGProps<SVGSVGElement>): React.ReactElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,7 @@ export function CaretRightIcon(props: React.SVGProps<SVGSVGElement>): React.Reac
       fill="currentColor"
       {...props}
     >
-      <path d="M400-280v-400l200 200-200 200Z" />
+      <path d="M480-360 280-560h400L480-360Z" />
     </svg>
   );
 }
