@@ -1,7 +1,9 @@
 {
   "version": 1,
   "lexicons": [
+    "app.bsky.actor.getPreferences",
     "app.bsky.actor.getProfile",
+    "app.bsky.actor.putPreferences",
     "app.bsky.bookmark.createBookmark",
     "app.bsky.bookmark.deleteBookmark",
     "app.bsky.bookmark.getBookmarks",
@@ -24,9 +26,17 @@
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.defs",
       "cid": "bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza"
     },
+    "app.bsky.actor.getPreferences": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.getPreferences",
+      "cid": "bafyreiftuoh6n5npkyelejxbzettltmgl46xm3qot5nkn7lm365ej2ahii"
+    },
     "app.bsky.actor.getProfile": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.getProfile",
       "cid": "bafyreigrtosreva7e5m7bwbbfsmw77gkdnieizgxwpobw5iobuck3j54xa"
+    },
+    "app.bsky.actor.putPreferences": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.putPreferences",
+      "cid": "bafyreietfhhwbwb3ltcffsonhw5p62z233frhe6edls67su5a3evqrykju"
     },
     "app.bsky.actor.status": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.status",
