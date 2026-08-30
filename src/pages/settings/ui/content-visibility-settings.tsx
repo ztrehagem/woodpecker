@@ -3,7 +3,7 @@ import { Select, Switch } from "@base-ui/react";
 import React from "react";
 
 import Card from "#src/shared/ui/card.tsx";
-import { CaretDownIcon } from "#src/shared/ui/icon/index.ts";
+import { CaretDownIcon, CheckIcon } from "#src/shared/ui/icon/index.ts";
 
 const ADULT_CONTENT_LABELS = [
   ["porn", "Pornography"],
@@ -119,7 +119,7 @@ function ContentLabelPreferenceSelect({
     >
       <Select.Label className="text-sm font-medium">{name}</Select.Label>
 
-      <Select.Trigger className="flex h-9 min-w-28 items-center justify-between gap-3 rounded-md border border-highlight bg-filling px-3 text-sm outline-none select-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <Select.Trigger className="flex h-9 min-w-28 cursor-pointer items-center justify-between gap-3 rounded-md border border-highlight bg-filling px-3 text-sm outline-none select-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50">
         <Select.Value />
         <Select.Icon className="text-xs text-fg-muted">
           <CaretDownIcon />
@@ -134,10 +134,12 @@ function ContentLabelPreferenceSelect({
                 <Select.Item
                   key={value}
                   value={value}
-                  className="grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 px-3 py-2 text-sm outline-none select-none data-highlighted:bg-highlight"
+                  className="grid cursor-pointer grid-cols-[1rem_1fr] items-center gap-2 px-3 py-2 text-sm outline-none select-none data-highlighted:bg-highlight"
                 >
-                  <Select.ItemIndicator className="text-xs">✓</Select.ItemIndicator>
-                  <Select.ItemText>{name}</Select.ItemText>
+                  <Select.ItemIndicator className="text-xs">
+                    <CheckIcon className="size-4" />
+                  </Select.ItemIndicator>
+                  <Select.ItemText className="col-start-2">{name}</Select.ItemText>
                 </Select.Item>
               ))}
             </Select.List>
