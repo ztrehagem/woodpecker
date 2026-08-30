@@ -1,10 +1,38 @@
 import type { BskyPreferences } from "@atproto/api";
-import { expect, test, vi } from "vitest";
+import { expect, test, vi, type MockInstance } from "vitest";
 
-import { createMockSession } from "#src/test/atproto-mock.ts";
+import { app } from "#src/shared/api/lexicons/index.ts";
+import type { Session } from "#src/shared/auth/index.ts";
+import { createMockSession as createSession } from "#src/test/atproto-mock.ts";
 import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { Page } from "./page.tsx";
+
+const clientCallSpies = new WeakMap<Session, MockInstance>();
+
+function createMockSession(
+  did?: Parameters<typeof createSession>[0],
+  {
+    mutes = [],
+    blocks = [],
+  }: {
+    mutes?: app.bsky.actor.defs.ProfileView[];
+    blocks?: app.bsky.actor.defs.ProfileView[];
+  } = {},
+) {
+  const session = createSession(did);
+  const call = vi.spyOn(session.client, "call").mockImplementation((method) => {
+    if (method === app.bsky.graph.getMutes) {
+      return Promise.resolve({ mutes });
+    }
+    if (method === app.bsky.graph.getBlocks) {
+      return Promise.resolve({ blocks });
+    }
+    return Promise.resolve({});
+  });
+  clientCallSpies.set(session, call);
+  return session;
+}
 
 function preferences(
   adultContentEnabled: boolean,
@@ -18,6 +46,20 @@ function preferences(
   return {
     moderationPrefs: { adultContentEnabled, labels, mutedWords: [] },
   } as unknown as BskyPreferences;
+}
+
+function profile(
+  did: string,
+  handle: string,
+  displayName: string,
+  blocking?: string,
+): app.bsky.actor.defs.ProfileView {
+  return {
+    did,
+    handle,
+    displayName,
+    ...(blocking == null || blocking === "" ? {} : { viewer: { blocking } }),
+  } as app.bsky.actor.defs.ProfileView;
 }
 
 test("成人向けコンテンツの現在の設定を表示する", async () => {
@@ -145,4 +187,50 @@ test("ミュートワードを削除する", async () => {
   await view.getByRole("button", { name: "Remove spoiler" }).click();
 
   expect(removeMutedWords).toHaveBeenCalledWith([currentPreferences.moderationPrefs.mutedWords[0]]);
+});
+
+test("ミュート中のユーザーを表示して解除する", async () => {
+  const session = createMockSession(void 0, {
+    mutes: [profile("did:plc:muted", "muted.test", "Muted User")],
+  });
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const view = await renderWithProviders(<Page />, {
+    session,
+    initialEntries: ["/settings"],
+  });
+
+  await expect.element(view.getByText("Muted User", { exact: true })).toBeVisible();
+  await view.getByText("Unmute", { exact: true }).click();
+
+  const call = clientCallSpies.get(session);
+  if (call == null) {
+    throw new Error("Client call spy was not initialized.");
+  }
+  expect(call).toHaveBeenCalledWith(app.bsky.graph.unmuteActor, {
+    actor: "did:plc:muted",
+  });
+});
+
+test("ブロック中のユーザーを表示して解除する", async () => {
+  const session = createMockSession("did:plc:viewer" as never, {
+    blocks: [
+      profile(
+        "did:plc:blocked",
+        "blocked.test",
+        "Blocked User",
+        "at://did:plc:viewer/app.bsky.graph.block/block-key",
+      ),
+    ],
+  });
+  vi.spyOn(session.agent, "getPreferences").mockResolvedValue(preferences(true));
+  const deleteBlock = vi.spyOn(session.client, "delete").mockResolvedValue({} as never);
+  const view = await renderWithProviders(<Page />, {
+    session,
+    initialEntries: ["/settings"],
+  });
+
+  await expect.element(view.getByText("Blocked User", { exact: true })).toBeVisible();
+  await view.getByText("Unblock", { exact: true }).click();
+
+  expect(deleteBlock).toHaveBeenCalledWith(app.bsky.graph.block, { rkey: "block-key" });
 });

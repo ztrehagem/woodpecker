@@ -1,6 +1,8 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 
-import type { app, com } from "#src/shared/api/lexicons/index.ts";
+import { app, type com } from "#src/shared/api/lexicons/index.ts";
+import type { Session } from "#src/shared/auth/index.ts";
+import { createMockSession } from "#src/test/atproto-mock.ts";
 import { renderWithProviders } from "#src/test/render-with-providers.tsx";
 
 import { ProfileCard } from "./profile-card.tsx";
@@ -22,8 +24,11 @@ function createProfile(
   } as app.bsky.actor.defs.ProfileViewDetailed;
 }
 
-function renderProfile(profile: app.bsky.actor.defs.ProfileViewDetailed) {
-  return renderWithProviders(<ProfileCard profile={profile} />, { initialEntries: ["/"] });
+function renderProfile(profile: app.bsky.actor.defs.ProfileViewDetailed, session?: Session) {
+  return renderWithProviders(<ProfileCard profile={profile} />, {
+    initialEntries: ["/"],
+    session,
+  });
 }
 
 test("バナー画像が表示される", async () => {
@@ -164,4 +169,44 @@ test("フォローボタンが表示される", async () => {
   const view = await renderProfile(profile);
 
   await expect.element(view.getByRole("button", { name: "Follow" })).toBeInTheDocument();
+});
+
+test("プロフィールからユーザーをミュートできる", async () => {
+  const session = createMockSession("did:plc:bob");
+  const call = vi.spyOn(session.client, "call").mockResolvedValue({} as never);
+  const view = await renderProfile(createProfile(), session);
+
+  await view.getByRole("button", { name: "More" }).click();
+  await view.getByText("Mute user", { exact: true }).click();
+  await expect.element(view.getByRole("heading", { name: "Mute User" })).toBeInTheDocument();
+  expect(call).not.toHaveBeenCalled();
+  await view.getByRole("button", { name: "Mute", exact: true }).click();
+
+  expect(call).toHaveBeenCalledWith(app.bsky.graph.muteActor, { actor: "did:plc:alice" });
+});
+
+test("プロフィールからユーザーをブロックできる", async () => {
+  const session = createMockSession("did:plc:bob");
+  const create = vi.spyOn(session.client, "create").mockResolvedValue({
+    uri: "at://did:plc:bob/app.bsky.graph.block/block-key",
+    cid: "bafyblock",
+  });
+  const view = await renderProfile(createProfile(), session);
+
+  await view.getByRole("button", { name: "More" }).click();
+  await view.getByText("Block user", { exact: true }).click();
+  await expect.element(view.getByRole("heading", { name: "Block User" })).toBeInTheDocument();
+  await view.getByRole("button", { name: "Block", exact: true }).click();
+
+  expect(create).toHaveBeenCalledWith(app.bsky.graph.block, {
+    subject: "did:plc:alice",
+    createdAt: expect.any(String),
+  });
+});
+
+test("自分のプロフィールにはミュート・ブロックメニューを表示しない", async () => {
+  const session = createMockSession("did:plc:alice");
+  const view = await renderProfile(createProfile(), session);
+
+  await expect.element(view.getByRole("button", { name: "More" })).not.toBeInTheDocument();
 });

@@ -124,6 +124,46 @@ describe.each([
     await expect.element(deleteButton).not.toBeInTheDocument();
   });
 
+  test("他人のポストにはミュート・ブロック操作が表示される", async () => {
+    const session = createMockSession("did:plc:bob");
+    const view = await renderView({ session });
+
+    await openMenu(view);
+
+    await expect.element(view.getByRole(itemRole, { name: "Mute user" })).toBeInTheDocument();
+    await expect.element(view.getByRole(itemRole, { name: "Block user" })).toBeInTheDocument();
+  });
+
+  test("ミュート操作でメニューが閉じても確認ダイアログを表示する", async () => {
+    const session = createMockSession("did:plc:bob");
+    const view = await renderView({ session });
+
+    await openMenu(view);
+    await view.getByRole(itemRole, { name: "Mute user" }).click();
+
+    await expect.element(view.getByRole("heading", { name: "Mute User" })).toBeInTheDocument();
+  });
+
+  test("ブロック操作でメニューが閉じても確認ダイアログを表示する", async () => {
+    const session = createMockSession("did:plc:bob");
+    const view = await renderView({ session });
+
+    await openMenu(view);
+    await view.getByRole(itemRole, { name: "Block user" }).click();
+
+    await expect.element(view.getByRole("heading", { name: "Block User" })).toBeInTheDocument();
+  });
+
+  test("自分のポストにはミュート・ブロック操作を表示しない", async () => {
+    const session = createMockSession("did:plc:alice");
+    const view = await renderView({ session });
+
+    await openMenu(view);
+
+    await expect.element(view.getByRole(itemRole, { name: "Mute user" })).not.toBeInTheDocument();
+    await expect.element(view.getByRole(itemRole, { name: "Block user" })).not.toBeInTheDocument();
+  });
+
   test("削除ボタンを押すと、確認ダイアログが表示される", async () => {
     const session = createMockSession("did:plc:alice");
     const view = await renderView({ session });
