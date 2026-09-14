@@ -19,8 +19,14 @@ export async function repostPost(
   } = {},
 ): Promise<CreateOutput> {
   return await session.client.create(app.bsky.feed.repost, {
-    subject: post,
-    via: via,
+    subject: {
+      uri: post.uri,
+      cid: post.cid,
+    },
+    via: via && {
+      uri: via?.uri,
+      cid: via?.cid,
+    },
     createdAt: toDatetimeString(new Date()),
   });
 }
