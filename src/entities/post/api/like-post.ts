@@ -19,8 +19,14 @@ export async function likePost(
   } = {},
 ): Promise<CreateOutput> {
   return await session.client.create(app.bsky.feed.like, {
-    subject: post,
-    via: via,
+    subject: {
+      uri: post.uri,
+      cid: post.cid,
+    },
+    via: via && {
+      uri: via?.uri,
+      cid: via?.cid,
+    },
     createdAt: toDatetimeString(new Date()),
   });
 }
