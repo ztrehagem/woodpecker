@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.66.0",
-    "@feature-sliced/steiger-plugin": "^0.7.0",
+    "@feature-sliced/steiger-plugin": "^0.8.1",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/eslint-plugin-query": "^5.105.0",
@@ -66,7 +66,7 @@
     "oxlint": "^1.90.0",
     "oxlint-tsgolint": "^7.0.2005",
     "playwright": "^1.64.1",
-    "steiger": "^0.6.0",
+    "steiger": "^0.8.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
     "vite": "^8.3.5",
