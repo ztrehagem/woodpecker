@@ -38,12 +38,16 @@ export function getPostModerationPolicy(
   viewerDid?: Did,
 ): ModerationPolicy {
   const labels = [
-    ...filterEffectiveLabels(post.author.labels ?? []).map(
-      ({ val, src }): Label => ({ val, src, isProfile: true }),
-    ),
-    ...filterEffectiveLabels(post.labels ?? []).map(
-      ({ val, src }): Label => ({ val, src, isProfile: false }),
-    ),
+    ...filterEffectiveLabels(post.author.labels ?? []).map(({ val, src }): Label => ({
+      val,
+      src,
+      isProfile: true,
+    })),
+    ...filterEffectiveLabels(post.labels ?? []).map(({ val, src }): Label => ({
+      val,
+      src,
+      isProfile: false,
+    })),
   ];
   const policy = resolveLabelModerationPolicy(labels, preferences);
 
@@ -73,9 +77,11 @@ export function getProfileModerationPolicy(
     | app.bsky.actor.defs.ProfileViewDetailed,
   preferences?: ContentPreferences,
 ): ModerationPolicy {
-  const labels = filterEffectiveLabels(profile.labels ?? []).map(
-    ({ val, src }): Label => ({ val, src, isProfile: true }),
-  );
+  const labels = filterEffectiveLabels(profile.labels ?? []).map(({ val, src }): Label => ({
+    val,
+    src,
+    isProfile: true,
+  }));
   return resolveLabelModerationPolicy(labels, preferences);
 }
 
