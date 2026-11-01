@@ -35,7 +35,7 @@
     "lexicon:build": "lex build --clear --out src/shared/api/lexicons --index-file"
   },
   "dependencies": {
-    "@atproto/api": "^0.29.6",
+    "@atproto/api": "^0.30.0",
     "@atproto/lex": "^0.4.4",
     "@atproto/oauth-client-browser": "^0.5.11",
     "@base-ui/react": "^1.9.0",
@@ -60,7 +60,7 @@
     "@vitest/browser-playwright": "^5.0.5",
     "@vitest/coverage-v8": "^5.0.5",
     "dependency-cruiser": "^18.7.0",
-    "eslint-plugin-security": "^4.2.0",
+    "eslint-plugin-security": "^4.2.1",
     "eslint-plugin-sonarjs": "^4.2.2",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
@@ -73,7 +73,7 @@
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.0.5",
     "vitest-browser-react": "^2.3.0",
-    "wrangler": "^4.155.0"
+    "wrangler": "^4.156.0"
   },
   "devEngines": {
     "packageManager": {
